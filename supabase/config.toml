@@ -1,0 +1,15 @@
+# Supabase CLI config (only the parts Ulduz needs).
+project_id = "ulduz"
+
+[functions.create-payment]
+verify_jwt = false
+[functions.epoint-callback]
+verify_jwt = false   # Epoint posts here directly; requests are authenticated by Epoint's signature instead
+[functions.check-status]
+verify_jwt = false
+[functions.get-order]
+verify_jwt = false
+[functions.generate-reading]
+verify_jwt = false
+[functions.ask-question]
+verify_jwt = false

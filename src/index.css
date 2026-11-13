@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { color-scheme: dark; -webkit-text-size-adjust: 100%; }
+  body { @apply bg-night text-ivory font-sans antialiased; min-height: 100vh;
+    background-image: radial-gradient(1200px 700px at 85% -15%, rgba(214,180,124,.10), transparent 60%),
+      radial-gradient(900px 600px at -15% 110%, rgba(201,139,132,.08), transparent 60%),
+      linear-gradient(180deg, #141833 0%, #0B0D17 55%, #0B0D17 100%);
+    background-attachment: fixed; }
+  ::selection { background: rgba(214,180,124,.35); color: #fff; }
+  :focus-visible { outline: 2px solid #D6B47C; outline-offset: 3px; border-radius: 6px; }
+  h1, h2, h3 { @apply font-display font-light; letter-spacing: -0.01em; }
+}
+
+@layer components {
+  .eyebrow { @apply text-[0.7rem] uppercase tracking-eyebrow text-gold; }
+  .card { @apply rounded-[20px] border border-gold/15 bg-white/[0.03] p-6 sm:p-7 shadow-glow backdrop-blur-[2px]; }
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-full bg-gold px-7 py-3.5 font-medium text-night transition
+    hover:bg-gold-soft hover:shadow-[0_10px_40px_-10px_rgba(214,180,124,.6)] active:translate-y-px disabled:cursor-wait disabled:opacity-60; }
+  .btn-ghost { @apply inline-flex items-center justify-center gap-2 rounded-full border border-gold/30 px-6 py-3 text-ivory transition hover:border-gold hover:text-gold; }
+  .field { @apply w-full rounded-xl border border-gold/15 bg-white/[0.04] px-4 py-3 text-[1rem] text-ivory placeholder:text-muted/60 outline-none transition focus:border-gold/70; }
+  .label { @apply grid gap-1.5 text-sm text-muted; }
+  .hint { @apply text-xs text-muted/80; }
+  .hairline { @apply h-px w-full bg-gradient-to-r from-transparent via-gold/30 to-transparent; }
+  .glyph { @apply font-glyph; }
+  .paper { @apply relative rounded-md bg-ivory-paper text-ink shadow-paper; }
+  .paper-text h3 { @apply mt-10 mb-3 font-display text-[1.7rem] font-normal text-copper first:mt-0; }
+  .paper-text p { @apply mb-4 font-display text-[1.2rem] leading-[1.75]; }
+  .paper-text ul { @apply mb-4 grid gap-2; }
+  .paper-text li { @apply relative pl-6 font-display text-[1.15rem] leading-[1.7]; }
+  .paper-text li::before { content: "✦"; @apply absolute left-0 top-[3px] text-sm text-copper/80; }
+  .paper-text strong { @apply font-semibold text-[#5a2f1c]; }
+}
+
+/* film grain */
+.grain::before { content: ""; position: fixed; inset: -50%; z-index: 1; pointer-events: none; opacity: .055;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+.caret::after { content: "▍"; margin-left: 2px; color: #8A5A3B; animation: blink 1s steps(2) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .animate-spinSlow { animation: none; } }
+@media print {
+  body { background: #fff !important; color: #000; }
+  .no-print, header, footer, canvas, .grain::before { display: none !important; }
+  .paper { box-shadow: none !important; background: #fff !important; }
+}
