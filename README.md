@@ -65,7 +65,13 @@ $0.04–0.06 with Claude Sonnet; a follow-up question about $0.02.
 3. Put the keys into the secrets, set `PAYMENT_MODE=epoint`, and redeploy the functions.
 4. Make a real 1 ₼ test payment before announcing the site.
 
-### 4. Website (Vercel or Netlify)
+### 4a. Website on GitHub Pages (free, already set up)
+`.github/workflows/pages.yml` builds and deploys on every push to `main`.
+1. Repo **Settings → Pages → Source: GitHub Actions**. (Pages on a *private* repo needs a paid GitHub plan; on GitHub Free the repo must be public. No secrets live in this code.)
+2. The site appears at `https://<username>.github.io/ulduz/`.
+3. Once the backend exists, add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` under **Settings → Secrets and variables → Actions → Variables**, and set the Supabase secret `SITE_URL=https://<username>.github.io/ulduz`.
+
+### 4b. Website on Vercel or Netlify (alternative)
 Import the GitHub repo, set the two `VITE_…` variables from `.env.example`, build command `npm run build`,
 output `dist`. SPA routing is already configured (`vercel.json`, `public/_redirects`).
 Then set `SITE_URL` / `ALLOWED_ORIGINS` in Supabase secrets to your final domain.

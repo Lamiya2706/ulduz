@@ -64,7 +64,7 @@ export default function ReadingPage() {
   const [msg, alertMsg] = useState("");
   const left = Math.max(0, 3 - qa.filter((x) => !x.live || x.answer).length);
   const chips = t(order?.kind === "couple" ? "couple.reading.chips" : "reading.chips", { returnObjects: true }) as string[];
-  const link = `${location.origin}/${lang}/reading/${orderId}?t=${token}`;
+  const link = `${location.origin}${import.meta.env.BASE_URL}${lang}/reading/${orderId}?t=${token}`;
 
   if (state === "notfound" || state === "notpaid") {
     return (

@@ -3,7 +3,7 @@ type Raw = [string, string, number, number, string, string[]?];
 
 let cache: Promise<City[]> | null = null;
 export function loadCities(): Promise<City[]> {
-  cache ??= fetch("/cities.json").then((r) => r.json()).then((rows: Raw[]) =>
+  cache ??= fetch(`${import.meta.env.BASE_URL}cities.json`).then((r) => r.json()).then((rows: Raw[]) =>
     rows.map(([name, country, lat, lon, tz, aliases]) => ({ name, country, lat, lon, tz, aliases: aliases ?? [] })));
   return cache;
 }

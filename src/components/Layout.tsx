@@ -89,7 +89,7 @@ export default function Layout() {
     for (const l of LANGS) {
       let el = document.querySelector(`link[hreflang="${l}"]`);
       if (!el) { el = document.createElement("link"); el.setAttribute("rel", "alternate"); el.setAttribute("hreflang", l); document.head.appendChild(el); }
-      el.setAttribute("href", `${location.origin}${pathname.replace(/^\/(az|en|ru)/, `/${l}`)}`);
+      el.setAttribute("href", `${location.origin}${import.meta.env.BASE_URL.replace(/\/$/, "")}${pathname.replace(/^\/(az|en|ru)/, `/${l}`)}`);
     }
   }, [lang, valid, pathname]);
 

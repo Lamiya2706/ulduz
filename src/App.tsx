@@ -14,7 +14,7 @@ const PaymentFailed = lazy(() => import("@/pages/PaymentPage").then((m) => ({ de
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, "")}>
       <Suspense fallback={<div className="min-h-screen" />}>
         <Routes>
           <Route path="/" element={<Navigate to={`/${detectLang()}`} replace />} />
