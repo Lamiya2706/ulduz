@@ -4,6 +4,11 @@ A premium astrology & numerology website in **Azerbaijani, English and Russian**
 Visitors get a real, astronomically calculated natal chart for free, and can unlock a
 **personal AI reading for 1 ₼** (written by Claude), paid via **Epoint**.
 
+**Couples compatibility** (`/az/couple`): two birth charts compared with synastry — harmony scores
+(emotional bond, attraction, communication, commitment, growth), the strongest planet contacts between
+the charts, element and Life Path match, and house overlays. A **couple reading for 1 ₼** is written by
+Claude from both charts, with 3 follow-up questions.
+
 ## What's inside
 
 | Part | Tech |
@@ -17,10 +22,11 @@ Visitors get a real, astronomically calculated natal chart for free, and can unl
 ```
 src/                     web app (pages, components, i18n UI strings, interpretation content)
   content/{az,en,ru}.ts  interpretation library (signs, houses, aspects, numerology…)
+  content/compat/        compatibility texts (synastry contacts, harmony areas, elements, Life Path)
   i18n/{az,en,ru}.ts     UI strings
 supabase/
   migrations/            database schema (all tables private, RLS on)
-  functions/_shared/     chart engine, numerology, prompt builder, Epoint & Anthropic clients
+  functions/_shared/     chart engine, synastry, numerology, prompt builder, Epoint & Anthropic clients
   functions/*            create-payment, epoint-callback, check-status, get-order, generate-reading, ask-question
 scripts/build-cities.mjs builds public/cities.json (1,800+ cities with time zones)
 ```
@@ -42,7 +48,7 @@ cd supabase/functions && deno test --allow-env tests/   # Epoint signature, vali
 ### 1. Supabase
 1. Create a project at supabase.com (free tier is fine to start).
 2. Install the CLI and link: `npx supabase login && npx supabase link --project-ref YOUR-REF`
-3. Create the tables: `npx supabase db push` (or paste `supabase/migrations/*.sql` into the SQL editor).
+3. Create the tables: `npx supabase db push` (or paste both `supabase/migrations/*.sql` files, in order, into the SQL editor).
 4. Copy `supabase/.env.example` → `supabase/.env`, fill it in, then `npx supabase secrets set --env-file supabase/.env`
 5. Deploy the functions: `npx supabase functions deploy`
 
@@ -68,7 +74,7 @@ Then set `SITE_URL` / `ALLOWED_ORIGINS` in Supabase secrets to your final domain
 - [ ] Fill the `[placeholders]` in `src/pages/staticContent.ts` (legal name, VÖEN, email…) and have Terms / Privacy / Refunds reviewed.
 - [ ] `PAYMENT_MODE=epoint` (never leave `test` on in production — it gives readings away free).
 - [ ] Anthropic spend limit set.
-- [ ] A native speaker proof-reads `src/content/az.ts`, `src/content/ru.ts` and the UI strings.
+- [ ] A native speaker proof-reads `src/content/az.ts`, `src/content/ru.ts`, `src/content/compat/*` and the UI strings.
 - [ ] Optional: schedule `select public.cleanup_orphan_charts();` daily with pg_cron.
 
 ## Notes

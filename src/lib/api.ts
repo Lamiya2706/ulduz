@@ -61,15 +61,18 @@ async function stream(fn: string, body: unknown, onText: (full: string) => void)
 export interface OrderView {
   status: "pending" | "paid" | "failed" | "refunded";
   lang: Lang;
+  kind: "natal" | "couple";
   name: string;
   chartCode: string;
+  partnerName: string | null;
+  partnerCode: string | null;
   reading: { status: "generating" | "done" | "error"; content: string } | null;
   questions: { question: string; answer: string }[];
 }
 
 export const api = {
-  createPayment: (input: BirthParams, lang: Lang, email: string | null) =>
-    call<{ redirectUrl: string; orderId: string; token: string }>("create-payment", { input, lang, email, origin: location.origin }),
+  createPayment: (input: BirthParams, lang: Lang, email: string | null, partner?: BirthParams) =>
+    call<{ redirectUrl: string; orderId: string; token: string }>("create-payment", { input, partner: partner ?? null, lang, email }),
   order: (orderId: string, token: string) => call<OrderView>("get-order", { orderId, token }),
   checkStatus: (orderId: string, token: string) => call<{ status: OrderView["status"] }>("check-status", { orderId, token }),
   generate: (orderId: string, token: string, onText: (t: string) => void) => stream("generate-reading", { orderId, token }, onText),

@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { useLang } from "@/components/Layout";
 import BirthForm from "@/components/BirthForm";
 import { CarpetDivider, HeroWheel, Reveal } from "@/components/Decor";
 import { Markdown } from "@/lib/md";
@@ -10,6 +12,7 @@ type QA = { q: string; a: string };
 
 export default function Home() {
   const { t } = useTranslation();
+  const lang = useLang();
   const steps = t("how.steps", { returnObjects: true }) as Step[];
   const faq = t("faq.items", { returnObjects: true }) as QA[];
   const freeItems = t("compare.free.items", { returnObjects: true }) as string[];
@@ -68,6 +71,18 @@ export default function Home() {
             <ul className="mt-6 grid gap-3">{paidItems.map((x) => <li key={x} className="flex gap-3 text-sm text-ivory/90"><span className="text-gold">✦</span>{x}</li>)}</ul>
           </Reveal>
         </div>
+      </section>
+
+      {/* COUPLES */}
+      <section className="mx-auto mt-28 max-w-6xl px-5 sm:px-8">
+        <Reveal className="card relative overflow-hidden px-7 py-12 text-center sm:px-14">
+          <div aria-hidden className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full border border-gold/15" />
+          <div aria-hidden className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full border border-gold/15" />
+          <p className="eyebrow">{t("couple.teaser.eyebrow")}</p>
+          <h2 className="mt-3 text-4xl sm:text-5xl">{t("couple.teaser.title")}</h2>
+          <p className="mx-auto mt-4 max-w-2xl text-muted">{t("couple.teaser.text")}</p>
+          <Link to={`/${lang}/couple`} className="btn mt-8">{t("couple.teaser.cta")} <span aria-hidden>→</span></Link>
+        </Reveal>
       </section>
 
       {/* SAMPLE */}

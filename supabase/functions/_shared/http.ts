@@ -39,7 +39,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 /** Loads an order only if the private token matches. */
 export async function orderWithToken(orderId: unknown, token: unknown) {
   if (typeof orderId !== "string" || !UUID.test(orderId) || typeof token !== "string" || token.length < 20) return null;
-  const { data } = await db().from("orders").select("*, charts(*)").eq("id", orderId).maybeSingle();
+  const { data } = await db().from("orders").select("*, charts:charts!orders_chart_id_fkey(*), partner:charts!orders_partner_chart_id_fkey(*)").eq("id", orderId).maybeSingle();
   if (!data || data.token_hash !== (await sha256(token))) return null;
   return data;
 }

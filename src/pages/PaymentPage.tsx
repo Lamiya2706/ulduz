@@ -53,15 +53,15 @@ export function PaymentFailed() {
   const token = tokenFor(orderId, sp.get("t"));
   const lang = useLang();
   const { t } = useTranslation();
-  const [chartCode, setChartCode] = useState<string | null>(null);
-  useEffect(() => { if (orderId && token) api.order(orderId, token).then((o) => setChartCode(o.chartCode)).catch(() => {}); }, [orderId, token]);
+  const [back, setBack] = useState<string | null>(null);
+  useEffect(() => { if (orderId && token) api.order(orderId, token).then((o) => setBack(o.kind === "couple" && o.partnerCode ? `couple/${o.chartCode}/${o.partnerCode}` : `chart/${o.chartCode}`)).catch(() => {}); }, [orderId, token]);
   return (
     <div className="mx-auto max-w-xl px-5 pt-24 text-center">
       <p className="eyebrow">Ulduz</p>
       <h1 className="mt-4 text-5xl">{t("payment.failedTitle")}</h1>
       <p className="mt-5 text-muted">{t("payment.failedText")}</p>
       <div className="mt-8 flex justify-center gap-3">
-        {chartCode && <Link to={`/${lang}/chart/${chartCode}#reading`} className="btn">{t("payment.retry")}</Link>}
+        {back && <Link to={`/${lang}/${back}#reading`} className="btn">{t("payment.retry")}</Link>}
         <Link to={`/${lang}`} className="btn-ghost">{t("pages.home")}</Link>
       </div>
     </div>

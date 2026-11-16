@@ -1,7 +1,7 @@
 // Writes the personal reading with Claude and streams it to the browser (SSE). One paid order = one reading.
 import { streamClaude } from "../_shared/anthropic.ts";
 import { cors, db, fail, json, orderWithToken, sseResponse } from "../_shared/http.ts";
-import { chartData, firstName, readingSystem } from "../_shared/prompt.ts";
+import { readingPrompt } from "../_shared/order-prompts.ts";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors(req) });
@@ -19,16 +19,13 @@ Deno.serve(async (req) => {
   const now = new Date().toISOString();
   await sb.from("readings").upsert({ order_id: order.id, lang: order.lang, status: "generating", content: "", attempts: (existing?.attempts ?? 0) + 1, updated_at: now });
 
-  const ch = order.charts;
-  const name = firstName(ch.full_name);
-  const system = readingSystem(order.lang, name, ch.chart.timeKnown);
-  const data = chartData({ fullName: ch.full_name, date: ch.birth_date, time: ch.birth_time, place: ch.place, lat: ch.lat, lon: ch.lon }, ch.chart, ch.numerology);
+  const { system, user } = readingPrompt(order);
   const model = Deno.env.get("ANTHROPIC_MODEL") ?? "claude-sonnet-5-5";
 
   return sseResponse(req, async (send) => {
     let full = "", lastSave = Date.now();
     try {
-      for await (const t of streamClaude(system, [{ role: "user", content: `CHART DATA\n${data}\n\nWrite the reading now.` }], 4500)) {
+      for await (const t of streamClaude(system, [{ role: "user", content: user }], 4500)) {
         full += t; send({ text: t });
         if (Date.now() - lastSave > 5000) { lastSave = Date.now(); await sb.from("readings").update({ content: full, updated_at: new Date().toISOString() }).eq("order_id", order.id); }
       }

@@ -43,3 +43,22 @@ Deno.test("prompt contains the full chart data", () => {
   assertStringIncludes(s, "## The heart of you");
   assertStringIncludes(s, "Azerbaijani");
 });
+
+import { readingPrompt, questionPromptSystem } from "../_shared/order-prompts.ts";
+Deno.test("couple prompt includes both people and the synastry", () => {
+  const mk = (name: string, date: string, time: string, lat: number, lon: number) => {
+    const p = { fullName: name, date, time, lat, lon, tz: "Asia/Baku", place: "Baku" };
+    return { full_name: name, birth_date: date, birth_time: time, place: "Baku", lat, lon, chart: computeChart(p), numerology: numerology(name, date) };
+  };
+  const order = { kind: "couple" as const, lang: "ru" as const, charts: mk("Ləmiyə Əsgərova", "1995-06-15", "08:30", 40.41, 49.87), partner: mk("Elvin Məmmədov", "1993-02-04", "21:10", 40.68, 46.36) };
+  const { system, user } = readingPrompt(order);
+  assertStringIncludes(system, "## What brings you together");
+  assertStringIncludes(system, "Russian");
+  assertStringIncludes(user, "PERSON 1 — Ləmiyə");
+  assertStringIncludes(user, "PERSON 2 — Elvin");
+  assertStringIncludes(user, "Synastry contacts");
+  assertStringIncludes(user, "planets in Elvin's houses");
+  assertStringIncludes(questionPromptSystem(order, "## x"), "never take sides");
+  const single = readingPrompt({ ...order, kind: "natal" as const, partner: null });
+  assertStringIncludes(single.system, "## The heart of you");
+});

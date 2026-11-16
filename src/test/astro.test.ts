@@ -38,3 +38,26 @@ describe("numerology", () => {
     expect(n.expression).not.toBeNull();
   });
 });
+
+import { synastry, lifePathRelation, elementRelation } from "@shared/synastry";
+describe("synastry", () => {
+  const a = computeChart({ fullName: "A", date: "1995-06-15", time: "08:30", lat: 40.41, lon: 49.87, tz: "Asia/Baku" });
+  const b = computeChart({ fullName: "B", date: "1993-02-04", time: "21:10", lat: 40.68, lon: 46.36, tz: "Asia/Baku" });
+  it("finds inter-aspects and bounded scores", () => {
+    const s = synastry(a, b, 9, 1);
+    expect(s.aspects.length).toBeGreaterThan(3);
+    for (const v of Object.values(s.scores)) { expect(v).toBeGreaterThanOrEqual(22); expect(v).toBeLessThanOrEqual(96); }
+    expect(s.overall).toBeGreaterThan(20);
+    expect(s.overlays).not.toBeNull();
+  });
+  it("is symmetric in overall score", () => {
+    expect(synastry(a, b, 9, 1).overall).toBe(synastry(b, a, 1, 9).overall);
+  });
+  it("classifies life paths and elements", () => {
+    expect(lifePathRelation(3, 9)).toBe("harmonious");
+    expect(lifePathRelation(11, 4)).toBe("harmonious");
+    expect(lifePathRelation(5, 5)).toBe("mirror");
+    expect(lifePathRelation(1, 2)).toBe("complementary");
+    expect(elementRelation("Fire", "Air")).toBe("compatible");
+  });
+});

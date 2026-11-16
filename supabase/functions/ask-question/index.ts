@@ -1,7 +1,7 @@
 // Answers up to 3 follow-up questions per paid reading, streaming via SSE.
 import { streamClaude, type Msg } from "../_shared/anthropic.ts";
 import { cors, db, fail, orderWithToken, sseResponse } from "../_shared/http.ts";
-import { chartData, firstName, questionSystem } from "../_shared/prompt.ts";
+import { questionPromptSystem } from "../_shared/order-prompts.ts";
 
 const MAX_Q = 3;
 
@@ -22,9 +22,7 @@ Deno.serve(async (req) => {
   if (reading?.status !== "done") return fail(req, "reading_not_ready", 409);
   if ((prev?.length ?? 0) >= MAX_Q) return fail(req, "no_questions_left", 429);
 
-  const ch = order.charts;
-  const name = firstName(ch.full_name);
-  const system = `${questionSystem(order.lang, name, reading.content)}\n\nCHART DATA\n${chartData({ fullName: ch.full_name, date: ch.birth_date, time: ch.birth_time, place: ch.place, lat: ch.lat, lon: ch.lon }, ch.chart, ch.numerology)}`;
+  const system = questionPromptSystem(order, reading.content);
   const messages: Msg[] = [];
   for (const q of prev ?? []) messages.push({ role: "user", content: q.question }, { role: "assistant", content: q.answer });
   messages.push({ role: "user", content: question });

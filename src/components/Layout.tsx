@@ -37,8 +37,10 @@ function Header() {
           <Star className="h-5 w-5 text-gold transition group-hover:rotate-45" />
           <span className="font-display text-2xl tracking-[0.08em] text-ivory">Ulduz</span>
         </Link>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4 sm:gap-6">
+          <Link to={`/${lang}/couple`} className="text-xs text-gold md:hidden">♡ {t("couple.nav")}</Link>
           <nav className="hidden items-center gap-6 text-sm text-muted md:flex">
+            <Link to={`/${lang}/couple`} className="hover:text-ivory">{t("couple.nav")}</Link>
             <Link to={`/${lang}#how`} className="hover:text-ivory">{t("nav.how")}</Link>
             <Link to={`/${lang}#faq`} className="hover:text-ivory">{t("nav.faq")}</Link>
             <Link to={`/${lang}/page/about`} className="hover:text-ivory">{t("nav.about")}</Link>
@@ -63,6 +65,7 @@ function Footer() {
           <p className="mt-6 max-w-md text-xs leading-relaxed text-muted/70">{t("footer.disclaimer")}</p>
         </div>
         <div className="flex flex-wrap content-start gap-x-6 gap-y-3 text-sm text-muted md:justify-end">
+          <Link to={`/${lang}/couple`} className="hover:text-gold">{t("couple.nav")}</Link>
           <Link to={`/${lang}#faq`} className="hover:text-gold">{t("footer.links.faq")}</Link>
           {links.map((l) => <Link key={l} to={`/${lang}/page/${l}`} className="hover:text-gold">{t(`footer.links.${l}`)}</Link>)}
         </div>

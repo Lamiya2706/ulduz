@@ -27,5 +27,5 @@
       "npm:astronomy-engine@2.1.19": ["./node_modules/astronomy-engine"]
     }
   },
-  "include": ["src", "supabase/functions/_shared/astro.ts", "supabase/functions/_shared/zodiac.ts", "supabase/functions/_shared/numerology.ts", "supabase/functions/_shared/birthcode.ts", "supabase/functions/_shared/prompt.ts"]
+  "include": ["src", "supabase/functions/_shared/astro.ts", "supabase/functions/_shared/zodiac.ts", "supabase/functions/_shared/numerology.ts", "supabase/functions/_shared/birthcode.ts", "supabase/functions/_shared/prompt.ts", "supabase/functions/_shared/synastry.ts"]
 }

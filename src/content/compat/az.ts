@@ -1,0 +1,58 @@
+import type { CompatContent } from "./types";
+
+const az: CompatContent = {
+  ascendant: "Asendent",
+  pairs: {
+    "Moon-Moon": ["Emosional ritmləriniz üst-üstə düşür: bir-birinizə demək olar ki, sözsüz təsəlli verirsiniz və \"ev\" hər ikiniz üçün oxşar hiss olunur.", "Özünüzü təhlükəsiz hiss etmək üçün fərqli şeylərə ehtiyacınız var — biriniz yaxınlıq istəyəndə, digəriniz məkan istəyir. Ehtiyaclarınızı ucadan demək bunu anlayışa çevirir."],
+    "Sun-Moon": ["Ürəyin klassik bağı: biriniz parlayır, digəriniz o işıqda özünü evdəki kimi hiss edir. Bu, uzunmüddətli rahatlığın ən güclü əlamətlərindən biridir.", "Birinizin istədiyi ilə digərinizin ehtiyac duyduğu fərqli istiqamətlərə çəkir. Bu gərginlik cazibədardır — və səbir istəyir."],
+    "Moon-Venus": ["Aranızda zəriflik asan axır; biriniz digərinin sevgi tərzindən özünü qayğı görmüş hiss edir.", "Məhəbbət və emosional ehtiyaclar həmişə eyni dildə gəlmir — biriniz şirinlik verəndə digərinizə arxayınlıq lazım olur."],
+    "Venus-Mars": ["Güclü, təbii cazibə: arzu və məhəbbət bir-birini tapır. Buradakı qığılcım həqiqidir və adətən uzun yaşayır.", "Sürtünməli, elektrikli kimya — ehtiras, zarafat, bəzən toqquşma. Mehriban saxlasanız, çox həyəcanlıdır."],
+    "Sun-Venus": ["Biriniz digərinə səmimi heyrandır; aranızda hərarət, təqdir və olduğun kimi bəyənilmək hissi var.", "Heyranlıq var, amma zövqlər və dəyərlər bəzən toqquşur — birinizə cazibədar gələn digərinizə həddindən artıq görünə bilər."],
+    "Venus-Venus": ["Oxşar tərzdə sevirsiniz və eyni şeylərdən zövq alırsınız — ortaq gözəllik, ortaq zövq, asan məhəbbət.", "Sevgi dilləriniz fərqlidir; biriniz sevgini bir cür göstərir, digəriniz başqa cür gözləyir. Bir-birinizin \"ləhcəsini\" öyrənmək — əsas işdir."],
+    "Mars-Mars": ["Enerjiləriniz eyni addımla hərəkət edir — görüləsi, qurulası iş olanda əla komandasınız.", "İki güclü iradə: rəqabət və tez alovlanma mümkündür. Bu enerjini bir-birinizə yox, ortaq hədəflərə yönəldin."],
+    "Sun-Mars": ["Biriniz digərini enerji ilə doldurur — birlikdə işləri hərəkətə gətirirsiniz və sağlam fiziki cazibə var.", "Biriniz digərinin sürətindən özünü itələnmiş hiss edə bilər; qığılcımlar hər iki mənada uçur. Bir-birinizin tempinə hörmət edin."],
+    "Moon-Mars": ["Ehtiras hisslə qoruyucu şəkildə görüşür — biriniz digərinə arxa durur.", "Biriniz digərinin birbaşalığından tələsdirilmiş və ya incimiş hiss edə bilər. Burada sürətdən əvvəl yumşaqlıq kömək edir."],
+    "Mercury-Mercury": ["Oxşar düşünürsünüz və asan danışırsınız — söhbət bu bağın sevinclərindən biridir.", "Fərqli düşünürsünüz, ona görə anlaşılmazlıqlar asan yaranır. Yavaşlamaq və \"nəyi nəzərdə tuturdun?\" soruşmaq möcüzə yaradır."],
+    "Moon-Mercury": ["Biriniz digərinin hiss etdiyini sözə çevirir — danışaraq bir-birinizin əhvalını anlayırsınız.", "Sözlər və hisslər bir-birini qaçıra bilər: biriniz təhlil edəndə, digəriniz sadəcə eşidilmək istəyir."],
+    "Sun-Mercury": ["Biriniz digərini həqiqətən dinləyir; ideyalar və planlar aranızda təbii axır.", "Fikirlər toqquşa bilər — biriniz digərinin sözünü kəsdiyini və ya ona şübhə etdiyini hiss edə bilər."],
+    "Mercury-Venus": ["Şirin, asan ünsiyyət — iltifat, yumor və mülayim sözlər təbii gəlir.", "Sevgi dolu sözləri deyə bilmək tərziniz fərqlidir; kiçik sözlər nəzərdə tutulduğundan daha kəskin dəyə bilər."],
+    "Mercury-Mars": ["Canlı, ruhlandırıcı müzakirələr — bir-birinizin düşüncəsini itiləyirsiniz.", "Mübahisələr tez qızışa bilər. Ehtiyac yaranmamışdan əvvəl \"fasilə\" sözü barədə razılaşın."],
+    "Sun-Saturn": ["Sabitləşdirici bağ: biriniz digərinin həyatına struktur və sədaqət gətirir. Bu, çox vaxt ciddi və davamlı əlaqənin əlamətidir.", "Biriniz digəri tərəfindən mühakimə olunmuş və ya saxlanılmış hiss edə bilər. Bu həm də hər ikinizə yetkinlik öyrədən münasibət ola bilər."],
+    "Moon-Saturn": ["Sabit emosional sədaqət — biriniz digərinə təhlükəsizlik və etibar hissi verir.", "Biriniz digərini emosional olaraq soyuq və ya tənqidi hiss edə bilər. Ucadan deyilən hərarət bunun çoxunu əridir."],
+    "Venus-Saturn": ["Davamlı sevgi: bağlılıq, sədaqət və birlikdə real bir şey qurmaq istəyi.", "Məhəbbət təmkinli və ya sınaqdan keçirilən kimi hiss oluna bilər — amma bu təmasla yaranan bağlar çox vaxt ən uzunömürlü olur."],
+    "Mercury-Saturn": ["Ciddi, ayaqları yerdə olan söhbətlər; bir-birinizə düşünməyə və ağıllı plan qurmağa kömək edirsiniz.", "Biriniz digərinin ideyalarını saymadığını hiss edə bilər. Səbir və düşüncə tərzinə hörmət vacibdir."],
+    "Mars-Saturn": ["İntizam iradə ilə görüşür — birlikdə böyük hədəflərə ardıcıl irəliləyə bilərsiniz.", "Biriniz digəri tərəfindən əngəllənmiş və ya nəzarətdə hiss edə bilər. Kim harada rəhbərlik edir — razılaşın."],
+    "Sun-Jupiter": ["Səxavət və nikbinlik: bir-birinizi daha böyük, daha şanslı və daha ümidli hiss etdirirsiniz.", "Ruhlandırma ifrata keçə bilər — birlikdə çox söz vermək və ya çox xərcləmək. Bir ayağınızı yerdə saxlayın."],
+    "Moon-Jupiter": ["Böyük ürəkli emosional dəstək — biriniz digərinin əhvalını təbii olaraq qaldırır.", "Təsəlli həddindən artıq yumşaqlığa çevrilə bilər; problemləri danışmaq əvəzinə üstündən keçə bilərsiniz."],
+    "Venus-Jupiter": ["Sevinc, məhəbbət və xoş anlar asan gəlir — bu təmas sevgiyə uğur və hərarət gətirir.", "Çoxlu şirinlik var, amma xoş ab-havanı qorumaq üçün çətin söhbətlərdən qaça bilərsiniz."],
+    "Mercury-Jupiter": ["Bir-birinizin üfüqünü genişləndirirsiniz — birlikdə səyahət, ideyalar və öyrənmək təbii gəlir.", "Böyük sözlər, kiçik detallar: biriniz praktik rəhbərliyi götürməsə, planlar plan olaraq qala bilər."],
+    "Sun-Sun": ["Əsas təbiətləriniz ahəngdardır — bir-birinizin varlıq tərzinə hörmət edir və onu anlayırsınız.", "Fərqli əsas temperamentlər: birinizi enerji ilə dolduran digərinizi yora bilər. Hörmət olunsa, fərq gücünüzə çevrilir."],
+    "Sun-Ascendant": ["Biriniz digəri tərəfindən dərhal tanınmış hiss edir — güclü \"olduğun kimi xoşuma gəlirsən\" hissi.", "İlk təəssüratlar toqquşa bilər; bir-birinizin üslubunun arxasını görmək üçün vaxt lazımdır."],
+    "Moon-Ascendant": ["Biriniz lap əvvəldən digərinin yanında özünü emosional olaraq evdəki kimi hiss edir.", "Biriniz digərinin davranışını nəzərdə tutulduğundan daha soyuq və ya sərt qəbul edə bilər."],
+    "Venus-Ascendant": ["Fiziki və estetik cazibə — biriniz sadəcə digərini gözəl tapır.", "Cazibə var, amma üslublar və zövqlər həmişə üst-üstə düşmür."],
+    "Mars-Ascendant": ["Dərhal kimya və enerji — biriniz digərini hərəkətə gətirir.", "Biriniz digərinə həddindən artıq güclü görünə bilər. Mülayimlik kömək edir."],
+  },
+  categories: {
+    emotional: { name: "Emosional bağ", high: "Hissləriniz eyni dildə danışır — təsəlli və yaxınlıq asan gəlir.", mid: "Həqiqi emosional bağ var, bəzi ehtiyacları isə bir-birinizə adlandırmağı öyrənəcəksiniz.", low: "Şeyləri fərqli hiss edirsiniz. Burada yaxınlıq səbir və şüurlu qayğı ilə böyüyür." },
+    romance: { name: "Cazibə və romantika", high: "Güclü, təbii kimya — cazibə və məhəbbət bir-birini tapır.", mid: "Öz ritmi olan isti cazibə; qayğı göstərdikcə romantika böyüyür.", low: "Qığılcım daha sakitdir. Cazibə çox vaxt dostluq və zamanla böyüyür." },
+    communication: { name: "Ünsiyyət", high: "Bir-birinizi asan anlayırsınız — söhbət aranızda bir hədiyyədir.", mid: "Əsasən asan ünsiyyət, diqqət edilməli bir neçə kor nöqtə ilə.", low: "Fərqli düşünürsünüz. Soruşmaq, dinləmək və yavaşlamaq hər şeyi dəyişir." },
+    commitment: { name: "Sabitlik və bağlılıq", high: "Sədaqət və davamlılığın güclü əlamətləri — bu bağ uzun ömür üçündür.", mid: "Birgə səylə dərinləşən möhkəm bağlılıq əsası.", low: "Sabitlik burada avtomatik deyil; aydın razılaşmalar və etibarla qurulur." },
+    growth: { name: "Birlikdə inkişaf", high: "Bir-birinizin ən yaxşı tərəfini üzə çıxarır və eyni istiqamətdə böyüyürsünüz.", mid: "Bir-birinizin böyüməsinə kömək edirsiniz, bəzən bir-birinizi sınağa çəkərək.", low: "Fərqli istiqamətlərdə böyüyürsünüz — bir-birinizə yer vermək açardır." },
+  },
+  overall: {
+    high: "Təbii olaraq ahəngdar bir bağ — xəritələriniz arasında həqiqi rahatlıq var.",
+    mid: "Mənalı bir bağ: kifayət qədər ahəng və hər ikinizi böyütməyə yetəcək qədər fərq.",
+    low: "Ziddiyyətlər bağı: daha çox şüurlu əmək istəyir — və hər ikinizə çox şey öyrədə bilər.",
+  },
+  elements: {
+    sun: { same: "Günəşləriniz eyni elementdədir — əsas təbiətləriniz bir-birinizə tanış gəlir.", compatible: "Günəşləriniz dost elementlərdədir — fərqli, amma təbii olaraq bir-birini dəstəkləyən.", different: "Günəşləriniz ziddiyyətli elementlərdədir — həyatı fərqli görürsünüz, bu həm sürtünmə, həm də valehlik ola bilər." },
+    moon: { same: "Aylarınız eyni elementdədir: oxşar tərzdə hiss edir və təsəlli verirsiniz.", compatible: "Aylarınız uyğun elementlərdədir: emosional ehtiyaclarınız bir-birini tamamlayır.", different: "Aylarınız ziddiyyətli elementlərdədir: bir-birinizin hiss etmə tərzini öyrənməli olacaqsınız." },
+    venusMars: { same: "Xəritələriniz arasında Venera və Mars eyni elementdədir — cazibə təbii gəlir.", compatible: "Xəritələriniz arasında Venera və Mars dost elementlərdədir — isti, asan cazibə.", different: "Xəritələriniz arasında Venera və Mars ziddiyyətli elementlərdədir — sirli bir çalarlı cazibə." },
+  },
+  lifePath: {
+    mirror: "Həyat Yolu rəqəminiz eynidir — bir-birinizdə özünüzü görürsünüz, həm istedadları, həm dərsləri.",
+    harmonious: "Həyat Yolu rəqəmləriniz eyni ailəyə aiddir — həyat məqsədləriniz ahəngdə hərəkət edir.",
+    complementary: "Həyat Yolu rəqəmləriniz təbiətcə fərqlidir — hər biriniz digərində olmayanı gətirir.",
+  },
+};
+export default az;

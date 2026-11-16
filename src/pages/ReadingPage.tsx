@@ -63,7 +63,7 @@ export default function ReadingPage() {
   }
   const [msg, alertMsg] = useState("");
   const left = Math.max(0, 3 - qa.filter((x) => !x.live || x.answer).length);
-  const chips = t("reading.chips", { returnObjects: true }) as string[];
+  const chips = t(order?.kind === "couple" ? "couple.reading.chips" : "reading.chips", { returnObjects: true }) as string[];
   const link = `${location.origin}/${lang}/reading/${orderId}?t=${token}`;
 
   if (state === "notfound" || state === "notpaid") {
@@ -79,7 +79,7 @@ export default function ReadingPage() {
     <div className="mx-auto max-w-3xl px-5 pt-6 sm:px-8">
       <header className="no-print text-center">
         <p className="eyebrow">{t("reading.eyebrow")}</p>
-        {order && <h1 className="mt-4 text-4xl sm:text-5xl">{t("reading.writtenFor", { name: order.name })}</h1>}
+        {order && <h1 className="mt-4 text-4xl sm:text-5xl">{order.kind === "couple" ? t("couple.reading.writtenFor", { a: order.name, b: order.partnerName }) : t("reading.writtenFor", { name: order.name })}</h1>}
       </header>
 
       <article className={`paper paper-text mt-10 px-7 py-10 sm:px-14 sm:py-16 ${state === "writing" && text ? "[&>*:last-child]:caret" : ""}`}>
@@ -105,7 +105,7 @@ export default function ReadingPage() {
           <div className="no-print mt-8 flex flex-wrap justify-center gap-3">
             <button className="btn-ghost" onClick={async () => { try { await navigator.clipboard.writeText(link); setCopied(true); setTimeout(() => setCopied(false), 2500); } catch { /* ignore */ } }}>{copied ? t("reading.copied") : t("reading.copy")}</button>
             <button className="btn-ghost" onClick={() => print()}>{t("reading.pdf")}</button>
-            {order && <Link to={`/${lang}/chart/${order.chartCode}`} className="btn-ghost">{t("reading.back")}</Link>}
+            {order && <Link to={order.kind === "couple" && order.partnerCode ? `/${lang}/couple/${order.chartCode}/${order.partnerCode}` : `/${lang}/chart/${order.chartCode}`} className="btn-ghost">{t("reading.back")}</Link>}
           </div>
 
           <CarpetDivider className="no-print mt-16" />

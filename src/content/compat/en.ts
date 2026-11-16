@@ -1,0 +1,58 @@
+import type { CompatContent } from "./types";
+
+const en: CompatContent = {
+  ascendant: "Ascendant",
+  pairs: {
+    "Moon-Moon": ["Your emotional rhythms match: you comfort each other almost without words, and home feels similar to you both.", "You need different things to feel safe — one wants closeness when the other needs space. Naming your needs out loud turns this into understanding."],
+    "Sun-Moon": ["A classic bond of the heart: one of you shines, the other feels at home in that light. This is one of the strongest signs of lasting ease.", "What one of you wants and what the other needs pull in different directions. The tension is magnetic — and asks for patience."],
+    "Moon-Venus": ["Tenderness flows easily between you; one of you feels cared for simply by the way the other loves.", "Affection and emotional needs don't always arrive in the same language — one gives sweetness when the other needs reassurance."],
+    "Venus-Mars": ["Strong, natural attraction: desire and affection meet each other. The spark here is real and tends to last.", "Electric chemistry with friction — passion, teasing, the occasional clash. Exciting, if you keep it kind."],
+    "Sun-Venus": ["One of you genuinely admires the other; there is warmth, appreciation and a feeling of being liked for who you are.", "Admiration is there, but tastes and values sometimes rub — what one finds charming, the other may find too much."],
+    "Venus-Venus": ["You love in similar ways and enjoy the same pleasures — shared beauty, shared taste, easy affection.", "Your love languages differ; one shows love one way, the other expects another. Learning each other's dialect is the work."],
+    "Mars-Mars": ["Your energies move in step — you make a good team when there's something to do, build or fight for.", "Two strong wills: competition and quick tempers are possible. Channel it into shared goals rather than into each other."],
+    "Sun-Mars": ["One of you energises the other — together you get things moving, and there's healthy physical chemistry.", "One of you can feel pushed by the other's drive; sparks fly in both senses. Respect each other's pace."],
+    "Moon-Mars": ["Passion meets feeling in a protective way — one of you stands up for the other.", "One of you can feel rushed or bruised by the other's directness. Softness before speed helps here."],
+    "Mercury-Mercury": ["You think alike and talk easily — conversation is one of the joys of this connection.", "You think in different ways, so misunderstandings come easily. Slowing down and asking 'what did you mean?' works wonders."],
+    "Moon-Mercury": ["One of you puts into words what the other feels — you understand each other's moods through talking.", "Words and feelings can miss each other: one analyses when the other just needs to be heard."],
+    "Sun-Mercury": ["One of you truly listens to the other; ideas and plans flow naturally between you.", "Opinions can clash — one of you may feel the other talks over or second-guesses them."],
+    "Mercury-Venus": ["Sweet, easy communication — compliments, humour and gentle words come naturally.", "Your ways of saying loving things differ; small words can land more sharply than intended."],
+    "Mercury-Mars": ["Lively, stimulating debates — you sharpen each other's thinking.", "Arguments can heat up fast. Agree on a pause word before you need it."],
+    "Sun-Saturn": ["A stabilising bond: one of you brings structure and loyalty to the other's life. This often marks a serious, lasting connection.", "One of you can feel judged or held back by the other. It can also be the relationship that teaches you both maturity."],
+    "Moon-Saturn": ["Steady emotional loyalty — one of you offers the other a sense of safety and reliability.", "One of you may feel the other is emotionally cool or critical. Warmth spoken aloud dissolves much of this."],
+    "Venus-Saturn": ["Love with staying power: commitment, loyalty and a wish to build something real together.", "Affection can feel restrained or tested — but bonds formed under this contact are often the ones that last."],
+    "Mercury-Saturn": ["Serious, grounded conversations; you help each other think things through and plan wisely.", "One of you may feel the other dismisses their ideas. Patience and respect for each other's thinking style matter."],
+    "Mars-Saturn": ["Discipline meets drive — together you can work steadily toward big goals.", "One of you can feel blocked or controlled by the other. Agree on who leads where."],
+    "Sun-Jupiter": ["Generosity and optimism: you make each other feel bigger, luckier and more hopeful.", "Encouragement can tip into excess — overpromising or overspending together. Keep one foot on the ground."],
+    "Moon-Jupiter": ["Big-hearted emotional support — one of you lifts the other's spirits naturally.", "Comfort can become indulgence; you may smooth over problems instead of talking them through."],
+    "Venus-Jupiter": ["Joy, affection and good times come easily — this contact brings luck and warmth to love.", "Plenty of sweetness, but you may avoid hard conversations to keep things pleasant."],
+    "Mercury-Jupiter": ["You expand each other's minds — travel, ideas and learning together feel natural.", "Big talk, small details: plans may stay plans unless one of you takes the practical lead."],
+    "Sun-Sun": ["Your core natures harmonise — you respect and understand each other's basic way of being.", "Different core temperaments: what energises one of you may tire the other. Difference can be your strength if it's respected."],
+    "Sun-Ascendant": ["One of you feels instantly recognised by the other — a strong sense of 'I like who you are'.", "First impressions can clash; it takes time to see past each other's style."],
+    "Moon-Ascendant": ["One of you feels emotionally at home around the other from the very start.", "One of you may read the other's manner as colder or harsher than intended."],
+    "Venus-Ascendant": ["Physical and aesthetic attraction — one of you simply finds the other beautiful.", "Attraction is there, but styles and tastes don't always meet."],
+    "Mars-Ascendant": ["Instant chemistry and energy — one of you stirs the other into action.", "One of you can come across as too strong for the other's comfort. Gentleness helps."],
+  },
+  categories: {
+    emotional: { name: "Emotional bond", high: "Your feelings speak the same language — comfort and closeness come easily.", mid: "A real emotional bond, with some needs you'll have to learn to name for each other.", low: "You feel things differently. Closeness grows here through patience and conscious care." },
+    romance: { name: "Attraction & romance", high: "Strong, natural chemistry — attraction and affection meet.", mid: "Warm attraction with its own rhythm; romance grows when you tend it.", low: "The spark is quieter. Attraction often grows through friendship and time." },
+    communication: { name: "Communication", high: "You understand each other easily — conversation is a gift between you.", mid: "Mostly easy talk, with a few blind spots to watch for.", low: "You think differently. Asking, listening and slowing down make all the difference." },
+    commitment: { name: "Stability & commitment", high: "Strong signs of loyalty and staying power — this bond is built to last.", mid: "A solid base for commitment that deepens with shared effort.", low: "Stability isn't automatic here; it's built through clear agreements and trust." },
+    growth: { name: "Growth together", high: "You bring out the best in each other and grow in the same direction.", mid: "You help each other grow, sometimes by challenging one another.", low: "You grow in different directions — giving each other room is the key." },
+  },
+  overall: {
+    high: "A naturally harmonious connection, with real ease between your charts.",
+    mid: "A meaningful connection: plenty of harmony, and enough difference to keep you both growing.",
+    low: "A connection of contrasts: it asks more conscious work — and can teach you both a great deal.",
+  },
+  elements: {
+    sun: { same: "Your Suns share an element — your basic natures feel familiar to each other.", compatible: "Your Suns are in friendly elements — different, but naturally supportive.", different: "Your Suns are in contrasting elements — you see life differently, which can be both friction and fascination." },
+    moon: { same: "Your Moons share an element: you feel and comfort in similar ways.", compatible: "Your Moons are in compatible elements: your emotional needs complement each other.", different: "Your Moons are in contrasting elements: you'll need to learn each other's way of feeling." },
+    venusMars: { same: "Venus and Mars across your charts share an element — attraction comes naturally.", compatible: "Venus and Mars across your charts sit in friendly elements — a warm, easy attraction.", different: "Venus and Mars across your charts sit in contrasting elements — attraction with an edge of mystery." },
+  },
+  lifePath: {
+    mirror: "You share the same Life Path number — you recognise yourselves in each other, gifts and lessons alike.",
+    harmonious: "Your Life Path numbers belong to the same family — your life purposes move in harmony.",
+    complementary: "Your Life Path numbers are different in nature — each of you brings what the other lacks.",
+  },
+};
+export default en;

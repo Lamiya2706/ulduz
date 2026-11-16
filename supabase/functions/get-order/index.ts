@@ -12,7 +12,8 @@ Deno.serve(async (req) => {
     sb.from("questions").select("question, answer").eq("order_id", order.id).order("created_at"),
   ]);
   return json(req, {
-    status: order.status, lang: order.lang, name: firstName(order.charts.full_name), chartCode: order.charts.code,
+    status: order.status, kind: order.kind, lang: order.lang, name: firstName(order.charts.full_name), chartCode: order.charts.code,
+    partnerName: order.partner ? firstName(order.partner.full_name) : null, partnerCode: order.partner?.code ?? null,
     reading: reading ?? null, questions: questions ?? [],
   });
 });
