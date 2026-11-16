@@ -76,6 +76,33 @@ Import the GitHub repo, set the two `VITE_…` variables from `.env.example`, bu
 output `dist`. SPA routing is already configured (`vercel.json`, `public/_redirects`).
 Then set `SITE_URL` / `ALLOWED_ORIGINS` in Supabase secrets to your final domain.
 
+### 5. Telegram bot (optional)
+The bot (`supabase/functions/telegram-bot`) asks for name, birth date, time and city, sends a short chart
+(Sun, Moon, Ascendant, Life Path), opens the full chart on the website as a Telegram Mini App, and sells the
+personal reading through the same orders and Epoint checkout. After payment it sends the reading link to the chat.
+
+1. In Telegram, open **@BotFather** → `/newbot` → choose a name and a username. Copy the token.
+2. Add the secrets (pick any long random string for the webhook secret) and deploy:
+   ```bash
+   npx supabase secrets set TELEGRAM_BOT_TOKEN=... TELEGRAM_WEBHOOK_SECRET=...
+   npx supabase db push                       # adds tg_sessions, tg_order_tokens, orders.tg_chat_id
+   npx supabase functions deploy telegram-bot epoint-callback create-payment
+   ```
+3. Point Telegram at the function and register the commands:
+   ```bash
+   curl "https://api.telegram.org/bot$TOKEN/setWebhook" \
+     -d url=https://YOUR-REF.supabase.co/functions/v1/telegram-bot \
+     -d secret_token=$TELEGRAM_WEBHOOK_SECRET -d 'allowed_updates=["message","callback_query"]'
+   curl "https://api.telegram.org/bot$TOKEN/setMyCommands" -H 'content-type: application/json' \
+     -d '{"commands":[{"command":"start","description":"Start / Başla / Начать"},{"command":"new","description":"New chart / Yeni xəritə / Новая карта"},{"command":"lang","description":"Language / Dil / Язык"}]}'
+   ```
+4. Optional: a menu button that opens the website as a Mini App —
+   `curl "https://api.telegram.org/bot$TOKEN/setChatMenuButton" -H 'content-type: application/json' -d '{"menu_button":{"type":"web_app","text":"Ulduz","web_app":{"url":"https://ulduz.space"}}}'`
+
+The reading button shows **“coming soon”** until you set the secret `READINGS_ENABLED=true` (Anthropic key and Epoint must be set up first).
+
+Mini App buttons need the site on **HTTPS** (enable "Enforce HTTPS" in GitHub Pages first).
+
 ## Before launch — checklist
 - [ ] Fill the `[placeholders]` in `src/pages/staticContent.ts` (legal name, VÖEN, email…) and have Terms / Privacy / Refunds reviewed.
 - [ ] `PAYMENT_MODE=epoint` (never leave `test` on in production — it gives readings away free).
