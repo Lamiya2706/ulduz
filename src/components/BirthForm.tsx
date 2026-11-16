@@ -57,7 +57,7 @@ export function PersonFields({ value: p, onChange, idPrefix }: { value: PersonSt
         <input className="field" value={p.name} onChange={(e) => set({ name: e.target.value })} maxLength={100} placeholder={t("form.namePh")} autoComplete="off" data-field="name" />
         <span className="hint">{t("form.nameHint")}</span>
       </label>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label className="label">{t("form.date")}
           <input className="field" type="date" min="1900-01-01" max="2099-12-31" value={p.date} onChange={(e) => set({ date: e.target.value })} data-field="date" />
         </label>
@@ -96,7 +96,7 @@ export function PersonFields({ value: p, onChange, idPrefix }: { value: PersonSt
       </div>
       {p.manual && (
         <div className="grid gap-4 rounded-2xl border border-dashed border-gold/20 p-4">
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <label className="label">{t("form.lat")}<input className="field" type="number" step="0.01" value={p.lat} onChange={(e) => set({ lat: e.target.value })} placeholder="40.41" /></label>
             <label className="label">{t("form.lon")}<input className="field" type="number" step="0.01" value={p.lon} onChange={(e) => set({ lon: e.target.value })} placeholder="49.87" /></label>
           </div>

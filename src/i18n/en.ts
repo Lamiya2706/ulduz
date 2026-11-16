@@ -9,7 +9,7 @@ const en = {
   },
   form: {
     title: "Your birth moment", name: "Full name at birth", namePh: "e.g. Aysel Hasanova", nameHint: "As on your birth certificate — used for numerology.",
-    date: "Date of birth", time: "Time of birth", noTime: "I don't know my birth time", place: "Place of birth", placePh: "Start typing a city — e.g. Baku",
+    date: "Date of birth", time: "Time of birth", noTime: "I don't know my birth time", place: "Place of birth", placePh: "City, e.g. Baku",
     placeHint: "Not in the list? Choose “Other place” and enter coordinates.", other: "Other place…", lat: "Latitude", lon: "Longitude", tz: "Time zone",
     coordsHint: "Any map app shows a town's coordinates. North and East are positive.", submit: "Read my chart",
     err: { name: "Please write your name.", date: "Please choose your date of birth.", place: "Choose your birthplace — or tick “I don't know my birth time”.", coords: "Please enter valid coordinates (latitude −66…66, longitude −180…180)." },

@@ -35,7 +35,7 @@ export function NumFormPage() {
         <h1 className="mt-5 text-5xl leading-[1.05] sm:text-6xl">{nc.ui.title1} <em className="text-gold">{nc.ui.title2}</em></h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">{nc.ui.sub}</p>
       </motion.header>
-      <motion.form onSubmit={submit} noValidate initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.2 }} className="card mx-auto mt-12 grid max-w-xl gap-5">
+      <motion.form onSubmit={submit} noValidate initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.2 }} className="card mx-auto mt-12 grid max-w-xl grid-cols-1 gap-5">
         <label className="label">{t("form.name")}
           <input className="field" value={name} onChange={(e) => { setName(e.target.value); setErr(null); }} maxLength={100} placeholder={t("form.namePh")} autoComplete="off" data-field="name" />
           <span className="text-xs text-muted/80">{t("form.nameHint")}</span>

@@ -11,7 +11,7 @@ const az: UI = {
   },
   form: {
     title: "Doğulduğun an", name: "Doğumdakı ad və soyad", namePh: "məs. Aysel Həsənova", nameHint: "Doğum şəhadətnaməsində yazıldığı kimi — numerologiya üçün lazımdır.",
-    date: "Doğum tarixi", time: "Doğum saatı", noTime: "Doğum saatımı bilmirəm", place: "Doğum yeri", placePh: "Şəhərin adını yazmağa başla — məsələn, Bakı",
+    date: "Doğum tarixi", time: "Doğum saatı", noTime: "Doğum saatımı bilmirəm", place: "Doğum yeri", placePh: "Şəhər, məsələn Bakı",
     placeHint: "Siyahıda yoxdur? \"Başqa yer\"i seç və koordinatları yaz.", other: "Başqa yer…", lat: "En dairəsi", lon: "Uzunluq dairəsi", tz: "Saat qurşağı",
     coordsHint: "Şəhərin koordinatlarını istənilən xəritə tətbiqində görmək olar. Şimal və şərq müsbət işarə ilə yazılır.", submit: "Xəritəmi göstər",
     err: { name: "Zəhmət olmasa, adını yaz.", date: "Doğum tarixini seç.", place: "Doğum yerini seç — və ya \"Doğum saatımı bilmirəm\" qutusunu işarələ.", coords: "Koordinatları yoxla: en −66 ilə 66, uzunluq −180 ilə 180 arasında olmalıdır." },
