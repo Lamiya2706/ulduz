@@ -62,7 +62,7 @@ const az: UI = {
     locked: { eyebrow: "X · Yalnız sənin üçün", title: "Şəxsi təhlilin",
       intro: "Yuxarıdakı hər şey sənin xəritəndir, hissə-hissə. Bu isə o biri yarısıdır: hər şeyi bir yerə yığan astroloq təhlili — daxili ziddiyyətlərin, necə sevdiyin və hazırda keçdiyin həyat mərhələsi.",
       sections: ["Sənin mahiyyətin", "İçində daşıdığın ziddiyyətlər", "Necə sevirsən və bağlanırsan", "İstedadların", "Kölgələrin və inkişaf nöqtələrin", "İş və çağırış", "Rəqəmlərin nə deyir", "Keçdiyin mərhələ", "Son söz"],
-      cta: "Şəxsi təhlili aç — 2 ₼", note: "Birdəfəlik ödəniş · Visa, Mastercard, Apple Pay, Google Pay" },
+      cta: "Şəxsi təhlili aç — 2 ₼", note: "Birdəfəlik ödəniş · Visa, Mastercard, Apple Pay, Google Pay", soon: "Şəxsi təhlil — tezliklə", soonNote: "Tam, süni intellektlə yazılan təhlil demək olar ki, hazırdır. Yuxarıdakı pulsuz xəritən isə artıq tamdır." },
     actions: { copy: "Xəritənin linkini kopyala", copied: "Link kopyalandı ✦", another: "Başqa xəritə qur" },
   },
   checkout: { title: "Şəxsi təhlil", includes: ["Yalnız sənin xəritənə görə yazılmış 9 hissəli təhlil", "Xəritənə 3 sual", "Təhlil şəxsi linkdə qalır, PDF kimi də yükləmək olar"],

@@ -1,15 +1,14 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { computeChart, PLANETS, SIGN_ELEMENT, signOf, type Chart, type PlanetKey } from "@shared/astro";
 import { numerology } from "@shared/numerology";
 import { SYN_CATEGORIES, synastry, type SynPoint } from "@shared/synastry";
 import { CoupleForm } from "@/components/BirthForm";
-import CheckoutDialog from "@/components/CheckoutDialog";
 import { CarpetDivider, Reveal } from "@/components/Decor";
 import { useLang } from "@/components/Layout";
 import { getCompat, getContent, type CompatContent, type Content } from "@/content";
-import { decodeBirth, type BirthParams } from "@/lib/birth";
+import { decodeBirth } from "@/lib/birth";
 import { motion } from "framer-motion";
 
 const tier = (v: number) => (v >= 72 ? "high" : v >= 55 ? "mid" : "low") as "high" | "mid" | "low";
@@ -80,7 +79,6 @@ export function CoupleResultPage() {
     const na = numerology(A.fullName, A.date), nb = numerology(B.fullName, B.date);
     return { ca, cb, na, nb, syn: synastry(ca, cb, na.lifePath, nb.lifePath) };
   }, [A, B]);
-  const [checkout, setCheckout] = useState(false);
   if (!A || !B || !data) return <Navigate to={`/${lang}/couple`} replace />;
   const { ca, cb, na, nb, syn } = data;
   const nameA = firstName(A.fullName), nameB = firstName(B.fullName);
@@ -194,8 +192,8 @@ export function CoupleResultPage() {
               ))}
             </div>
             <div className="absolute inset-0 flex flex-col items-center justify-end rounded-md bg-gradient-to-t from-night via-night/80 to-transparent pb-10">
-              <button className="btn px-8 py-4 text-base" data-track="begin_checkout" data-track-type="couple" onClick={() => setCheckout(true)}>{t("couple.locked.cta")}</button>
-              <p className="mt-4 text-xs text-muted">{t("chart.locked.note")}</p>
+              <span data-track="reading_coming_soon" className="rounded-full border border-gold/40 bg-gold/10 px-7 py-3.5 text-base font-medium text-gold">{t("chart.locked.soon")} ✦</span>
+              <p className="mt-4 max-w-sm text-center text-xs text-muted">{t("chart.locked.soonNote")}</p>
             </div>
           </div>
         </Reveal>
@@ -207,7 +205,6 @@ export function CoupleResultPage() {
       </div>
       <p className="mx-auto mt-14 max-w-2xl text-center text-xs leading-relaxed text-muted/70">{t("footer.disclaimer")}</p>
 
-      <CheckoutDialog open={checkout} onClose={() => setCheckout(false)} input={A} partner={B as BirthParams} />
     </div>
   );
 }

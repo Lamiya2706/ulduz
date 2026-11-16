@@ -8,7 +8,6 @@ import {
 import { numerology } from "@shared/numerology";
 import { encodeNum } from "@shared/numerology-full";
 import ChartWheel from "@/components/ChartWheel";
-import CheckoutDialog from "@/components/CheckoutDialog";
 import { CarpetDivider, Reveal } from "@/components/Decor";
 import { useLang } from "@/components/Layout";
 import { getContent, type Content } from "@/content";
@@ -60,7 +59,6 @@ export default function ChartPage() {
   const input = useMemo(() => (code ? decodeBirth(code) : null), [code]);
   const chart = useMemo<Chart | null>(() => (input ? computeChart(input) : null), [input]);
   const nm = useMemo(() => (input ? numerology(input.fullName, input.date) : null), [input]);
-  const [checkout, setCheckout] = useState(false);
   const [copied, setCopied] = useState(false);
   if (!input || !chart || !nm) return <Navigate to={`/${lang}`} replace />;
 
@@ -301,8 +299,8 @@ export default function ChartPage() {
               ))}
             </div>
             <div className="absolute inset-0 flex flex-col items-center justify-end rounded-md bg-gradient-to-t from-night via-night/80 to-transparent pb-10">
-              <button className="btn px-8 py-4 text-base" data-track="begin_checkout" data-track-type="personal" onClick={() => setCheckout(true)}>{t("chart.locked.cta")}</button>
-              <p className="mt-4 text-xs text-muted">{t("chart.locked.note")}</p>
+              <span data-track="reading_coming_soon" className="rounded-full border border-gold/40 bg-gold/10 px-7 py-3.5 text-base font-medium text-gold">{t("chart.locked.soon")} ✦</span>
+              <p className="mt-4 max-w-sm text-center text-xs text-muted">{t("chart.locked.soonNote")}</p>
             </div>
           </div>
         </Reveal>
@@ -316,7 +314,6 @@ export default function ChartPage() {
       </div>
       <p className="mx-auto mt-14 max-w-2xl text-center text-xs leading-relaxed text-muted/70">{t("footer.disclaimer")}</p>
 
-      <CheckoutDialog open={checkout} onClose={() => setCheckout(false)} input={input} />
     </div>
   );
 }

@@ -60,7 +60,7 @@ const en = {
     locked: { eyebrow: "X · Written only for you", title: "Your personal reading",
       intro: "Everything above is your chart, laid out piece by piece. This is the other half: an astrologer's reading that weaves it all together — the contradictions you carry, how you love, the chapter of life you're in now.",
       sections: ["The heart of you", "The contradictions you carry", "How you love and attach", "Your gifts", "Your shadows and growing edges", "Your work and calling", "What your numbers say", "The chapter you're in now", "A last word"],
-      cta: "Unlock your personal reading — 2 ₼", note: "One-time payment · Visa, Mastercard, Apple Pay, Google Pay" },
+      cta: "Unlock your personal reading — 2 ₼", note: "One-time payment · Visa, Mastercard, Apple Pay, Google Pay", soon: "Personal reading — coming soon", soonNote: "The full AI-written reading is almost ready. Your free chart above is already complete." },
     actions: { copy: "Copy link to this chart", copied: "Link copied ✦", another: "Read another chart" },
   },
   checkout: { title: "Your personal reading", includes: ["A 9-part reading written only for your chart", "3 questions to ask your chart", "Your reading saved at a private link, with PDF"],

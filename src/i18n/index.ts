@@ -6,6 +6,7 @@ import ru from "./ru";
 import { COUPLE_UI } from "./couple";
 import { NUM_UI } from "./numerology";
 import { SKY_UI } from "./sky";
+import { YEAR_UI } from "./year";
 
 export const LANGS = ["az", "en", "ru"] as const;
 export type Lang = (typeof LANGS)[number];
@@ -23,7 +24,7 @@ export function detectLang(): Lang {
 }
 
 i18n.use(initReactI18next).init({
-  resources: { en: { translation: { ...en, couple: COUPLE_UI.en, numerology: NUM_UI.en, sky: SKY_UI.en } }, az: { translation: { ...az, couple: COUPLE_UI.az, numerology: NUM_UI.az, sky: SKY_UI.az } }, ru: { translation: { ...ru, couple: COUPLE_UI.ru, numerology: NUM_UI.ru, sky: SKY_UI.ru } } },
+  resources: { en: { translation: { ...en, couple: COUPLE_UI.en, numerology: NUM_UI.en, sky: SKY_UI.en, year: YEAR_UI.en } }, az: { translation: { ...az, couple: COUPLE_UI.az, numerology: NUM_UI.az, sky: SKY_UI.az, year: YEAR_UI.az } }, ru: { translation: { ...ru, couple: COUPLE_UI.ru, numerology: NUM_UI.ru, sky: SKY_UI.ru, year: YEAR_UI.ru } } },
   lng: "az",
   fallbackLng: "en",
   interpolation: { escapeValue: false },

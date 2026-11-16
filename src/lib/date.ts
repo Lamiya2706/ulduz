@@ -15,3 +15,14 @@ export function formatMonth(y: number, m: number, lang: Lang): string {
   const s = new Intl.DateTimeFormat(lang, { month: "long", timeZone: "UTC" }).format(new Date(Date.UTC(y, m - 1, 15)));
   return `${s.charAt(0).toLocaleUpperCase(lang)}${s.slice(1)} ${y}`;
 }
+
+/** Month name ("mart", "March", "март"). */
+export function monthName(m: number, lang: Lang): string {
+  if (lang === "az") return AZ_MONTHS[m - 1];
+  return new Intl.DateTimeFormat(lang, { month: "long", timeZone: "UTC" }).format(new Date(Date.UTC(2024, m - 1, 15)));
+}
+/** Short day + month ("11 mart", "March 11", "11 марта"). */
+export function formatDayMonth(d: Date, lang: Lang): string {
+  if (lang === "az") return `${d.getUTCDate()} ${AZ_MONTHS[d.getUTCMonth()]}`;
+  return new Intl.DateTimeFormat(lang, { day: "numeric", month: "long", timeZone: "UTC" }).format(d);
+}

@@ -63,3 +63,16 @@ describe("sky content", () => {
     }
   });
 });
+
+import { YEAR_CONTENT } from "@/content/year";
+import { YEAR_UI } from "@/i18n/year";
+describe("year content", () => {
+  const keys = (o: object): string[] => Object.entries(o).flatMap(([k, v]) => (v && typeof v === "object" && !Array.isArray(v) ? keys(v).map((x) => `${k}.${x}`) : [k])).sort();
+  it("has the same structure in every language", () => {
+    for (const l of ["az", "ru"] as const) {
+      expect(keys(YEAR_CONTENT[l])).toEqual(keys(YEAR_CONTENT.en));
+      expect(keys(YEAR_UI[l])).toEqual(keys(YEAR_UI.en));
+      expect(Object.keys(YEAR_CONTENT[l].years)).toHaveLength(9);
+    }
+  });
+});

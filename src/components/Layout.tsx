@@ -41,9 +41,9 @@ function Header() {
   }, [open]);
   const links = [
     { to: `/${lang}/moon`, label: t("sky.nav") },
+    { to: `/${lang}/year`, label: t("year.nav") },
     { to: `/${lang}/numerology`, label: t("numerology.nav") },
     { to: `/${lang}/couple`, label: t("couple.nav") },
-    { to: `/${lang}#how`, label: t("nav.how") },
     { to: `/${lang}#faq`, label: t("nav.faq") },
   ];
   return (
@@ -97,6 +97,7 @@ function Footer() {
         </div>
         <div className="flex flex-wrap content-start gap-x-6 gap-y-3 text-sm text-muted md:justify-end">
           <Link to={`/${lang}/moon`} className="hover:text-gold">{t("sky.nav")}</Link>
+          <Link to={`/${lang}/year`} className="hover:text-gold">{t("year.nav")}</Link>
           <Link to={`/${lang}/numerology`} className="hover:text-gold">{t("numerology.nav")}</Link>
           <Link to={`/${lang}/couple`} className="hover:text-gold">{t("couple.nav")}</Link>
           <Link to={`/${lang}#faq`} className="hover:text-gold">{t("footer.links.faq")}</Link>
