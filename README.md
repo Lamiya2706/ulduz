@@ -99,6 +99,8 @@ personal reading through the same orders and Epoint checkout. After payment it s
 4. Optional: a menu button that opens the website as a Mini App —
    `curl "https://api.telegram.org/bot$TOKEN/setChatMenuButton" -H 'content-type: application/json' -d '{"menu_button":{"type":"web_app","text":"Ulduz","web_app":{"url":"https://ulduz.space"}}}'`
 
+The reading button shows **“coming soon”** until you set the secret `READINGS_ENABLED=true` (Anthropic key and Epoint must be set up first).
+
 Mini App buttons need the site on **HTTPS** (enable "Enforce HTTPS" in GitHub Pages first).
 
 ## Before launch — checklist

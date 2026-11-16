@@ -18,6 +18,8 @@ interface Session { chat_id: number; lang: Lang; step: Step; data: Data }
 
 const LANGS: Lang[] = ["az", "en", "ru"];
 const MAX_ORDERS_PER_CHAT_HOUR = 5;
+/** Paid readings stay "coming soon" (like on the website) until READINGS_ENABLED=true. */
+const readingsEnabled = () => Deno.env.get("READINGS_ENABLED") === "true";
 
 async function load(chatId: number): Promise<Session> {
   const { data } = await db().from("tg_sessions").select("chat_id, lang, step, data").eq("chat_id", chatId).maybeSingle();
@@ -54,7 +56,7 @@ async function showChart(s: Session, birth: BirthParams) {
   await save(s);
   await send(s.chat_id, chartSummary(L, firstName(birth.fullName), chart, nm.lifePath), [
     [{ text: T.fullChart[L], web_app: { url: `${site()}/${L}/chart/${encodeBirth(birth)}` } }],
-    [{ text: T.buy[L], callback_data: "buy" }],
+    [readingsEnabled() ? { text: T.buy[L], callback_data: "buy" } : { text: T.soon[L], callback_data: "soon" }],
     [{ text: T.again[L], callback_data: "new" }],
   ]);
 }
@@ -123,7 +125,8 @@ async function onCallback(s: Session, data: string) {
     return askName(s);
   }
   if (data === "new") return askName(s);
-  if (data === "buy") return buy(s);
+  if (data === "buy") return readingsEnabled() ? buy(s) : send(s.chat_id, T.soonNote[s.lang]);
+  if (data === "soon") return send(s.chat_id, T.soonNote[s.lang]);
   if (data === "time:none" && s.step === "time") {
     s.data.time = null; s.step = "city";
     await save(s);

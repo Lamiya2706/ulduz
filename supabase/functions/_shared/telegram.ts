@@ -144,6 +144,12 @@ export const T = {
   computing: { az: "Ulduzlara baxıram… ✨", en: "Looking at the stars… ✨", ru: "Смотрю на звёзды… ✨" },
   fullChart: { az: "🌌 Tam xəritə", en: "🌌 Full chart", ru: "🌌 Полная карта" },
   buy: { az: "✨ Şəxsi oxunuş — 2 ₼", en: "✨ Personal reading — 2 ₼", ru: "✨ Личный разбор — 2 ₼" },
+  soon: { az: "✨ Şəxsi oxunuş — tezliklə", en: "✨ Personal reading — coming soon", ru: "✨ Личный разбор — скоро" },
+  soonNote: {
+    az: "Süni intellektlə yazılan tam şəxsi oxunuş demək olar ki, hazırdır. Xəritən isə artıq tamdır — «Tam xəritə» düyməsini bas.",
+    en: "The full AI-written personal reading is almost ready. Your chart is already complete — tap “Full chart”.",
+    ru: "Полный личный разбор, написанный ИИ, почти готов. А твоя карта уже полностью доступна — нажми «Полная карта».",
+  },
   again: { az: "🔄 Başqa xəritə", en: "🔄 Another chart", ru: "🔄 Другая карта" },
   buyIntro: {
     az: "Şəxsi oxunuş — sənin xəritənə əsasən yazılmış ətraflı mətn: xarakterin, münasibətlər, istedadlar, iş və indiki dövrün. Sonra 3 sual da verə bilərsən.",
