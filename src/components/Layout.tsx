@@ -131,10 +131,7 @@ export default function Layout() {
     setMeta('meta[name="robots"]', tag("meta", { name: "robots" }), "content", isPrivatePath(rest) ? "noindex, follow" : "index, follow");
     setMeta('link[rel="canonical"]', tag("link", { rel: "canonical" }), "href", `${base}/${lang}${rest.replace(/\/$/, "")}/`);
     for (const l of LANGS) setMeta(`link[hreflang="${l}"]`, tag("link", { rel: "alternate", hreflang: l }), "href", `${base}/${l}${rest.replace(/\/$/, "")}/`);
-    // Google Analytics (loaded only when VITE_GA_ID is set at build time): one page_view per route.
-    const w = window as unknown as { gtag?: (...a: unknown[]) => void };
-    const t = setTimeout(() => w.gtag?.("event", "page_view", { page_title: meta.title, page_location: location.href, page_path: location.pathname, language: lang }), 0);
-    return () => clearTimeout(t);
+    // Page views (including SPA route changes) are tracked by GA4 enhanced measurement — no manual events needed.
   }, [lang, valid, pathname]);
 
   useEffect(() => {

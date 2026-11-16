@@ -34,7 +34,7 @@ jobs:
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
           # Google Analytics 4 measurement ID (G-XXXXXXX) and Search Console HTML-tag token — optional
-          VITE_GA_ID: ${{ vars.GA_ID }}
+          VITE_GA_ID: ${{ vars.GA_ID || 'G-E424P74CK6' }}
           VITE_GSC_VERIFICATION: ${{ vars.GSC_VERIFICATION }}
       - name: SPA fallback (deep links like /az/chart/… load the app)
         run: cp dist/index.html dist/404.html

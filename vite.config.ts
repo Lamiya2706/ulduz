@@ -29,7 +29,7 @@ function seo(): Plugin {
       if (gsc && /^[\w-]+$/.test(gsc)) head += `<meta name="google-site-verification" content="${gsc}" />\n`;
       if (ga && /^G-[A-Z0-9]+$/.test(ga)) {
         head += `<script async src="https://www.googletagmanager.com/gtag/js?id=${ga}"></script>\n` +
-          `<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","${ga}",{send_page_view:false,anonymize_ip:true});</script>\n`;
+          `<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","${ga}");</script>\n`;
       }
       return head ? html.replace("</head>", `${head}</head>`) : html;
     },
