@@ -194,7 +194,7 @@ export function CoupleResultPage() {
               ))}
             </div>
             <div className="absolute inset-0 flex flex-col items-center justify-end rounded-md bg-gradient-to-t from-night via-night/80 to-transparent pb-10">
-              <button className="btn px-8 py-4 text-base" onClick={() => setCheckout(true)}>{t("couple.locked.cta")}</button>
+              <button className="btn px-8 py-4 text-base" data-track="begin_checkout" data-track-type="couple" onClick={() => setCheckout(true)}>{t("couple.locked.cta")}</button>
               <p className="mt-4 text-xs text-muted">{t("chart.locked.note")}</p>
             </div>
           </div>

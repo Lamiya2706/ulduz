@@ -4,6 +4,7 @@ import { Link, Navigate, Outlet, useLocation, useParams } from "react-router-dom
 import i18n, { isLang, LANG_LABEL, LANGS, type Lang } from "@/i18n";
 import { Star, Starfield } from "./Decor";
 import { isPrivatePath, pageMeta } from "@/lib/seo";
+import { installClickTracking } from "@/lib/analytics";
 
 export function useLang(): Lang {
   const { lang } = useParams();
@@ -19,7 +20,7 @@ function LangSwitch() {
       {LANGS.map((l, i) => (
         <span key={l} className="flex items-center gap-1">
           {i > 0 && <span className="text-gold/30">·</span>}
-          <Link to={`/${l}${rest}${search}${hash}`} onClick={() => { try { localStorage.setItem("ulduz.lang", l); } catch { /* ignore */ } }}
+          <Link to={`/${l}${rest}${search}${hash}`} data-track="language_change" data-track-label={l} onClick={() => { try { localStorage.setItem("ulduz.lang", l); } catch { /* ignore */ } }}
             aria-current={l === lang ? "true" : undefined}
             className={`rounded px-1.5 py-1 transition ${l === lang ? "text-gold" : "text-muted hover:text-ivory"}`}>{LANG_LABEL[l]}</Link>
         </span>
@@ -54,10 +55,10 @@ function Header() {
         </Link>
         <div className="flex items-center gap-6">
           <nav className="hidden items-center gap-6 text-sm text-muted lg:flex">
-            {links.map((l) => <Link key={l.to} to={l.to} className="hover:text-ivory">{l.label}</Link>)}
+            {links.map((l) => <Link key={l.to} to={l.to} data-track="nav_click" data-track-place="header" className="hover:text-ivory">{l.label}</Link>)}
           </nav>
           <div className="hidden sm:block"><LangSwitch /></div>
-          <button type="button" onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? "Close menu" : "Open menu"}
+          <button type="button" data-track="menu_toggle" data-track-label={open ? "close" : "open"} onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? "Close menu" : "Open menu"}
             className="-mr-2 grid h-10 w-10 place-items-center rounded-full text-ivory transition hover:bg-gold/10 lg:hidden">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" aria-hidden>
               {open ? <path d="M5 5l10 10M15 5L5 15" /> : <path d="M3 6h14M3 10h14M3 14h9" />}
@@ -69,7 +70,7 @@ function Header() {
         <div id="mobile-menu" className="fixed inset-x-0 bottom-0 top-[76px] z-40 overflow-y-auto border-t border-gold/10 bg-night/95 px-5 pb-10 pt-6 backdrop-blur-md lg:hidden">
           <nav className="grid">
             {links.map((l) => (
-              <Link key={l.to} to={l.to} onClick={() => setOpen(false)} className="flex items-center justify-between border-b border-gold/10 py-4 font-display text-2xl text-ivory">
+              <Link key={l.to} to={l.to} data-track="nav_click" data-track-place="mobile_menu" onClick={() => setOpen(false)} className="flex items-center justify-between border-b border-gold/10 py-4 font-display text-2xl text-ivory">
                 {l.label}<span aria-hidden className="text-base text-gold">→</span>
               </Link>
             ))}
@@ -134,6 +135,8 @@ export default function Layout() {
     for (const l of LANGS) setMeta(`link[hreflang="${l}"]`, tag("link", { rel: "alternate", hreflang: l }), "href", `${base}/${l}${rest.replace(/\/$/, "")}/`);
     // Page views (including SPA route changes) are tracked by GA4 enhanced measurement — no manual events needed.
   }, [lang, valid, pathname]);
+
+  useEffect(() => installClickTracking(), []);
 
   useEffect(() => {
     if (hash) { const el = document.getElementById(hash.slice(1)); if (el) { setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 50); return; } }

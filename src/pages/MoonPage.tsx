@@ -36,12 +36,12 @@ export default function MoonPage() {
 
       <section className="card mt-10 p-4 sm:p-7">
         <div className="flex items-center justify-between gap-3">
-          <button type="button" onClick={() => shift(-1)} aria-label={sc.ui.prev} className="grid h-10 w-10 place-items-center rounded-full text-gold hover:bg-gold/10">←</button>
+          <button type="button" data-track="moon_month_change" data-track-label="prev" onClick={() => shift(-1)} aria-label={sc.ui.prev} className="grid h-10 w-10 place-items-center rounded-full text-gold hover:bg-gold/10">←</button>
           <div className="text-center">
             <h2 className="font-display text-3xl">{formatMonth(ym.y, ym.m, lang)}</h2>
             {!(ym.y === now.y && ym.m === now.m) && <button type="button" onClick={() => { setYm({ y: now.y, m: now.m }); setSel(now.d); }} className="mt-1 text-xs text-gold hover:text-ivory">{sc.ui.today}</button>}
           </div>
-          <button type="button" onClick={() => shift(1)} aria-label={sc.ui.next} className="grid h-10 w-10 place-items-center rounded-full text-gold hover:bg-gold/10">→</button>
+          <button type="button" data-track="moon_month_change" data-track-label="next" onClick={() => shift(1)} aria-label={sc.ui.next} className="grid h-10 w-10 place-items-center rounded-full text-gold hover:bg-gold/10">→</button>
         </div>
         <div className="mt-6 grid grid-cols-7 gap-1 text-center text-[0.65rem] uppercase tracking-[0.1em] text-muted sm:gap-2">
           {sc.ui.weekdays.map((w) => <div key={w}>{w}</div>)}
@@ -52,7 +52,7 @@ export default function MoonPage() {
             const n = i + 1;
             const active = n === sel;
             return (
-              <button key={n} type="button" onClick={() => setSel(n)} aria-pressed={active} aria-label={formatDate(d.date, lang)}
+              <button key={n} type="button" data-track="moon_day_select" data-track-label={d.date} data-track-haircut={d.haircut} onClick={() => setSel(n)} aria-pressed={active} aria-label={formatDate(d.date, lang)}
                 className={`relative flex aspect-[4/5] flex-col items-center justify-between rounded-xl border px-0.5 py-1.5 transition sm:aspect-square sm:py-2 ${active ? "border-gold bg-gold/[0.12]" : isToday(n) ? "border-gold/50" : "border-gold/10 hover:border-gold/40"}`}>
                 <span className={`text-sm sm:text-base ${isToday(n) ? "font-semibold text-gold" : "text-ivory"}`}>{n}</span>
                 <MoonIcon illumination={d.illumination} phase={d.phase} className="h-4 w-4 sm:h-5 sm:w-5" />

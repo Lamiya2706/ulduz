@@ -11,6 +11,7 @@ const more: SkyMore = {
     aspectsTitle: "Aspects of the day", aspectsIntro: "The tightest connections between the planets today.", noAspects: "No tight aspects between the planets today — a calm, even background.",
     eventsTitle: "Coming up", nextFull: "Full Moon", nextNew: "New Moon", mercStarts: "Mercury turns retrograde", mercEnds: "Mercury turns direct", inDays: (n) => (n === 0 ? "today" : n === 1 ? "tomorrow" : `in ${n} days`),
     personalTitle: "Your personal day", personalIntro: "Add your date of birth and see what today means for you personally.", personalDate: "Date of birth", personalBtn: "Show",
+    fullDay: "Full forecast for the day",
     personalDay: "Personal day", personalMonth: "Personal month", personalYear: (y) => `Personal year ${y}`, personalChange: "Change date",
   },
   lunarDays: [

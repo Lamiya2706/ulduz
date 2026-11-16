@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { encodeBirth, type BirthParams } from "@/lib/birth";
 import { countryName, loadCities, searchCities, type City } from "@/lib/cities";
 import { useLang } from "./Layout";
+import { track } from "@/lib/analytics";
 
 const ALL_ZONES: string[] = (() => { try { return Intl.supportedValuesOf("timeZone"); } catch { return ["Asia/Baku", "Europe/Istanbul", "Europe/Moscow", "Europe/London", "UTC"]; } })();
 const DEFAULT_TZ = (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Baku"; } catch { return "Asia/Baku"; } })();
@@ -122,6 +123,7 @@ export default function BirthForm() {
     e.preventDefault();
     const r = personToBirth(p, label);
     if ("error" in r) return setErr(t(r.error));
+    track("chart_create", { has_time: !!r.time, has_place: !!r.place });
     nav(`/${lang}/chart/${encodeBirth(r)}`);
   }
   return (
@@ -152,6 +154,7 @@ export function CoupleForm() {
     if ("error" in ra) return setErr(`${t("couple.form.first")}: ${t(ra.error)}`);
     const rb = personToBirth(b, label);
     if ("error" in rb) return setErr(`${t("couple.form.second")}: ${t(rb.error)}`);
+    track("couple_create", { has_time: !!(ra.time && rb.time) });
     nav(`/${lang}/couple/${encodeBirth(ra)}/${encodeBirth(rb)}`);
   }
   return (

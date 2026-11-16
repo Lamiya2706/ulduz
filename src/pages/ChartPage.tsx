@@ -301,7 +301,7 @@ export default function ChartPage() {
               ))}
             </div>
             <div className="absolute inset-0 flex flex-col items-center justify-end rounded-md bg-gradient-to-t from-night via-night/80 to-transparent pb-10">
-              <button className="btn px-8 py-4 text-base" onClick={() => setCheckout(true)}>{t("chart.locked.cta")}</button>
+              <button className="btn px-8 py-4 text-base" data-track="begin_checkout" data-track-type="personal" onClick={() => setCheckout(true)}>{t("chart.locked.cta")}</button>
               <p className="mt-4 text-xs text-muted">{t("chart.locked.note")}</p>
             </div>
           </div>
@@ -309,7 +309,7 @@ export default function ChartPage() {
       </section>
 
       <div className="no-print mt-16 flex flex-wrap items-center justify-center gap-3">
-        <button className="btn-ghost" onClick={async () => { try { await navigator.clipboard.writeText(location.href); setCopied(true); setTimeout(() => setCopied(false), 2500); } catch { /* ignore */ } }}>
+        <button className="btn-ghost" data-track="share_link" data-track-type="chart" onClick={async () => { try { await navigator.clipboard.writeText(location.href); setCopied(true); setTimeout(() => setCopied(false), 2500); } catch { /* ignore */ } }}>
           {copied ? t("chart.actions.copied") : t("chart.actions.copy")}
         </button>
         <Link to={`/${lang}#start`} className="btn-ghost">{t("chart.actions.another")}</Link>

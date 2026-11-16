@@ -8,6 +8,7 @@ import { useLang } from "@/components/Layout";
 import { getContent } from "@/content";
 import { getNumContent, type NumContent } from "@/content/numerology";
 import { formatDate } from "@/lib/date";
+import { track } from "@/lib/analytics";
 
 const CORE: CoreKey[] = ["lifePath", "expression", "soul", "personality", "birthday", "maturity"];
 const MASTER = [11, 22, 33];
@@ -26,6 +27,7 @@ export function NumFormPage() {
     e.preventDefault();
     if (!name.trim()) return setErr(t("form.err.name"));
     if (!date || !decodeNum(encodeNum(name, date))) return setErr(t("form.err.date"));
+    track("numerology_create");
     nav(`/${lang}/numerology/${encodeNum(name, date)}`);
   };
   return (
@@ -87,7 +89,7 @@ function CoreCard({ k, v, nc, i }: { k: CoreKey; v: number; nc: NumContent; i: n
           <div><dt className="text-gold">{nc.ui.adviceL}</dt><dd className="text-ivory/85">{n.advice}</dd></div>
         </dl>
       )}
-      <button type="button" onClick={() => setOpen(!open)} className="mt-4 text-sm text-gold hover:text-ivory" aria-expanded={open}>{open ? nc.ui.less : nc.ui.more} {open ? "↑" : "↓"}</button>
+      <button type="button" data-track="numerology_expand" data-track-label={k} onClick={() => setOpen(!open)} className="mt-4 text-sm text-gold hover:text-ivory" aria-expanded={open}>{open ? nc.ui.less : nc.ui.more} {open ? "↑" : "↓"}</button>
     </Reveal>
   );
 }
@@ -280,7 +282,7 @@ export function NumResultPage() {
         <Link to={`/${lang}#start`} className="btn mt-8">{nc.ui.ctaBtn} <span aria-hidden>→</span></Link>
       </Reveal>
       <div className="no-print mt-12 flex flex-wrap justify-center gap-3">
-        <button className="btn-ghost" onClick={async () => { try { await navigator.clipboard.writeText(location.href); setCopied(true); setTimeout(() => setCopied(false), 2500); } catch { /* ignore */ } }}>
+        <button className="btn-ghost" data-track="share_link" data-track-type="numerology" onClick={async () => { try { await navigator.clipboard.writeText(location.href); setCopied(true); setTimeout(() => setCopied(false), 2500); } catch { /* ignore */ } }}>
           {copied ? nc.ui.copied : nc.ui.copy}
         </button>
         <Link to={`/${lang}/numerology`} className="btn-ghost">{nc.ui.another}</Link>

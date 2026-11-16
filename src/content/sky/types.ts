@@ -34,6 +34,7 @@ export interface SkyMore {
     aspectsTitle: string; aspectsIntro: string; noAspects: string;
     eventsTitle: string; nextFull: string; nextNew: string; mercStarts: string; mercEnds: string; inDays: (n: number) => string;
     personalTitle: string; personalIntro: string; personalDate: string; personalBtn: string;
+    fullDay: string;
     personalDay: string; personalMonth: string; personalYear: (y: number) => string; personalChange: string;
   };
   lunarDays: [string, string][];      // 30 × [symbol, meaning]

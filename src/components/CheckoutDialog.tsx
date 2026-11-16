@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { track } from "@/lib/analytics";
 import { useEffect, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -27,11 +28,15 @@ export default function CheckoutDialog({ open, onClose, input, partner }: { open
 
   async function pay() {
     setBusy(true); setErr("");
+    const kind = partner ? "couple" : "personal";
+    track("add_payment_info", { type: kind, reading_language: readingLang, has_email: !!email.trim(), value: 2, currency: "AZN" });
     try {
       const { redirectUrl, orderId, token } = await api.createPayment(input, readingLang, email.trim() || null, partner);
       try { localStorage.setItem(`ulduz.order.${orderId}`, token); } catch { /* ignore */ }
+      track("payment_redirect", { type: kind, value: 2, currency: "AZN" });
       location.href = redirectUrl;
     } catch (e) {
+      track("payment_error", { type: kind, reason: e instanceof ApiError ? e.code : "network" });
       setErr(e instanceof ApiError && e.code === "not_configured" ? t("checkout.notConfigured") : t("checkout.error"));
       setBusy(false);
     }

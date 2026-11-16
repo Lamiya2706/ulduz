@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { ASPECTS, type PlanetKey } from "@shared/astro";
 import { fullNumerology } from "@shared/numerology-full";
 import { PLANETS, SIGN_GLYPHS } from "@shared/zodiac";
@@ -9,7 +10,6 @@ import { getNumContent } from "@/content/numerology";
 import { getSkyContent, getSkyMore } from "@/content/sky";
 import type { Lang } from "@/i18n";
 import { formatDate } from "@/lib/date";
-import { Reveal } from "./Decor";
 
 export const VERDICT_STYLE: Record<Verdict, string> = {
   good: "bg-emerald-400/15 text-emerald-300",
@@ -65,7 +65,7 @@ function PersonalDay({ lang, date }: { lang: Lang; date: string }) {
             <label className="label min-w-[12rem] flex-1">{sm.ui.personalDate}
               <input className="field" type="date" min="1900-01-01" max="2099-12-31" value={draft} onChange={(e) => setDraft(e.target.value)} />
             </label>
-            <button type="button" className="btn" onClick={save}>{sm.ui.personalBtn}</button>
+            <button type="button" className="btn" data-track="personal_day_set" onClick={save}>{sm.ui.personalBtn}</button>
           </div>
         </>
       ) : (
@@ -213,16 +213,39 @@ export function DayCard({ day, lang, title, showLink = false }: { day: SkyDay; l
   );
 }
 
-/** Home page block: the sky today. Lazy-loaded (needs the astronomy engine). */
+/** Home page block: a compact summary of the sky today. Lazy-loaded (needs the astronomy engine). */
 export default function TodaySection({ lang, day }: { lang: Lang; day: SkyDay }) {
-  const sc = getSkyContent(lang);
+  const sc = getSkyContent(lang), sm = getSkyMore(lang), c = getContent(lang);
+  const det = useMemo(() => { const [y, m, d] = day.date.split("-").map(Number); return skyDetails(y, m, d, day); }, [day]);
+  const ms = sc.moonSigns[day.moonSign];
+  const [ldSymbol] = sm.lunarDays[day.lunarDay - 1];
   return (
     <section className="mx-auto max-w-4xl px-5 sm:px-8">
-      <Reveal>
-        <p className="eyebrow text-center">{sc.ui.eyebrow}</p>
-        <h2 className="mt-3 text-center text-4xl sm:text-5xl">{sc.ui.todayTitle(formatDate(day.date, lang))}</h2>
-      </Reveal>
-      <div className="mt-8"><DayCard day={day} lang={lang} title={sc.ui.eyebrow} showLink /></div>
+      <motion.div className="card" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1] }}>
+        <div className="flex items-start gap-5">
+          <MoonIcon illumination={day.illumination} phase={day.phase} className="h-16 w-16 flex-none sm:h-20 sm:w-20" />
+          <div className="min-w-0">
+            <p className="eyebrow">{sc.ui.todayTitle(formatDate(day.date, lang))}</p>
+            <p className="mt-2 font-display text-2xl sm:text-3xl">{sc.phases[day.phase].name} · <span className="glyph text-gold">{SIGN_GLYPHS[day.moonSign]}</span> {sc.ui.moonIn(c.signIn[day.moonSign])}</p>
+            <p className="mt-1 text-sm text-muted">{sm.ui.lunarDayTitle(day.lunarDay, ldSymbol)} · {ms.mood}</p>
+          </div>
+        </div>
+        <div className="mt-6 grid gap-5 border-t border-gold/10 pt-5 sm:grid-cols-[1.1fr_1fr]">
+          <div className="grid grid-cols-2 gap-x-6 gap-y-2.5 text-sm">
+            {SPHERES.map((k) => (
+              <div key={k} className="flex items-center justify-between gap-2"><span className="text-ivory/85">{sm.ui.sphereNames[k]}</span><Dots n={det.spheres[k]} /></div>
+            ))}
+          </div>
+          <div className="grid gap-1.5 text-sm">
+            <p className="text-ivory/90"><span className="text-emerald-300">✓</span> {ms.do[0]}</p>
+            <p className="text-ivory/90"><span className="text-rose">✕</span> {ms.avoid[0]}</p>
+            <p className="flex items-center gap-2 text-ivory/90">✂ {sc.ui.haircutTitle}: <span className={`rounded-full px-2.5 py-0.5 text-xs ${VERDICT_STYLE[day.haircut]}`}>{sc.ui.verdict[day.haircut]}</span></p>
+          </div>
+        </div>
+        <div className="mt-6 text-center sm:text-left">
+          <Link to={`/${lang}/moon`} data-track="today_full_click" className="btn-ghost">{sm.ui.fullDay} <span aria-hidden>→</span></Link>
+        </div>
+      </motion.div>
     </section>
   );
 }

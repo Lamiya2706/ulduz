@@ -11,6 +11,7 @@ const more: SkyMore = {
     aspectsTitle: "Günün aspektləri", aspectsIntro: "Bu gün planetlər arasındakı ən dəqiq əlaqələr.", noAspects: "Bu gün planetlər arasında dəqiq aspekt yoxdur — sakit, sabit bir fon.",
     eventsTitle: "Yaxında", nextFull: "Bədirlənmiş Ay", nextNew: "Təzə Ay", mercStarts: "Merkuri retroqrad olur", mercEnds: "Merkuri retroqradlıqdan çıxır", inDays: (n) => (n === 0 ? "bu gün" : n === 1 ? "sabah" : `${n} gün sonra`),
     personalTitle: "Sənin şəxsi günün", personalIntro: "Doğum tarixini yaz — bu günün şəxsən sənin üçün nə demək olduğunu öyrən.", personalDate: "Doğum tarixi", personalBtn: "Göstər",
+    fullDay: "Günün tam təhlili",
     personalDay: "Şəxsi gün", personalMonth: "Şəxsi ay", personalYear: (y) => `Şəxsi il ${y}`, personalChange: "Tarixi dəyiş",
   },
   lunarDays: [

@@ -20,8 +20,8 @@ function TodayBlock({ lang }: { lang: Lang }) {
     import("@shared/sky").then(({ skyDay }) => { const d = new Date(); if (alive) setDay(skyDay(d.getFullYear(), d.getMonth() + 1, d.getDate())); });
     return () => { alive = false; };
   }, []);
-  if (!day) return <div className="mx-auto h-[28rem] max-w-4xl" />;
-  return <Suspense fallback={<div className="mx-auto h-[28rem] max-w-4xl" />}><TodaySection lang={lang} day={day} /></Suspense>;
+  if (!day) return <div className="mx-auto h-72 max-w-4xl" />;
+  return <Suspense fallback={<div className="mx-auto h-72 max-w-4xl" />}><TodaySection lang={lang} day={day} /></Suspense>;
 }
 
 export default function Home() {
@@ -57,7 +57,7 @@ export default function Home() {
       </section>
 
       {/* TODAY — loads the astronomy engine lazily */}
-      <div className="mt-20"><TodayBlock lang={lang} /></div>
+      <div className="mt-14"><TodayBlock lang={lang} /></div>
 
       <div className="mx-auto max-w-6xl px-5 sm:px-8"><CarpetDivider className="my-16" /></div>
 
@@ -90,31 +90,26 @@ export default function Home() {
         </div>
       </section>
 
-      {/* COUPLES */}
+      {/* MORE IN ULDUZ — one row instead of separate big teasers */}
       <section className="mx-auto mt-28 max-w-6xl px-5 sm:px-8">
-        <Reveal className="card relative overflow-hidden px-7 py-12 text-center sm:px-14">
-          <div aria-hidden className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full border border-gold/15" />
-          <div aria-hidden className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full border border-gold/15" />
-          <p className="eyebrow">{t("couple.teaser.eyebrow")}</p>
-          <h2 className="mt-3 text-4xl sm:text-5xl">{t("couple.teaser.title")}</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-muted">{t("couple.teaser.text")}</p>
-          <Link to={`/${lang}/couple`} className="btn mt-8">{t("couple.teaser.cta")} <span aria-hidden>→</span></Link>
-        </Reveal>
-      </section>
-
-      {/* NUMEROLOGY */}
-      <section className="mx-auto mt-10 max-w-6xl px-5 sm:px-8">
-        <Reveal className="card grid items-center gap-8 px-7 py-10 sm:px-12 md:grid-cols-[auto_1fr]">
-          <div aria-hidden className="mx-auto grid grid-cols-3 gap-1.5 font-display text-2xl text-gold/80">
-            {[1, 11, 3, 4, 5, 6, 7, 22, 9].map((n) => <span key={n} className="grid h-12 w-12 place-items-center rounded-lg border border-gold/20">{n}</span>)}
-          </div>
-          <div className="text-center md:text-left">
-            <p className="eyebrow">{t("numerology.teaser.eyebrow")}</p>
-            <h2 className="mt-3 text-4xl sm:text-5xl">{t("numerology.teaser.title")}</h2>
-            <p className="mt-4 max-w-2xl text-muted">{t("numerology.teaser.text")}</p>
-            <Link to={`/${lang}/numerology`} className="btn mt-7">{t("numerology.teaser.cta")} <span aria-hidden>→</span></Link>
-          </div>
-        </Reveal>
+        <Reveal className="text-center"><p className="eyebrow">Ulduz</p><h2 className="mt-3 text-4xl sm:text-5xl">{t("sky.exploreTitle")}</h2></Reveal>
+        <div className="mt-10 grid gap-4 md:grid-cols-3">
+          {[
+            { to: "moon", icon: "☾", key: "sky" },
+            { to: "numerology", icon: "9", key: "numerology" },
+            { to: "couple", icon: "♡", key: "couple" },
+          ].map((x, i) => (
+            <Reveal key={x.to} delay={i * 0.08} className="h-full">
+              <Link to={`/${lang}/${x.to}`} data-track="explore_tile" data-track-label={x.to} className="card group flex h-full flex-col transition hover:border-gold/40">
+                <span aria-hidden className="grid h-12 w-12 place-items-center rounded-full border border-gold/25 font-display text-2xl text-gold">{x.icon}</span>
+                <p className="mt-5 text-[0.68rem] uppercase tracking-[0.16em] text-muted">{t(`${x.key}.teaser.eyebrow`)}</p>
+                <h3 className="mt-2 font-display text-2xl font-normal">{t(`${x.key}.teaser.title`)}</h3>
+                <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">{t(`${x.key}.teaser.text`)}</p>
+                <span className="mt-5 text-sm text-gold transition group-hover:text-ivory">{t(`${x.key}.teaser.cta`)} →</span>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
       </section>
 
       {/* SAMPLE */}

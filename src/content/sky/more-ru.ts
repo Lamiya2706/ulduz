@@ -12,6 +12,7 @@ const more: SkyMore = {
     eventsTitle: "Скоро", nextFull: "Полнолуние", nextNew: "Новолуние", mercStarts: "Меркурий становится ретроградным", mercEnds: "Меркурий выходит из ретроградности",
     inDays: (n) => (n === 0 ? "сегодня" : n === 1 ? "завтра" : `через ${n} ${n % 10 === 1 && n % 100 !== 11 ? "день" : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? "дня" : "дней"}`),
     personalTitle: "Твой личный день", personalIntro: "Укажи дату рождения — и узнай, что сегодняшний день значит лично для тебя.", personalDate: "Дата рождения", personalBtn: "Показать",
+    fullDay: "Полный разбор дня",
     personalDay: "Личный день", personalMonth: "Личный месяц", personalYear: (y) => `Личный год ${y}`, personalChange: "Изменить дату",
   },
   lunarDays: [

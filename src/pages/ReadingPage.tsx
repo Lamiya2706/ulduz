@@ -103,7 +103,7 @@ export default function ReadingPage() {
       {state === "done" && (
         <>
           <div className="no-print mt-8 flex flex-wrap justify-center gap-3">
-            <button className="btn-ghost" onClick={async () => { try { await navigator.clipboard.writeText(link); setCopied(true); setTimeout(() => setCopied(false), 2500); } catch { /* ignore */ } }}>{copied ? t("reading.copied") : t("reading.copy")}</button>
+            <button className="btn-ghost" data-track="share_link" data-track-type="reading" onClick={async () => { try { await navigator.clipboard.writeText(link); setCopied(true); setTimeout(() => setCopied(false), 2500); } catch { /* ignore */ } }}>{copied ? t("reading.copied") : t("reading.copy")}</button>
             <button className="btn-ghost" onClick={() => print()}>{t("reading.pdf")}</button>
             {order && <Link to={order.kind === "couple" && order.partnerCode ? `/${lang}/couple/${order.chartCode}/${order.partnerCode}` : `/${lang}/chart/${order.chartCode}`} className="btn-ghost">{t("reading.back")}</Link>}
           </div>

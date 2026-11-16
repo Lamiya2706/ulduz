@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { track } from "@/lib/analytics";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useLang } from "@/components/Layout";
@@ -24,8 +25,8 @@ export function PaymentSuccess() {
         try {
           // check-status asks Epoint directly when our callback hasn't arrived yet
           const { status } = tries % 3 === 0 ? await api.checkStatus(orderId, token) : await api.order(orderId, token);
-          if (status === "paid") { nav(`/${lang}/reading/${orderId}?t=${token}`, { replace: true }); return; }
-          if (status === "failed") { nav(`/${lang}/payment/failed?order=${orderId}`, { replace: true }); return; }
+          if (status === "paid") { track("purchase", { transaction_id: orderId, value: 2, currency: "AZN" }); nav(`/${lang}/reading/${orderId}?t=${token}`, { replace: true }); return; }
+          if (status === "failed") { track("payment_failed", { transaction_id: orderId }); nav(`/${lang}/payment/failed?order=${orderId}`, { replace: true }); return; }
         } catch { /* keep polling */ }
         if (tries > 12) setPending(true);
         await new Promise((r) => setTimeout(r, 2500));
