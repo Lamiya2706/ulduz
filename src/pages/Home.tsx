@@ -48,7 +48,6 @@ export default function Home() {
               {t("hero.title1")}<br /><em className="text-gold">{t("hero.title2")}</em>
             </h1>
             <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted">{t("hero.sub")}</p>
-            <p className="mt-6 text-xs tracking-wide text-muted/70">{t("hero.trust")}</p>
           </motion.div>
           <motion.div id="start" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.25, ease: [0.2, 0.8, 0.2, 1] }} className="scroll-mt-24 lg:mt-6">
             <BirthForm />

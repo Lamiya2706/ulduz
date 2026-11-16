@@ -7,7 +7,7 @@ const az: UI = {
     eyebrow: "Ulduz · natal astrologiya və numerologiya",
     title1: "Ulduzlar sənin", title2: "doğulduğun anı xatırlayır.",
     sub: "Doğulduğun anı yaz — həqiqi natal xəritəni hesablayaq: bütün planetləri, yüksələn bürcünü və evlərini. Sonra onu rəqəmlərinlə birlikdə oxuyaq: necə insansan, necə sevirsən, necə bağlanırsan və hara doğru böyüyürsən.",
-    cta: "Xəritəmi göstər", trust: "Xəritə pulsuzdur · birbaşa brauzerində hesablanır · razılığın olmadan heç nə saxlanmır",
+    cta: "Xəritəmi göstər",
   },
   form: {
     title: "Doğulduğun an", name: "Doğumdakı ad və soyad", namePh: "məs. Aysel Həsənova", nameHint: "Doğum şəhadətnaməsində yazıldığı kimi — numerologiya üçün lazımdır.",

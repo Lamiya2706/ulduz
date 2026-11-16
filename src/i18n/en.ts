@@ -5,7 +5,7 @@ const en = {
     eyebrow: "Ulduz · natal astrology & numerology",
     title1: "The stars remember", title2: "the moment you were born.",
     sub: "Enter the moment you arrived. We calculate your real birth chart — every planet, your rising sign and houses — and read it alongside your numbers: who you are, how you love, how you attach, and where you're growing.",
-    cta: "Read my chart", trust: "Free chart · calculated in your browser · nothing stored without your consent",
+    cta: "Read my chart",
   },
   form: {
     title: "Your birth moment", name: "Full name at birth", namePh: "e.g. Aysel Hasanova", nameHint: "As on your birth certificate — used for numerology.",
