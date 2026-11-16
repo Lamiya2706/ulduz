@@ -18,7 +18,7 @@ export interface NumContent {
     nav: { core: string; name: string; karma: string; square: string; cycles: string; now: string };
     coreTitle: string; coreIntro: string; loveL: string; workL: string; adviceL: string; more: string; less: string;
     nameTitle: string; nameIntro: string; vowelsNote: string; intensityTitle: string; passionTitle: string; passionText: (nums: string) => string;
-    karmaTitle: string; karmaIntro: string; debtTitle: string; debtIn: (position: string) => string; noDebt: string; yes: string; no: string;
+    karmaTitle: string; karmaIntro: string; debtTitle: string; debtIn: (position: string) => string; noDebt: string; yes: string; no: string; missing: string;
     lessonsTitle: string; noLessons: string;
     squareTitle: string; squareIntro: string; workingNumbers: string; empty: string;
     cyclesTitle: string; cyclesIntro: string; pinnacles: string; challenges: string;

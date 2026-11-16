@@ -14,7 +14,7 @@ const en: NumContent = {
     intensityTitle: "How often each number appears", passionTitle: "Hidden passion",
     passionText: (n) => `The number that repeats most in your name is ${n}. This is a talent you return to again and again, almost without noticing.`,
     karmaTitle: "Karmic numbers", karmaIntro: "These are two different things. Karmic debt is calculated from your core numbers, and most people don't have it. Karmic lessons are the numbers missing from your name. Neither is a punishment — just the areas where growth is most noticeable.",
-    debtTitle: "Karmic debt", debtIn: (p) => `Appears in: ${p}`, noDebt: "You have no karmic debt. It only appears when 13, 14, 16 or 19 comes up while calculating your core numbers — and in your case none of them does.", yes: "yes", no: "no",
+    debtTitle: "Karmic debt", debtIn: (p) => `Appears in: ${p}`, noDebt: "You have no karmic debt. It only appears when 13, 14, 16 or 19 comes up while calculating your core numbers — and in your case none of them does.", yes: "yes", no: "no", missing: "missing",
     lessonsTitle: "Karmic lessons", noLessons: "Your name contains all numbers from 1 to 9 — there are no missing lessons. A rare, balanced name.",
     squareTitle: "Pythagoras square", squareIntro: "The psychomatrix, popular in the Russian school of numerology, is built only from the digits of your birth date. Each cell shows how strongly a quality is expressed.",
     workingNumbers: "Working numbers", empty: "empty",

@@ -217,7 +217,7 @@ export function NumResultPage() {
             )}
           </Reveal>
           <Reveal delay={0.08} className="card">
-            <div className="flex items-center justify-between gap-3"><h3 className="font-display text-2xl font-normal">{nc.ui.lessonsTitle}</h3><Badge on={n.lessons.length > 0} label={n.lessons.length ? `${nc.ui.yes} · ${n.lessons.join(", ")}` : nc.ui.no} /></div>
+            <div className="flex items-center justify-between gap-3"><h3 className="font-display text-2xl font-normal">{nc.ui.lessonsTitle}</h3><Badge on={n.lessons.length > 0} label={n.lessons.length ? `${nc.ui.missing} · ${n.lessons.join(", ")}` : nc.ui.no} /></div>
             {n.lessons.length === 0 ? <p className="mt-3 text-sm text-ivory/85">{nc.ui.noLessons}</p> : (
               <ul className="mt-3 grid gap-3">{n.lessons.map((l) => <li key={l} className="flex gap-3 text-sm leading-relaxed text-ivory/90"><span className="text-gold">✦</span>{nc.lessons[l as Nine]}</li>)}</ul>
             )}

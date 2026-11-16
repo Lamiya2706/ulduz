@@ -14,7 +14,7 @@ const az: NumContent = {
     intensityTitle: "Hər rəqəm neçə dəfə təkrarlanır", passionTitle: "Gizli ehtiras",
     passionText: (n) => `Adında ən çox təkrarlanan rəqəm: ${n}. Bu, özün də fərqinə varmadan dönə-dönə qayıtdığın bir istedaddır.`,
     karmaTitle: "Karmik rəqəmlər", karmaIntro: "Bunlar iki fərqli göstəricidir. Karmik borc əsas rəqəmlərə görə hesablanır və insanların çoxunda olmur. Karmik dərslər isə adında çatışmayan rəqəmlərdir. Heç biri cəza deyil — sadəcə inkişafın ən çox hiss olunduğu mövzulardır.",
-    debtTitle: "Karmik borc", debtIn: (p) => `Harada görünür: ${p}`, noDebt: "Səndə karmik borc yoxdur. O, yalnız əsas rəqəmləri hesablayanda 13, 14, 16 və ya 19 alınanda yaranır — səndə belə rəqəm yoxdur.", yes: "var", no: "yoxdur",
+    debtTitle: "Karmik borc", debtIn: (p) => `Harada görünür: ${p}`, noDebt: "Səndə karmik borc yoxdur. O, yalnız əsas rəqəmləri hesablayanda 13, 14, 16 və ya 19 alınanda yaranır — səndə belə rəqəm yoxdur.", yes: "var", no: "yoxdur", missing: "çatışmır",
     lessonsTitle: "Karmik dərslər", noLessons: "Adında 1-dən 9-a qədər bütün rəqəmlər var — buraxılmış dərs yoxdur. Bu, nadir və çox ahəngdar bir addır.",
     squareTitle: "Pifaqor kvadratı", squareIntro: "Rus numerologiya məktəbində məşhur olan psixomatrisa yalnız doğum tarixinin rəqəmlərindən qurulur. Hər xana müəyyən bir keyfiyyətin səndə nə qədər güclü olduğunu göstərir.",
     workingNumbers: "İşçi rəqəmlər", empty: "yoxdur",
