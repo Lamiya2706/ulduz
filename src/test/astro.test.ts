@@ -31,7 +31,7 @@ describe("chart engine", () => {
 
 describe("numerology", () => {
   it("computes core numbers and handles Azerbaijani letters", () => {
-    const n = numerology("Ləmiyə Əsgərova", "1995-06-15", new Date("2026-11-13"));
+    const n = numerology("Aysel Həsənova", "1995-06-15", new Date("2026-11-13"));
     expect(n.lifePath).toBe(9);
     expect(n.birthday).toBe(6);
     expect(n.personalYear).toBe(4);

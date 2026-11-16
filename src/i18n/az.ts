@@ -10,7 +10,7 @@ const az: UI = {
     cta: "Xəritəmi oxu", trust: "Pulsuz xəritə · brauzerində hesablanır · razılığın olmadan heç nə saxlanmır",
   },
   form: {
-    title: "Doğulduğun an", name: "Doğumdakı tam adın", namePh: "məs. Ləmiyə Əsgərova", nameHint: "Doğum şəhadətnaməsində olduğu kimi — numerologiya üçün istifadə olunur.",
+    title: "Doğulduğun an", name: "Doğumdakı tam adın", namePh: "məs. Aysel Həsənova", nameHint: "Doğum şəhadətnaməsində olduğu kimi — numerologiya üçün istifadə olunur.",
     date: "Doğum tarixi", time: "Doğum saatı", noTime: "Doğum saatımı bilmirəm", place: "Doğum yeri", placePh: "Şəhəri yazmağa başla — məs. Bakı",
     placeHint: "Siyahıda yoxdur? \"Başqa yer\"i seç və koordinatları yaz.", other: "Başqa yer…", lat: "En dairəsi", lon: "Uzunluq dairəsi", tz: "Saat qurşağı",
     coordsHint: "İstənilən xəritə tətbiqi yaşayış yerinin koordinatlarını göstərir. Şimal və Şərq müsbətdir.", submit: "Xəritəmi oxu",

@@ -26,7 +26,7 @@ Deno.test("birth input validation rejects bad input", () => {
   assertEquals(validateBirth({ fullName: "A", date: "1995-02-10", time: "25:00", lat: 1, lon: 1, tz: "UTC", place: null }), null);
   assertEquals(validateBirth({ fullName: "A", date: "1995-02-10", time: "08:00", lat: null, lon: null, tz: "UTC", place: null }), null);
   assertEquals(validateBirth({ fullName: "A", date: "1995-02-10", time: null, lat: null, lon: null, tz: "Mars/Olympus", place: null }), null);
-  const ok = { fullName: "Ləmiyə Əsgərova", date: "1995-06-15", time: "08:30", lat: 40.41, lon: 49.87, tz: "Asia/Baku", place: "Bakı" };
+  const ok = { fullName: "Aysel Həsənova", date: "1995-06-15", time: "08:30", lat: 40.41, lon: 49.87, tz: "Asia/Baku", place: "Bakı" };
   assertEquals(decodeBirth(encodeBirth(ok)), ok);
 });
 
@@ -50,11 +50,11 @@ Deno.test("couple prompt includes both people and the synastry", () => {
     const p = { fullName: name, date, time, lat, lon, tz: "Asia/Baku", place: "Baku" };
     return { full_name: name, birth_date: date, birth_time: time, place: "Baku", lat, lon, chart: computeChart(p), numerology: numerology(name, date) };
   };
-  const order = { kind: "couple" as const, lang: "ru" as const, charts: mk("Ləmiyə Əsgərova", "1995-06-15", "08:30", 40.41, 49.87), partner: mk("Elvin Məmmədov", "1993-02-04", "21:10", 40.68, 46.36) };
+  const order = { kind: "couple" as const, lang: "ru" as const, charts: mk("Aysel Həsənova", "1995-06-15", "08:30", 40.41, 49.87), partner: mk("Elvin Məmmədov", "1993-02-04", "21:10", 40.68, 46.36) };
   const { system, user } = readingPrompt(order);
   assertStringIncludes(system, "## What brings you together");
   assertStringIncludes(system, "Russian");
-  assertStringIncludes(user, "PERSON 1 — Ləmiyə");
+  assertStringIncludes(user, "PERSON 1 — Aysel");
   assertStringIncludes(user, "PERSON 2 — Elvin");
   assertStringIncludes(user, "Synastry contacts");
   assertStringIncludes(user, "planets in Elvin's houses");
