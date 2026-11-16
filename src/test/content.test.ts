@@ -47,7 +47,7 @@ describe("numerology content", () => {
   });
 });
 
-import { SKY_CONTENT } from "@/content/sky";
+import { SKY_CONTENT, SKY_MORE } from "@/content/sky";
 import { SKY_UI } from "@/i18n/sky";
 describe("sky content", () => {
   const keys = (o: object): string[] => Object.entries(o).flatMap(([k, v]) => (v && typeof v === "object" && !Array.isArray(v) ? keys(v).map((x) => `${k}.${x}`) : [k])).sort();
@@ -57,6 +57,9 @@ describe("sky content", () => {
       expect(keys(SKY_UI[l])).toEqual(keys(SKY_UI.en));
       expect(SKY_CONTENT[l].moonSigns).toHaveLength(12);
       expect(SKY_CONTENT[l].ui.weekdays).toHaveLength(7);
+      expect(keys(SKY_MORE[l])).toEqual(keys(SKY_MORE.en));
+      expect(SKY_MORE[l].lunarDays).toHaveLength(30);
+      expect(SKY_MORE[l].sunSeason).toHaveLength(12);
     }
   });
 });

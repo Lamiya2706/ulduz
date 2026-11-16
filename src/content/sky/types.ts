@@ -19,3 +19,25 @@ export interface SkyContent {
   hairGrowth: { waxing: string; waning: string };
   retro: Partial<Record<"Mercury" | "Venus" | "Mars", string>> & { other: (names: string) => string };
 }
+
+import type { AspectType, PlanetKey } from "@shared/astro";
+import type { Sphere } from "@shared/sky";
+
+/** Texts for the detailed "sky today" view. */
+export interface SkyMore {
+  ui: {
+    lunarDayTitle: (n: number, symbol: string) => string;
+    ingress: (time: string, sign: string) => string;
+    seasonTitle: (sign: string) => string;
+    spheresTitle: string; sphereNames: Record<Sphere, string>; sphereLevels: [string, string, string, string, string];
+    planetsTitle: string; retroMark: string;
+    aspectsTitle: string; aspectsIntro: string; noAspects: string;
+    eventsTitle: string; nextFull: string; nextNew: string; mercStarts: string; mercEnds: string; inDays: (n: number) => string;
+    personalTitle: string; personalIntro: string; personalDate: string; personalBtn: string;
+    personalDay: string; personalMonth: string; personalYear: (y: number) => string; personalChange: string;
+  };
+  lunarDays: [string, string][];      // 30 × [symbol, meaning]
+  sunSeason: string[];                // 12
+  planetThemes: Partial<Record<PlanetKey, string>>;
+  aspectTypes: Record<AspectType, string>;
+}
