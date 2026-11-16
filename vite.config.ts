@@ -5,7 +5,7 @@ import { defineConfig } from "vitest/config";
 const r = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 
 export default defineConfig({
-  // GitHub Pages serves the site from /<repo>/ — set VITE_BASE=/ulduz/ there; "/" everywhere else.
+  // Served from the custom domain root (ulduz.space). Set VITE_BASE=/ulduz/ only for a github.io/<repo>/ build.
   base: process.env.VITE_BASE ?? "/",
   plugins: [react()],
   resolve: {

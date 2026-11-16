@@ -28,11 +28,12 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_BASE: /${{ github.event.repository.name }}/
+          # Served from the custom domain ulduz.space, so the app lives at the root.
+          VITE_BASE: /
           # Optional until the backend exists: add these under Settings → Secrets and variables → Actions → Variables
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
-      - name: SPA fallback (deep links like /ulduz/az/chart/… load the app)
+      - name: SPA fallback (deep links like /az/chart/… load the app)
         run: cp dist/index.html dist/404.html
       - uses: actions/upload-pages-artifact@v3
         with:
