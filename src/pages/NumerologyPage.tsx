@@ -52,6 +52,10 @@ export function NumFormPage() {
   );
 }
 
+function Badge({ on, label }: { on: boolean; label: string }) {
+  return <span className={`flex-none rounded-full px-3 py-1 text-xs uppercase tracking-[0.12em] ${on ? "bg-rose/15 text-rose" : "bg-gold/15 text-gold"}`}>{label}</span>;
+}
+
 function Section({ id, eyebrow, title, intro, children }: { id: string; eyebrow: string; title: string; intro?: string; children: ReactNode }) {
   return (
     <section id={id} className="mt-24 scroll-mt-28">
@@ -200,7 +204,7 @@ export function NumResultPage() {
       <Section id="karma" eyebrow="III" title={nc.ui.karmaTitle} intro={nc.ui.karmaIntro}>
         <div className="grid gap-4 md:grid-cols-2">
           <Reveal className="card">
-            <h3 className="font-display text-2xl font-normal">{nc.ui.debtTitle}</h3>
+            <div className="flex items-center justify-between gap-3"><h3 className="font-display text-2xl font-normal">{nc.ui.debtTitle}</h3><Badge on={n.debts.length > 0} label={n.debts.length ? `${nc.ui.yes} · ${[...new Set(n.debts.map((d) => d.debt))].join(", ")}` : nc.ui.no} /></div>
             {n.debts.length === 0 ? <p className="mt-3 text-sm text-ivory/85">{nc.ui.noDebt}</p> : (
               <ul className="mt-3 grid gap-4">
                 {[...new Set(n.debts.map((d) => d.debt))].map((debt) => (
@@ -213,7 +217,7 @@ export function NumResultPage() {
             )}
           </Reveal>
           <Reveal delay={0.08} className="card">
-            <h3 className="font-display text-2xl font-normal">{nc.ui.lessonsTitle}</h3>
+            <div className="flex items-center justify-between gap-3"><h3 className="font-display text-2xl font-normal">{nc.ui.lessonsTitle}</h3><Badge on={n.lessons.length > 0} label={n.lessons.length ? `${nc.ui.yes} · ${n.lessons.join(", ")}` : nc.ui.no} /></div>
             {n.lessons.length === 0 ? <p className="mt-3 text-sm text-ivory/85">{nc.ui.noLessons}</p> : (
               <ul className="mt-3 grid gap-3">{n.lessons.map((l) => <li key={l} className="flex gap-3 text-sm leading-relaxed text-ivory/90"><span className="text-gold">✦</span>{nc.lessons[l as Nine]}</li>)}</ul>
             )}
