@@ -21,7 +21,7 @@ const en = {
   ] },
   compare: { eyebrow: "What you receive", title: "A generous free chart — and a reading written only for you",
     free: { title: "Your natal chart", price: "Free", items: ["Interactive birth chart wheel", "Sun, Moon & Rising in depth", "Every personal planet and house", "Elements, temperament & personality type", "Key aspects, love & attachment pattern", "Full numerology profile"] },
-    paid: { title: "Your personal reading", price: "2 ₼", items: ["A 9-part reading written only for your chart", "The contradictions you carry — named and explained", "How you love and attach, in depth", "The chapter of life you're in right now", "3 questions to ask your chart", "Saved forever — private link & PDF"] } },
+    paid: { title: "Your personal reading", price: "Soon", items: ["A 9-part reading written only for your chart", "The contradictions you carry — named and explained", "How you love and attach, in depth", "The chapter of life you're in right now", "3 questions to ask your chart", "Saved forever — private link & PDF"] } },
   sample: { eyebrow: "From a personal reading", title: "Written like a letter, not a horoscope",
     text: ["## The contradictions you carry", "Your Sun in Gemini wants to talk about everything — and your Moon in Capricorn quietly decides what is safe to say. That is why people often feel they know you, while you feel no one quite does. **Both are true.**", "The work isn't to choose between them. It's to let the Capricorn part trust that being seen won't cost you your strength."] },
   faq: { eyebrow: "Questions", title: "Before you begin", items: [

@@ -23,7 +23,7 @@ const az: UI = {
   ] },
   compare: { eyebrow: "Nə əldə edəcəksən", title: "Səxavətli pulsuz xəritə — və yalnız sənin üçün yazılmış təhlil",
     free: { title: "Natal xəritə", price: "Pulsuz", items: ["İnteraktiv natal xəritə", "Günəş, Ay və Asendent — ətraflı", "Bütün şəxsi planetlər və evlər", "Elementlər, temperament və xarakter tipi", "Əsas aspektlər, sevgi və bağlılıq tipi", "Tam numerologiya profili"] },
-    paid: { title: "Şəxsi təhlil", price: "2 ₼", items: ["Yalnız sənin xəritənə görə yazılmış 9 hissəli təhlil", "Daxili ziddiyyətlərin — adı ilə və izahı ilə", "Necə sevdiyin və bağlandığın — dərindən", "Hazırda keçdiyin həyat mərhələsi", "Xəritənə 3 sual", "Həmişəlik qalır — şəxsi link və PDF"] } },
+    paid: { title: "Şəxsi təhlil", price: "Tezliklə", items: ["Yalnız sənin xəritənə görə yazılmış 9 hissəli təhlil", "Daxili ziddiyyətlərin — adı ilə və izahı ilə", "Necə sevdiyin və bağlandığın — dərindən", "Hazırda keçdiyin həyat mərhələsi", "Xəritənə 3 sual", "Həmişəlik qalır — şəxsi link və PDF"] } },
   sample: { eyebrow: "Şəxsi təhlildən bir parça", title: "Bu, horoskop yox, məktubdur",
     text: ["## İçində daşıdığın ziddiyyətlər", "Əkizlərdəki Günəşin hər şey haqqında danışmaq istəyir, Oğlaqdakı Ayın isə səssizcə nəyi demənin təhlükəsiz olduğuna qərar verir. Ona görə insanlara elə gəlir ki, səni yaxşı tanıyırlar, sənə isə elə gəlir ki, səni heç kim əslində tanımır. **İkisi də doğrudur.**", "Onlardan birini seçmək lazım deyil. Lazım olan içindəki \"Oğlağa\" inandırmaqdır ki, səni olduğun kimi görsələr, gücün heç yerə getməyəcək."] },
   faq: { eyebrow: "Suallar", title: "Başlamazdan əvvəl", items: [
