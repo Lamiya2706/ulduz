@@ -39,11 +39,11 @@ function Header() {
     return () => { document.body.style.overflow = ""; };
   }, [open]);
   const links = [
+    { to: `/${lang}/moon`, label: t("sky.nav") },
     { to: `/${lang}/numerology`, label: t("numerology.nav") },
     { to: `/${lang}/couple`, label: t("couple.nav") },
     { to: `/${lang}#how`, label: t("nav.how") },
     { to: `/${lang}#faq`, label: t("nav.faq") },
-    { to: `/${lang}/page/about`, label: t("nav.about") },
   ];
   return (
     <header className="no-print relative z-40">
@@ -95,6 +95,7 @@ function Footer() {
           <p className="mt-6 max-w-md text-xs leading-relaxed text-muted/70">{t("footer.disclaimer")}</p>
         </div>
         <div className="flex flex-wrap content-start gap-x-6 gap-y-3 text-sm text-muted md:justify-end">
+          <Link to={`/${lang}/moon`} className="hover:text-gold">{t("sky.nav")}</Link>
           <Link to={`/${lang}/numerology`} className="hover:text-gold">{t("numerology.nav")}</Link>
           <Link to={`/${lang}/couple`} className="hover:text-gold">{t("couple.nav")}</Link>
           <Link to={`/${lang}#faq`} className="hover:text-gold">{t("footer.links.faq")}</Link>

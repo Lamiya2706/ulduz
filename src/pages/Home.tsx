@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
+import type { SkyDay } from "@shared/sky";
+import type { Lang } from "@/i18n";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useLang } from "@/components/Layout";
@@ -9,6 +11,18 @@ import { Markdown } from "@/lib/md";
 
 type Step = { t: string; d: string };
 type QA = { q: string; a: string };
+
+const TodaySection = lazy(() => import("@/components/Sky"));
+function TodayBlock({ lang }: { lang: Lang }) {
+  const [day, setDay] = useState<SkyDay | null>(null);
+  useEffect(() => {
+    let alive = true;
+    import("@shared/sky").then(({ skyDay }) => { const d = new Date(); if (alive) setDay(skyDay(d.getFullYear(), d.getMonth() + 1, d.getDate())); });
+    return () => { alive = false; };
+  }, []);
+  if (!day) return <div className="mx-auto h-[28rem] max-w-4xl" />;
+  return <Suspense fallback={<div className="mx-auto h-[28rem] max-w-4xl" />}><TodaySection lang={lang} day={day} /></Suspense>;
+}
 
 export default function Home() {
   const { t } = useTranslation();
@@ -41,6 +55,9 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+
+      {/* TODAY — loads the astronomy engine lazily */}
+      <div className="mt-20"><TodayBlock lang={lang} /></div>
 
       <div className="mx-auto max-w-6xl px-5 sm:px-8"><CarpetDivider className="my-16" /></div>
 

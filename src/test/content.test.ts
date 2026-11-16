@@ -46,3 +46,17 @@ describe("numerology content", () => {
     }
   });
 });
+
+import { SKY_CONTENT } from "@/content/sky";
+import { SKY_UI } from "@/i18n/sky";
+describe("sky content", () => {
+  const keys = (o: object): string[] => Object.entries(o).flatMap(([k, v]) => (v && typeof v === "object" && !Array.isArray(v) ? keys(v).map((x) => `${k}.${x}`) : [k])).sort();
+  it("has the same structure in every language", () => {
+    for (const l of ["az", "ru"] as const) {
+      expect(keys(SKY_CONTENT[l])).toEqual(keys(SKY_CONTENT.en));
+      expect(keys(SKY_UI[l])).toEqual(keys(SKY_UI.en));
+      expect(SKY_CONTENT[l].moonSigns).toHaveLength(12);
+      expect(SKY_CONTENT[l].ui.weekdays).toHaveLength(7);
+    }
+  });
+});
