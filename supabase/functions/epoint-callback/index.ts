@@ -2,6 +2,7 @@
 // Authenticated by Epoint's signature — the browser redirect alone never marks an order paid.
 import { decodeData, verify } from "../_shared/epoint.ts";
 import { db } from "../_shared/http.ts";
+import { notifyOrderPaid } from "../_shared/telegram.ts";
 
 Deno.serve(async (req) => {
   if (req.method !== "POST") return new Response("method not allowed", { status: 405 });
@@ -31,5 +32,9 @@ Deno.serve(async (req) => {
     patch.status = "failed";
   }
   await sb.from("orders").update(patch).eq("id", orderId);
+  // Orders placed from the Telegram bot: send the reading link to that chat. Never fail the callback over it.
+  if (patch.status === "paid" && order.tg_chat_id) {
+    await notifyOrderPaid(orderId, order.lang).catch((e) => console.error("telegram notify", e));
+  }
   return new Response("OK");
 });
