@@ -6,6 +6,7 @@ import {
   PLANETS, SIGN_ELEMENT, SIGN_MODALITY, signOf, weakElement, type Aspect, type Chart, type PlanetKey,
 } from "@shared/astro";
 import { numerology } from "@shared/numerology";
+import { encodeNum } from "@shared/numerology-full";
 import ChartWheel from "@/components/ChartWheel";
 import CheckoutDialog from "@/components/CheckoutDialog";
 import { CarpetDivider, Reveal } from "@/components/Decor";
@@ -85,11 +86,11 @@ export default function ChartPage() {
   const planetRow = (k: PlanetKey, text: string) => {
     const P0 = PLANETS.find((x) => x.key === k)!, ps = p[k];
     return (
-      <div key={k} className="grid grid-cols-[44px_1fr] gap-4 border-b border-gold/10 py-5 last:border-0">
-        <span className="glyph pt-0.5 text-center text-2xl text-gold">{P0.glyph}</span>
+      <div key={k} className="grid grid-cols-[28px_1fr] gap-3 border-b border-gold/10 py-5 last:border-0 sm:grid-cols-[44px_1fr] sm:gap-4">
+        <span className="glyph pt-0.5 text-center text-xl text-gold sm:text-2xl">{P0.glyph}</span>
         <div>
           <h3 className="font-display text-xl font-normal">{c.planetNames[k]} {c.signIn[ps.sign]}
-            <span className="ml-2 font-sans text-xs text-muted">{fmtDeg(ps.lon)}{ps.retro ? ` · ${t("chart.planets.retrograde")}` : ""}{ps.house ? ` · ${c.ordinal(ps.house)} ${t("chart.planets.house")}` : ""}{ps.dignity ? ` · ${c.dignityNames[ps.dignity]}` : ""}</span>
+            <span className="block font-sans text-xs text-muted sm:ml-2 sm:inline">{fmtDeg(ps.lon)}{ps.retro ? ` · ${t("chart.planets.retrograde")}` : ""}{ps.house ? ` · ${c.ordinal(ps.house)} ${t("chart.planets.house")}` : ""}{ps.dignity ? ` · ${c.dignityNames[ps.dignity]}` : ""}</span>
           </h3>
           <p className="mt-1.5 leading-relaxed text-ivory/85">{text}{houseLine(k)}{ps.retro && c.retro[k] ? " " + c.retro[k] : ""}</p>
         </div>
@@ -269,6 +270,7 @@ export default function ChartPage() {
             <p className="mt-3 text-sm leading-relaxed text-ivory/80">{c.personalYear[nm.personalYear]}</p>
           </Reveal>
         </div>
+        <div className="mt-6 text-center"><Link to={`/${lang}/numerology/${encodeNum(input.fullName, input.date)}`} className="btn-ghost">{t("numerology.fromChart")} <span aria-hidden>→</span></Link></div>
       </Section>
 
       {/* IX. LIGHT & SHADOW */}

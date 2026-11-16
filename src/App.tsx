@@ -9,6 +9,8 @@ const ChartPage = lazy(() => import("@/pages/ChartPage"));
 const ReadingPage = lazy(() => import("@/pages/ReadingPage"));
 const CoupleFormPage = lazy(() => import("@/pages/CouplePage").then((m) => ({ default: m.CoupleFormPage })));
 const CoupleResultPage = lazy(() => import("@/pages/CouplePage").then((m) => ({ default: m.CoupleResultPage })));
+const NumFormPage = lazy(() => import("@/pages/NumerologyPage").then((m) => ({ default: m.NumFormPage })));
+const NumResultPage = lazy(() => import("@/pages/NumerologyPage").then((m) => ({ default: m.NumResultPage })));
 const PaymentSuccess = lazy(() => import("@/pages/PaymentPage").then((m) => ({ default: m.PaymentSuccess })));
 const PaymentFailed = lazy(() => import("@/pages/PaymentPage").then((m) => ({ default: m.PaymentFailed })));
 
@@ -21,6 +23,8 @@ export default function App() {
           <Route path="/:lang" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="chart/:code" element={<ChartPage />} />
+            <Route path="numerology" element={<NumFormPage />} />
+            <Route path="numerology/:code" element={<NumResultPage />} />
             <Route path="couple" element={<CoupleFormPage />} />
             <Route path="couple/:a/:b" element={<CoupleResultPage />} />
             <Route path="reading/:orderId" element={<ReadingPage />} />

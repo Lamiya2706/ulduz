@@ -1,4 +1,4 @@
-import type { Lang } from "@/i18n";
+import type { Lang } from "../i18n";
 
 export type Slug = "about" | "terms" | "privacy" | "refund" | "contact";
 type Page = { title: string; body: string[]; draft?: boolean };
@@ -31,7 +31,7 @@ const PAGES: Record<Lang, Record<Slug, Page>> = {
     privacy: { draft: true, title: "Privacy policy", body: [
       "## What we process", "The free chart is calculated in your browser; we do not store it. When you unlock a personal reading we store your name, birth date, time and place, the generated reading, your questions and answers, and — if you give it — your email, so the reading stays available at its private link.",
       "## Why", "Only to provide the reading you bought, to answer support requests and to meet legal obligations. We do not sell data or use it for advertising.",
-      "## Processors", "Supabase (database and functions), Anthropic (AI text generation — your chart data is sent to generate the reading), Epoint (payments), and our hosting provider.",
+      "## Processors", "Supabase (database and functions), Anthropic (AI text generation — your chart data is sent to generate the reading), Epoint (payments), Google Analytics (anonymous visit statistics) and our hosting provider.",
       "## Retention and deletion", "Readings are kept so your link keeps working. Write to [email] and we will delete your data.",
       "## Your rights", "You can request access, correction or deletion of your personal data under the Law of the Republic of Azerbaijan “On Personal Data”.",
     ] },
@@ -68,7 +68,7 @@ const PAGES: Record<Lang, Record<Slug, Page>> = {
     privacy: { draft: true, title: "Məxfilik siyasəti", body: [
       "## Nəyi emal edirik", "Pulsuz xəritə brauzerində hesablanır, biz onu saxlamırıq. Şəxsi oxunuşu açanda adını, doğum tarixini, saatını və yerini, yaradılmış oxunuşu, suallarını və cavabları, həmçinin — versən — e-poçtunu saxlayırıq ki, oxunuş şəxsi linkdə əlçatan qalsın.",
       "## Nə üçün", "Yalnız aldığın oxunuşu təqdim etmək, dəstək sorğularına cavab vermək və qanuni öhdəlikləri yerinə yetirmək üçün. Məlumatları satmırıq və reklam üçün istifadə etmirik.",
-      "## Emalçılar", "Supabase (verilənlər bazası və funksiyalar), Anthropic (süni intellektlə mətn yaradılması — oxunuşu yaratmaq üçün xəritə məlumatların göndərilir), Epoint (ödənişlər) və hostinq provayderimiz.",
+      "## Emalçılar", "Supabase (verilənlər bazası və funksiyalar), Anthropic (süni intellektlə mətn yaradılması — oxunuşu yaratmaq üçün xəritə məlumatların göndərilir), Epoint (ödənişlər), Google Analytics (anonim ziyarət statistikası) və hostinq provayderimiz.",
       "## Saxlama və silmə", "Oxunuşlar linkin işləməyə davam etməsi üçün saxlanılır. [e-poçt] ünvanına yaz, məlumatlarını silək.",
       "## Hüquqların", "\"Fərdi məlumatlar haqqında\" Azərbaycan Respublikası Qanununa əsasən fərdi məlumatlarına çıxış, onların düzəldilməsi və ya silinməsini tələb edə bilərsən.",
     ] },
@@ -105,7 +105,7 @@ const PAGES: Record<Lang, Record<Slug, Page>> = {
     privacy: { draft: true, title: "Политика конфиденциальности", body: [
       "## Что мы обрабатываем", "Бесплатная карта рассчитывается в браузере; мы её не храним. Когда ты открываешь личный разбор, мы сохраняем имя, дату, время и место рождения, созданный разбор, вопросы и ответы и — если ты его укажешь — email, чтобы разбор оставался доступен по личной ссылке.",
       "## Зачем", "Только чтобы предоставить купленный разбор, отвечать на обращения и выполнять требования закона. Мы не продаём данные и не используем их для рекламы.",
-      "## Обработчики", "Supabase (база данных и функции), Anthropic (генерация текста ИИ — данные карты отправляются для создания разбора), Epoint (платежи) и наш хостинг-провайдер.",
+      "## Обработчики", "Supabase (база данных и функции), Anthropic (генерация текста ИИ — данные карты отправляются для создания разбора), Epoint (платежи), Google Analytics (анонимная статистика посещений) и наш хостинг-провайдер.",
       "## Хранение и удаление", "Разборы хранятся, чтобы ссылка продолжала работать. Напиши на [email], и мы удалим твои данные.",
       "## Твои права", "Ты можешь запросить доступ, исправление или удаление своих персональных данных согласно Закону Азербайджанской Республики «О персональных данных».",
     ] },

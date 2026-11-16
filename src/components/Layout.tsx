@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Navigate, Outlet, useLocation, useParams } from "react-router-dom";
 import i18n, { isLang, LANG_LABEL, LANGS, type Lang } from "@/i18n";
 import { Star, Starfield } from "./Decor";
+import { isPrivatePath, pageMeta } from "@/lib/seo";
 
 export function useLang(): Lang {
   const { lang } = useParams();
@@ -30,24 +31,53 @@ function LangSwitch() {
 function Header() {
   const { t } = useTranslation();
   const lang = useLang();
+  const { pathname } = useLocation();
+  const [open, setOpen] = useState(false);
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
+  const links = [
+    { to: `/${lang}/numerology`, label: t("numerology.nav") },
+    { to: `/${lang}/couple`, label: t("couple.nav") },
+    { to: `/${lang}#how`, label: t("nav.how") },
+    { to: `/${lang}#faq`, label: t("nav.faq") },
+    { to: `/${lang}/page/about`, label: t("nav.about") },
+  ];
   return (
-    <header className="no-print relative z-20">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
-        <Link to={`/${lang}`} className="group flex items-center gap-2.5" aria-label="Ulduz">
+    <header className="no-print relative z-40">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-5 sm:px-8">
+        <Link to={`/${lang}`} className="group flex flex-none items-center gap-2.5" aria-label="Ulduz">
           <Star className="h-5 w-5 text-gold transition group-hover:rotate-45" />
           <span className="font-display text-2xl tracking-[0.08em] text-ivory">Ulduz</span>
         </Link>
-        <div className="flex items-center gap-4 sm:gap-6">
-          <Link to={`/${lang}/couple`} className="text-xs text-gold md:hidden">♡ {t("couple.nav")}</Link>
-          <nav className="hidden items-center gap-6 text-sm text-muted md:flex">
-            <Link to={`/${lang}/couple`} className="hover:text-ivory">{t("couple.nav")}</Link>
-            <Link to={`/${lang}#how`} className="hover:text-ivory">{t("nav.how")}</Link>
-            <Link to={`/${lang}#faq`} className="hover:text-ivory">{t("nav.faq")}</Link>
-            <Link to={`/${lang}/page/about`} className="hover:text-ivory">{t("nav.about")}</Link>
+        <div className="flex items-center gap-6">
+          <nav className="hidden items-center gap-6 text-sm text-muted lg:flex">
+            {links.map((l) => <Link key={l.to} to={l.to} className="hover:text-ivory">{l.label}</Link>)}
           </nav>
-          <LangSwitch />
+          <div className="hidden sm:block"><LangSwitch /></div>
+          <button type="button" onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? "Close menu" : "Open menu"}
+            className="-mr-2 grid h-10 w-10 place-items-center rounded-full text-ivory transition hover:bg-gold/10 lg:hidden">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" aria-hidden>
+              {open ? <path d="M5 5l10 10M15 5L5 15" /> : <path d="M3 6h14M3 10h14M3 14h9" />}
+            </svg>
+          </button>
         </div>
       </div>
+      {open && (
+        <div id="mobile-menu" className="fixed inset-x-0 bottom-0 top-[76px] z-40 overflow-y-auto border-t border-gold/10 bg-night/95 px-5 pb-10 pt-6 backdrop-blur-md lg:hidden">
+          <nav className="grid">
+            {links.map((l) => (
+              <Link key={l.to} to={l.to} onClick={() => setOpen(false)} className="flex items-center justify-between border-b border-gold/10 py-4 font-display text-2xl text-ivory">
+                {l.label}<span aria-hidden className="text-base text-gold">→</span>
+              </Link>
+            ))}
+          </nav>
+          <div className="mt-8 flex justify-center"><LangSwitch /></div>
+          <div className="mt-8 flex justify-center"><Link to={`/${lang}#start`} onClick={() => setOpen(false)} className="btn">{t("nav.start")} <span aria-hidden>→</span></Link></div>
+        </div>
+      )}
     </header>
   );
 }
@@ -65,6 +95,7 @@ function Footer() {
           <p className="mt-6 max-w-md text-xs leading-relaxed text-muted/70">{t("footer.disclaimer")}</p>
         </div>
         <div className="flex flex-wrap content-start gap-x-6 gap-y-3 text-sm text-muted md:justify-end">
+          <Link to={`/${lang}/numerology`} className="hover:text-gold">{t("numerology.nav")}</Link>
           <Link to={`/${lang}/couple`} className="hover:text-gold">{t("couple.nav")}</Link>
           <Link to={`/${lang}#faq`} className="hover:text-gold">{t("footer.links.faq")}</Link>
           {links.map((l) => <Link key={l} to={`/${lang}/page/${l}`} className="hover:text-gold">{t(`footer.links.${l}`)}</Link>)}
@@ -84,13 +115,26 @@ export default function Layout() {
     if (!valid) return;
     if (i18n.language !== lang) i18n.changeLanguage(lang);
     document.documentElement.lang = lang!;
-    document.title = i18n.t("meta.title");
-    document.querySelector('meta[name="description"]')?.setAttribute("content", i18n.t("meta.description"));
-    for (const l of LANGS) {
-      let el = document.querySelector(`link[hreflang="${l}"]`);
-      if (!el) { el = document.createElement("link"); el.setAttribute("rel", "alternate"); el.setAttribute("hreflang", l); document.head.appendChild(el); }
-      el.setAttribute("href", `${location.origin}${import.meta.env.BASE_URL.replace(/\/$/, "")}${pathname.replace(/^\/(az|en|ru)/, `/${l}`)}`);
-    }
+    const rest = pathname.replace(/^\/(az|en|ru)/, "");
+    const meta = pageMeta(lang as Lang, rest);
+    const base = `${location.origin}${import.meta.env.BASE_URL.replace(/\/$/, "")}`;
+    const setMeta = (sel: string, make: () => Element, attr: string, value: string) => {
+      let el = document.head.querySelector(sel);
+      if (!el) { el = make(); document.head.appendChild(el); }
+      el.setAttribute(attr, value);
+    };
+    const tag = (name: string, attrs: Record<string, string>) => () => { const e = document.createElement(name); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); return e; };
+    document.title = meta.title;
+    setMeta('meta[name="description"]', tag("meta", { name: "description" }), "content", meta.description);
+    setMeta('meta[property="og:title"]', tag("meta", { property: "og:title" }), "content", meta.title);
+    setMeta('meta[property="og:description"]', tag("meta", { property: "og:description" }), "content", meta.description);
+    setMeta('meta[name="robots"]', tag("meta", { name: "robots" }), "content", isPrivatePath(rest) ? "noindex, follow" : "index, follow");
+    setMeta('link[rel="canonical"]', tag("link", { rel: "canonical" }), "href", `${base}/${lang}${rest.replace(/\/$/, "")}/`);
+    for (const l of LANGS) setMeta(`link[hreflang="${l}"]`, tag("link", { rel: "alternate", hreflang: l }), "href", `${base}/${l}${rest.replace(/\/$/, "")}/`);
+    // Google Analytics (loaded only when VITE_GA_ID is set at build time): one page_view per route.
+    const w = window as unknown as { gtag?: (...a: unknown[]) => void };
+    const t = setTimeout(() => w.gtag?.("event", "page_view", { page_title: meta.title, page_location: location.href, page_path: location.pathname, language: lang }), 0);
+    return () => clearTimeout(t);
   }, [lang, valid, pathname]);
 
   useEffect(() => {

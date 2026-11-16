@@ -85,6 +85,21 @@ export default function Home() {
         </Reveal>
       </section>
 
+      {/* NUMEROLOGY */}
+      <section className="mx-auto mt-10 max-w-6xl px-5 sm:px-8">
+        <Reveal className="card grid items-center gap-8 px-7 py-10 sm:px-12 md:grid-cols-[auto_1fr]">
+          <div aria-hidden className="mx-auto grid grid-cols-3 gap-1.5 font-display text-2xl text-gold/80">
+            {[1, 11, 3, 4, 5, 6, 7, 22, 9].map((n) => <span key={n} className="grid h-12 w-12 place-items-center rounded-lg border border-gold/20">{n}</span>)}
+          </div>
+          <div className="text-center md:text-left">
+            <p className="eyebrow">{t("numerology.teaser.eyebrow")}</p>
+            <h2 className="mt-3 text-4xl sm:text-5xl">{t("numerology.teaser.title")}</h2>
+            <p className="mt-4 max-w-2xl text-muted">{t("numerology.teaser.text")}</p>
+            <Link to={`/${lang}/numerology`} className="btn mt-7">{t("numerology.teaser.cta")} <span aria-hidden>→</span></Link>
+          </div>
+        </Reveal>
+      </section>
+
       {/* SAMPLE */}
       <section className="mx-auto mt-28 max-w-4xl px-5 sm:px-8">
         <Reveal className="text-center"><p className="eyebrow">{t("sample.eyebrow")}</p><h2 className="mt-3 text-4xl sm:text-5xl">{t("sample.title")}</h2></Reveal>

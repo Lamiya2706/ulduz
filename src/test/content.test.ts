@@ -28,3 +28,21 @@ describe("content completeness", () => {
     for (const l of LANGS) { const c = getContent(l); expect(c.signs).toHaveLength(12); expect(Object.keys(c.archetypes)).toHaveLength(16); }
   });
 });
+
+import { NUM_CONTENT } from "@/content/numerology";
+import { NUM_UI } from "@/i18n/numerology";
+describe("numerology content", () => {
+  const keys = (o: object): string[] => Object.entries(o).flatMap(([k, v]) => (v && typeof v === "object" && !Array.isArray(v) ? keys(v).map((x) => `${k}.${x}`) : [k])).sort();
+  it("has the same structure in every language", () => {
+    for (const l of ["az", "ru"] as const) {
+      expect(keys(NUM_CONTENT[l])).toEqual(keys(NUM_CONTENT.en));
+      expect(keys(NUM_UI[l])).toEqual(keys(NUM_UI.en));
+    }
+  });
+  it("covers every number", () => {
+    for (const c of Object.values(NUM_CONTENT)) {
+      expect(Object.keys(c.numbers).map(Number).sort((a, b) => a - b)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 22, 33]);
+      for (const s of Object.values(c.square)) expect(s.levels).toHaveLength(4);
+    }
+  });
+});

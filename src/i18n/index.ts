@@ -4,6 +4,7 @@ import en from "./en";
 import az from "./az";
 import ru from "./ru";
 import { COUPLE_UI } from "./couple";
+import { NUM_UI } from "./numerology";
 
 export const LANGS = ["az", "en", "ru"] as const;
 export type Lang = (typeof LANGS)[number];
@@ -21,7 +22,7 @@ export function detectLang(): Lang {
 }
 
 i18n.use(initReactI18next).init({
-  resources: { en: { translation: { ...en, couple: COUPLE_UI.en } }, az: { translation: { ...az, couple: COUPLE_UI.az } }, ru: { translation: { ...ru, couple: COUPLE_UI.ru } } },
+  resources: { en: { translation: { ...en, couple: COUPLE_UI.en, numerology: NUM_UI.en } }, az: { translation: { ...az, couple: COUPLE_UI.az, numerology: NUM_UI.az } }, ru: { translation: { ...ru, couple: COUPLE_UI.ru, numerology: NUM_UI.ru } } },
   lng: "az",
   fallbackLng: "en",
   interpolation: { escapeValue: false },

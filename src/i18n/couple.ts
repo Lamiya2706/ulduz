@@ -1,5 +1,6 @@
 // UI strings for the couples compatibility feature (merged into each language's translation namespace).
 const en = {
+  meta: { title: "Couple compatibility by natal charts — Ulduz", description: "Compare two real birth charts: emotional bond, attraction, communication, commitment and growth, plus where your planets touch. Free synastry in Azerbaijani, English and Russian." },
   nav: "Compatibility",
   teaser: { eyebrow: "For two", title: "How do your stars meet?", text: "Compare two birth charts: emotional bond, attraction, communication, commitment and growth — plus where your planets touch.", cta: "Check compatibility" },
   form: { eyebrow: "Synastry · compatibility", title1: "Two skies,", title2: "one conversation.", sub: "Enter both birth moments. We compare your real charts planet by planet and read how you meet — where it flows, and where it asks for care.",
@@ -20,6 +21,7 @@ const en = {
 type CoupleUI = typeof en;
 
 const az: CoupleUI = {
+  meta: { title: "Natal xəritəyə görə cütlük uyğunluğu — Ulduz", description: "İki həqiqi doğum xəritəsini müqayisə et: hisslər, cazibə, ünsiyyət, etibar və birlikdə inkişaf, üstəlik planetlərinizin toxunduğu nöqtələr. Pulsuz sinastriya." },
   nav: "Uyğunluq",
   teaser: { eyebrow: "İki nəfər üçün", title: "Ulduzlarınız necə görüşür?", text: "İki natal xəritəni yan-yana qoyaq: hisslər, cazibə, ünsiyyət, etibar və birlikdə inkişaf — üstəlik planetlərinizin bir-birinə harada toxunduğu.", cta: "Uyğunluğu yoxla" },
   form: { eyebrow: "Sinastriya · uyğunluq", title1: "İki səma —", title2: "bir hekayə.", sub: "Hər ikinizin doğum anını yazın. Həqiqi xəritələrinizi planet-planet müqayisə edəcəyik və aranızda nəyin asan alındığını, nəyin qayğı istədiyini göstərəcəyik.",
@@ -39,6 +41,7 @@ const az: CoupleUI = {
 };
 
 const ru: CoupleUI = {
+  meta: { title: "Совместимость пары по натальным картам — Ulduz", description: "Сравни две настоящие натальные карты: эмоциональная связь, притяжение, общение, надёжность и рост, а также точки соприкосновения ваших планет. Бесплатная синастрия." },
   nav: "Совместимость",
   teaser: { eyebrow: "Для двоих", title: "Как встречаются ваши звёзды?", text: "Сравните две натальные карты: эмоциональная связь, притяжение, общение, надёжность и общий рост — и то, где соприкасаются ваши планеты.", cta: "Проверить совместимость" },
   form: { eyebrow: "Синастрия · совместимость", title1: "Два неба —", title2: "один разговор.", sub: "Укажите моменты рождения обоих. Мы сравним ваши настоящие карты планета за планетой и расскажем, как вы встречаетесь: где всё складывается легко, а где нужна бережность.",
