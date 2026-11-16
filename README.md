@@ -2,11 +2,11 @@
 
 A premium astrology & numerology website in **Azerbaijani, English and Russian**.
 Visitors get a real, astronomically calculated natal chart for free, and can unlock a
-**personal AI reading for 1 ₼** (written by Claude), paid via **Epoint**.
+**personal AI reading for 2 ₼** (written by Claude), paid via **Epoint**.
 
 **Couples compatibility** (`/az/couple`): two birth charts compared with synastry — harmony scores
 (emotional bond, attraction, communication, commitment, growth), the strongest planet contacts between
-the charts, element and Life Path match, and house overlays. A **couple reading for 1 ₼** is written by
+the charts, element and Life Path match, and house overlays. A **couple reading for 2 ₼** is written by
 Claude from both charts, with 3 follow-up questions.
 
 ## What's inside
@@ -63,7 +63,7 @@ $0.04–0.06 with Claude Sonnet; a follow-up question about $0.02.
 2. In the Epoint merchant cabinet set the **Result URL** to
    `https://YOUR-REF.supabase.co/functions/v1/epoint-callback`
 3. Put the keys into the secrets, set `PAYMENT_MODE=epoint`, and redeploy the functions.
-4. Make a real 1 ₼ test payment before announcing the site.
+4. Make a real 2 ₼ test payment before announcing the site.
 
 ### 4a. Website on GitHub Pages (free, already set up)
 `.github/workflows/pages.yml` builds and deploys on every push to `main`.

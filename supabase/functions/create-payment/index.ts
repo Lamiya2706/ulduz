@@ -37,7 +37,7 @@ Deno.serve(async (req) => {
     const partnerId = partner ? await saveChart(partner) : null;
 
     const token = randomToken();
-    const amount = Deno.env.get("PRICE_AZN") ?? "1.00";
+    const amount = Deno.env.get("PRICE_AZN") ?? "2.00";
     const { data: order, error: oe } = await sb.from("orders").insert({
       chart_id: chartId, partner_chart_id: partnerId, kind: partner ? "couple" : "natal", token_hash: await sha256(token), amount, lang, email, ip,
       provider: Deno.env.get("PAYMENT_MODE") === "test" ? "test" : "epoint",

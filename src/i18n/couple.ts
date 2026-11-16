@@ -13,7 +13,7 @@ const en = {
   locked: { eyebrow: "Written only for the two of you", title: "Your couple reading",
     intro: "A long, warm reading of your two charts woven together — what draws you to each other, where you clash, how each of you loves and attaches, and what this relationship asks of you both.",
     sections: ["What brings you together", "The magnetism between you", "How each of you loves", "Where you clash — and why", "Your emotional world together", "Talking and understanding", "What your numbers say", "Your path together", "A last word for you both"],
-    cta: "Unlock your couple reading — 1 ₼" },
+    cta: "Unlock your couple reading — 2 ₼" },
   checkout: { title: "Your couple reading", includes: ["A 9-part reading of both charts together", "3 questions to ask about your relationship", "Saved at a private link, with PDF"] },
   reading: { writtenFor: "Written for {{a}} & {{b}}", chips: ["What do we need to work on most?", "How can we argue better?", "What does each of us need to feel loved?", "What is this relationship teaching us?"] },
 };
@@ -33,7 +33,7 @@ const az: CoupleUI = {
   locked: { eyebrow: "Yalnız ikiniz üçün yazılıb", title: "Cütlük oxunuşunuz",
     intro: "İki xəritənizi bir-birinə hörən uzun, isti oxunuş — sizi bir-birinizə nə çəkir, harada toqquşursunuz, hər biriniz necə sevir və bağlanır, bu münasibət hər ikinizdən nə istəyir.",
     sections: ["Sizi nə birləşdirir", "Aranızdakı cazibə", "Hər biriniz necə sevir", "Harada toqquşursunuz — və niyə", "Birgə emosional dünyanız", "Danışmaq və anlamaq", "Rəqəmləriniz nə deyir", "Birgə yolunuz", "Hər ikinizə son söz"],
-    cta: "Cütlük oxunuşunu aç — 1 ₼" },
+    cta: "Cütlük oxunuşunu aç — 2 ₼" },
   checkout: { title: "Cütlük oxunuşunuz", includes: ["Hər iki xəritənin birlikdə 9 hissəli oxunuşu", "Münasibətiniz haqqında 3 sual", "Şəxsi linkdə və PDF olaraq saxlanılır"] },
   reading: { writtenFor: "{{a}} və {{b}} üçün yazılıb", chips: ["Ən çox nə üzərində işləməliyik?", "Necə daha yaxşı mübahisə edə bilərik?", "Hər birimiz sevildiyini hiss etmək üçün nəyə ehtiyac duyur?", "Bu münasibət bizə nə öyrədir?"] },
 };
@@ -52,7 +52,7 @@ const ru: CoupleUI = {
   locked: { eyebrow: "Написано только для вас двоих", title: "Ваш разбор для пары",
     intro: "Длинный, тёплый разбор, сплетающий ваши две карты, — что вас притягивает, где вы сталкиваетесь, как каждый из вас любит и привязывается и чего эти отношения просят от вас обоих.",
     sections: ["Что вас соединяет", "Притяжение между вами", "Как любит каждый из вас", "Где вы сталкиваетесь — и почему", "Ваш общий эмоциональный мир", "Говорить и понимать", "Что говорят ваши числа", "Ваш общий путь", "Последнее слово вам обоим"],
-    cta: "Открыть разбор для пары — 1 ₼" },
+    cta: "Открыть разбор для пары — 2 ₼" },
   checkout: { title: "Ваш разбор для пары", includes: ["Разбор обеих карт вместе из 9 частей", "3 вопроса о ваших отношениях", "Сохраняется по личной ссылке, есть PDF"] },
   reading: { writtenFor: "Написано для: {{a}} и {{b}}", chips: ["Над чем нам важнее всего работать?", "Как нам лучше ссориться?", "Что нужно каждому из нас, чтобы чувствовать себя любимым?", "Чему нас учат эти отношения?"] },
 };

@@ -47,7 +47,7 @@ export default function CheckoutDialog({ open, onClose, input, partner }: { open
             className="card w-full max-w-lg rounded-b-none border-gold/30 bg-night-2 sm:rounded-[24px] sm:p-9">
             <div className="flex items-start justify-between gap-4">
               <h2 id="checkout-title" className="text-3xl">{t(`${ns}.title`)}</h2>
-              <span className="font-display text-3xl text-gold">1 ₼</span>
+              <span className="font-display text-3xl text-gold">2 ₼</span>
             </div>
             <ul className="mt-5 grid gap-2.5">{includes.map((x) => <li key={x} className="flex gap-3 text-sm text-ivory/90"><span className="text-gold">✦</span>{x}</li>)}</ul>
             <div className="mt-6 grid gap-4">

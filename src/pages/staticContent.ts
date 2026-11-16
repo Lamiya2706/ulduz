@@ -22,7 +22,7 @@ const PAGES: Record<Lang, Record<Slug, Page>> = {
     ] },
     terms: { draft: true, title: "Terms of use (public offer)", body: [
       "These terms govern the use of Ulduz ([website address]), operated by [legal name], VÖEN [tax number], [address] (“we”).",
-      "## The service", "The free natal chart is provided as is. The personal reading is a one-time digital service priced at 1 AZN, delivered immediately after payment as a text written by an AI model and stored at a private link.",
+      "## The service", "The free natal chart is provided as is. The personal reading is a one-time digital service priced at 2 AZN, delivered immediately after payment as a text written by an AI model and stored at a private link.",
       "## Nature of the content", "Readings are for entertainment and self-reflection. They are not medical, psychological, legal or financial advice, and no outcome is predicted or guaranteed.",
       "## Payment", "Payments are processed by Epoint (licensed by the Central Bank of the Republic of Azerbaijan). We never receive or store your card details.",
       "## Acceptance", "By paying you accept this offer. The contract is concluded when payment is confirmed.",
@@ -59,7 +59,7 @@ const PAGES: Record<Lang, Record<Slug, Page>> = {
     ] },
     terms: { draft: true, title: "İstifadə şərtləri (ictimai oferta)", body: [
       "Bu şərtlər [legal ad], VÖEN [vergi nömrəsi], [ünvan] (\"biz\") tərəfindən idarə olunan Ulduz ([sayt ünvanı]) xidmətindən istifadəni tənzimləyir.",
-      "## Xidmət", "Pulsuz natal xəritə olduğu kimi təqdim olunur. Şəxsi oxunuş 1 AZN dəyərində birdəfəlik rəqəmsal xidmətdir; ödənişdən dərhal sonra süni intellekt modelinin yazdığı mətn kimi təqdim olunur və şəxsi linkdə saxlanılır.",
+      "## Xidmət", "Pulsuz natal xəritə olduğu kimi təqdim olunur. Şəxsi oxunuş 2 AZN dəyərində birdəfəlik rəqəmsal xidmətdir; ödənişdən dərhal sonra süni intellekt modelinin yazdığı mətn kimi təqdim olunur və şəxsi linkdə saxlanılır.",
       "## Məzmunun xarakteri", "Oxunuşlar əyləncə və özünü dərk etmək üçündür. Onlar tibbi, psixoloji, hüquqi və ya maliyyə məsləhəti deyil və heç bir nəticə proqnozlaşdırılmır və ya zəmanət verilmir.",
       "## Ödəniş", "Ödənişlər Azərbaycan Respublikası Mərkəzi Bankı tərəfindən lisenziyalaşdırılmış Epoint vasitəsilə həyata keçirilir. Kart məlumatlarını heç vaxt almırıq və saxlamırıq.",
       "## Qəbul", "Ödəniş etməklə bu ofertanı qəbul edirsən. Müqavilə ödəniş təsdiqləndiyi anda bağlanmış sayılır.",
@@ -96,7 +96,7 @@ const PAGES: Record<Lang, Record<Slug, Page>> = {
     ] },
     terms: { draft: true, title: "Условия использования (публичная оферта)", body: [
       "Эти условия регулируют использование сервиса Ulduz ([адрес сайта]), которым управляет [юр. наименование], VÖEN [ИНН], [адрес] («мы»).",
-      "## Сервис", "Бесплатная натальная карта предоставляется «как есть». Личный разбор — разовая цифровая услуга стоимостью 1 AZN, предоставляемая сразу после оплаты в виде текста, написанного моделью ИИ, и сохраняемая по личной ссылке.",
+      "## Сервис", "Бесплатная натальная карта предоставляется «как есть». Личный разбор — разовая цифровая услуга стоимостью 2 AZN, предоставляемая сразу после оплаты в виде текста, написанного моделью ИИ, и сохраняемая по личной ссылке.",
       "## Характер контента", "Разборы предназначены для развлечения и самопознания. Они не являются медицинской, психологической, юридической или финансовой консультацией; никакие результаты не прогнозируются и не гарантируются.",
       "## Оплата", "Платежи обрабатывает Epoint (лицензия Центрального банка Азербайджанской Республики). Мы никогда не получаем и не храним данные карты.",
       "## Акцепт", "Оплачивая, ты принимаешь эту оферту. Договор считается заключённым с момента подтверждения оплаты.",
