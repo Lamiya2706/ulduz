@@ -76,3 +76,28 @@ describe("year content", () => {
     }
   });
 });
+
+import { FULLMOON_CONTENT } from "@/content/fullmoon";
+import { FULLMOON_UI } from "@/i18n/fullmoon";
+import { nearestFullMoon } from "@shared/sky";
+describe("full moon content", () => {
+  const keys = (o: object): string[] => Object.entries(o).flatMap(([k, v]) => (v && typeof v === "object" && !Array.isArray(v) ? keys(v).map((x) => `${k}.${x}`) : [k])).sort();
+  it("has the same structure in every language", () => {
+    for (const l of ["az", "ru"] as const) {
+      expect(keys(FULLMOON_CONTENT[l])).toEqual(keys(FULLMOON_CONTENT.en));
+      expect(keys(FULLMOON_UI[l])).toEqual(keys(FULLMOON_UI.en));
+    }
+    for (const c of Object.values(FULLMOON_CONTENT)) {
+      expect(c.signs).toHaveLength(12);
+      expect(c.steps).toHaveLength(7);
+      expect(c.methods).toHaveLength(8);
+      for (const m of c.methods) expect(m.steps.length).toBeGreaterThanOrEqual(3);
+    }
+  });
+  it("finds the Full Moon of 24 Nov 2026 in Gemini", () => {
+    const f = nearestFullMoon(new Date("2026-11-24T10:00:00Z"));
+    expect(f.date.toISOString().slice(0, 13)).toBe("2026-11-24T14");
+    expect(f.sign).toBe(2);
+    expect(nearestFullMoon(new Date("2026-11-27T10:00:00Z")).date.toISOString().slice(0, 10)).toBe("2026-12-24");
+  });
+});

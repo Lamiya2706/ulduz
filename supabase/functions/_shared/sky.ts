@@ -141,3 +141,12 @@ export function skyDetails(y: number, m: number, d: number, base: SkyDay = skyDa
     mercury: { retro: base.retro.includes("Mercury"), changes: mercuryStation(noon) },
   };
 }
+
+export interface FullMoon { date: Date; sign: number; degree: number; sunSign: number }
+/** The current Full Moon (if it peaked less than ~36 h ago) or the next one, with the Moon's sign at the exact moment. */
+export function nearestFullMoon(now: Date = new Date()): FullMoon {
+  const from = new Date(now.getTime() - 1.5 * DAY);
+  const date = Astronomy.SearchMoonPhase(180, from, 40)!.date;
+  const lon = planetLon("Moon", date);
+  return { date, sign: signOf(lon), degree: Math.floor(norm(lon) % 30), sunSign: signOf(planetLon("Sun", date)) };
+}

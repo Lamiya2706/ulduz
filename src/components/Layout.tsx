@@ -41,6 +41,7 @@ function Header() {
   }, [open]);
   const links = [
     { to: `/${lang}/moon`, label: t("sky.nav") },
+    { to: `/${lang}/full-moon`, label: t("fullmoon.nav") },
     { to: `/${lang}/year`, label: t("year.nav") },
     { to: `/${lang}/numerology`, label: t("numerology.nav") },
     { to: `/${lang}/couple`, label: t("couple.nav") },
@@ -54,12 +55,12 @@ function Header() {
           <span className="font-display text-2xl tracking-[0.08em] text-ivory">Ulduz</span>
         </Link>
         <div className="flex items-center gap-6">
-          <nav className="hidden items-center gap-6 text-sm text-muted lg:flex">
+          <nav className="hidden items-center gap-6 text-sm text-muted xl:flex">
             {links.map((l) => <Link key={l.to} to={l.to} data-track="nav_click" data-track-place="header" className="hover:text-ivory">{l.label}</Link>)}
           </nav>
           <div className="hidden sm:block"><LangSwitch /></div>
           <button type="button" data-track="menu_toggle" data-track-label={open ? "close" : "open"} onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? "Close menu" : "Open menu"}
-            className="-mr-2 grid h-10 w-10 place-items-center rounded-full text-ivory transition hover:bg-gold/10 lg:hidden">
+            className="-mr-2 grid h-10 w-10 place-items-center rounded-full text-ivory transition hover:bg-gold/10 xl:hidden">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" aria-hidden>
               {open ? <path d="M5 5l10 10M15 5L5 15" /> : <path d="M3 6h14M3 10h14M3 14h9" />}
             </svg>
@@ -67,7 +68,7 @@ function Header() {
         </div>
       </div>
       {open && (
-        <div id="mobile-menu" className="fixed inset-x-0 bottom-0 top-[76px] z-40 overflow-y-auto border-t border-gold/10 bg-night/95 px-5 pb-10 pt-6 backdrop-blur-md lg:hidden">
+        <div id="mobile-menu" className="fixed inset-x-0 bottom-0 top-[76px] z-40 overflow-y-auto border-t border-gold/10 bg-night/95 px-5 pb-10 pt-6 backdrop-blur-md xl:hidden">
           <nav className="grid">
             {links.map((l) => (
               <Link key={l.to} to={l.to} data-track="nav_click" data-track-place="mobile_menu" onClick={() => setOpen(false)} className="flex items-center justify-between border-b border-gold/10 py-4 font-display text-2xl text-ivory">
@@ -97,6 +98,7 @@ function Footer() {
         </div>
         <div className="flex flex-wrap content-start gap-x-6 gap-y-3 text-sm text-muted md:justify-end">
           <Link to={`/${lang}/moon`} className="hover:text-gold">{t("sky.nav")}</Link>
+          <Link to={`/${lang}/full-moon`} className="hover:text-gold">{t("fullmoon.nav")}</Link>
           <Link to={`/${lang}/year`} className="hover:text-gold">{t("year.nav")}</Link>
           <Link to={`/${lang}/numerology`} className="hover:text-gold">{t("numerology.nav")}</Link>
           <Link to={`/${lang}/couple`} className="hover:text-gold">{t("couple.nav")}</Link>

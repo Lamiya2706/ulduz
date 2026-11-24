@@ -10,6 +10,7 @@ const ReadingPage = lazy(() => import("@/pages/ReadingPage"));
 const CoupleFormPage = lazy(() => import("@/pages/CouplePage").then((m) => ({ default: m.CoupleFormPage })));
 const CoupleResultPage = lazy(() => import("@/pages/CouplePage").then((m) => ({ default: m.CoupleResultPage })));
 const MoonPage = lazy(() => import("@/pages/MoonPage"));
+const FullMoonPage = lazy(() => import("@/pages/FullMoonPage"));
 const YearFormPage = lazy(() => import("@/pages/YearPage").then((m) => ({ default: m.YearFormPage })));
 const YearResultPage = lazy(() => import("@/pages/YearPage").then((m) => ({ default: m.YearResultPage })));
 const NumFormPage = lazy(() => import("@/pages/NumerologyPage").then((m) => ({ default: m.NumFormPage })));
@@ -27,6 +28,7 @@ export default function App() {
             <Route index element={<Home />} />
             <Route path="chart/:code" element={<ChartPage />} />
             <Route path="moon" element={<MoonPage />} />
+            <Route path="full-moon" element={<FullMoonPage />} />
             <Route path="year" element={<YearFormPage />} />
             <Route path="year/:date" element={<YearResultPage />} />
             <Route path="numerology" element={<NumFormPage />} />

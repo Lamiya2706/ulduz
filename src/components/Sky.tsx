@@ -8,6 +8,7 @@ import { skyDetails, SPHERES, type Phase, type SkyDay, type Verdict } from "@sha
 import { getContent } from "@/content";
 import { getNumContent } from "@/content/numerology";
 import { getSkyContent, getSkyMore } from "@/content/sky";
+import { FULLMOON_UI } from "@/i18n/fullmoon";
 import type { Lang } from "@/i18n";
 import { formatDate } from "@/lib/date";
 
@@ -17,6 +18,18 @@ export const VERDICT_STYLE: Record<Verdict, string> = {
   bad: "bg-rose/15 text-rose",
 };
 export const VERDICT_DOT: Record<Verdict, string> = { good: "bg-emerald-300", neutral: "bg-gold/70", bad: "bg-rose" };
+
+/** Shown on Full Moon days: invites to the manifestation ritual. */
+export function FullMoonBanner({ lang, place }: { lang: Lang; place: string }) {
+  const b = FULLMOON_UI[lang].banner;
+  return (
+    <Link to={`/${lang}/full-moon`} data-track="fullmoon_banner" data-track-place={place}
+      className="group flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gold/40 bg-gradient-to-r from-gold/[0.14] to-transparent px-5 py-4 transition hover:border-gold">
+      <span className="flex items-center gap-3 text-sm text-ivory"><span aria-hidden className="h-5 w-5 flex-none rounded-full bg-[#EFE3C8] shadow-[0_0_18px_rgba(239,227,200,.55)]" />{b.now}</span>
+      <span className="text-sm text-gold transition group-hover:text-ivory">{b.cta} →</span>
+    </Link>
+  );
+}
 
 /** Moon disc lit according to the phase (northern-hemisphere view). */
 export function MoonIcon({ illumination, phase, className = "h-16 w-16" }: { illumination: number; phase: Phase; className?: string }) {
@@ -103,6 +116,7 @@ export function DayCard({ day, lang, title, showLink = false }: { day: SkyDay; l
   ].sort((a, b) => a.date.getTime() - b.date.getTime());
   return (
     <div className="grid gap-4">
+      {day.phase === "full" && <FullMoonBanner lang={lang} place="day_card" />}
       <div className="card grid gap-6 sm:grid-cols-[auto_1fr] sm:items-center">
         <div className="flex items-center gap-5">
           <MoonIcon illumination={day.illumination} phase={day.phase} className="h-20 w-20 flex-none" />
@@ -242,6 +256,7 @@ export default function TodaySection({ lang, day }: { lang: Lang; day: SkyDay })
             <p className="flex items-center gap-2 text-ivory/90">✂ {sc.ui.haircutTitle}: <span className={`rounded-full px-2.5 py-0.5 text-xs ${VERDICT_STYLE[day.haircut]}`}>{sc.ui.verdict[day.haircut]}</span></p>
           </div>
         </div>
+        {day.phase === "full" && <div className="mt-6"><FullMoonBanner lang={lang} place="home_today" /></div>}
         <div className="mt-6 text-center sm:text-left">
           <Link to={`/${lang}/moon`} data-track="today_full_click" className="btn-ghost">{sm.ui.fullDay} <span aria-hidden>→</span></Link>
         </div>

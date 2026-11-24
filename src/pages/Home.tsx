@@ -92,9 +92,10 @@ export default function Home() {
       {/* MORE IN ULDUZ — one row instead of separate big teasers */}
       <section className="mx-auto mt-28 max-w-6xl px-5 sm:px-8">
         <Reveal className="text-center"><p className="eyebrow">Ulduz</p><h2 className="mt-3 text-4xl sm:text-5xl">{t("sky.exploreTitle")}</h2></Reveal>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {[
             { to: "moon", icon: "☾", key: "sky" },
+            { to: "full-moon", icon: "○", key: "fullmoon" },
             { to: "year", icon: "✦", key: "year" },
             { to: "numerology", icon: "9", key: "numerology" },
             { to: "couple", icon: "♡", key: "couple" },
