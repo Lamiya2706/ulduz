@@ -13,3 +13,5 @@ verify_jwt = false
 verify_jwt = false
 [functions.ask-question]
 verify_jwt = false
+[functions.daily-push]
+verify_jwt = false   # called by pg_cron; authenticated with the PUSH_CRON_SECRET header instead

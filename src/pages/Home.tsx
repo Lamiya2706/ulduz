@@ -5,6 +5,7 @@ import type { Lang } from "@/i18n";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useLang } from "@/components/Layout";
+import AppCard from "@/components/AppCard";
 import BirthForm from "@/components/BirthForm";
 import { CarpetDivider, HeroWheel, Reveal } from "@/components/Decor";
 import { Markdown } from "@/lib/md";
@@ -88,6 +89,7 @@ function SignedInHome() {
               : <Link to={`/${lang}/account`} className="btn" data-track="home_add_birth">{t("auth.home.addBirth")} <span aria-hidden>→</span></Link>}
           </div>
         )}
+        {profileLoaded && <AppCard hasBirth={!!saved} />}
       </section>
 
       <div className="mt-14"><TodayBlock lang={lang} /></div>
