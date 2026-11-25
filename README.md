@@ -76,6 +76,19 @@ Import the GitHub repo, set the two `VITE_…` variables from `.env.example`, bu
 output `dist`. SPA routing is already configured (`vercel.json`, `public/_redirects`).
 Then set `SITE_URL` / `ALLOWED_ORIGINS` in Supabase secrets to your final domain.
 
+### 5. Installable app and push notifications
+The site is a PWA: `public/manifest.webmanifest`, icons in `public/icons/`, and a service worker `public/sw.js`
+(offline app shell, cached static files, never caches Supabase calls or sign-in links). Signed-in people can add it to the
+home screen and turn on a daily horoscope notification from the home page.
+
+Push needs a one-time setup in Supabase:
+1. VAPID keys: generate a pair (`npx web-push generate-vapid-keys`), put the **public** key in `src/lib/push.ts`
+   (or `VITE_VAPID_PUBLIC_KEY`), and set the secrets `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT=mailto:…`.
+2. A random `PUSH_CRON_SECRET` secret, and the same value in Vault: `select vault.create_secret('<value>', 'push_cron_secret');`
+3. `npx supabase db push` (table `push_subscriptions`) and `npx supabase functions deploy daily-push`.
+4. Enable the `pg_cron` and `pg_net` extensions and schedule the hourly run (SQL at the end of the push migration).
+   Each subscription gets one message a day at 8:00 in its own time zone.
+
 ## Before launch — checklist
 - [ ] Fill the `[placeholders]` in `src/pages/staticContent.ts` (legal name, VÖEN, email…) and have Terms / Privacy / Refunds reviewed.
 - [ ] `PAYMENT_MODE=epoint` (never leave `test` on in production — it gives readings away free).

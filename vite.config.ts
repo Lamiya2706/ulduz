@@ -63,12 +63,26 @@ function seo(): Plugin {
   };
 }
 
+/** Stamps the service worker with a build id, so each deploy installs a fresh worker and clears the old app shell. */
+function swVersion(): Plugin {
+  let outDir = "dist";
+  return {
+    name: "ulduz-sw-version",
+    apply: "build",
+    configResolved(c) { outDir = resolve(c.root, c.build.outDir); },
+    closeBundle() {
+      const file = join(outDir, "sw.js");
+      writeFileSync(file, readFileSync(file, "utf8").replace(`"__BUILD__"`, `"${Date.now().toString(36)}"`));
+    },
+  };
+}
+
 const r = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 
 export default defineConfig({
   // Served from the custom domain root (ulduz.space). Set VITE_BASE=/ulduz/ only for a github.io/<repo>/ build.
   base: process.env.VITE_BASE ?? "/",
-  plugins: [react(), seo()],
+  plugins: [react(), seo(), swVersion()],
   resolve: {
     alias: {
       "@shared": r("./supabase/functions/_shared"),
