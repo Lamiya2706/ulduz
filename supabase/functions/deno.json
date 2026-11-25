@@ -1,1 +1,12 @@
-{ "compilerOptions": { "strict": true }, "lint": { "rules": { "exclude": ["no-explicit-any"] } } }
+{
+  "compilerOptions": { "strict": true },
+  "lint": { "rules": { "exclude": ["no-explicit-any"] } },
+  "unstable": ["sloppy-imports"],
+  "imports": {
+    "@/i18n": "./_shared/prompt.ts",
+    "@shared/astro": "./_shared/astro.ts",
+    "@shared/daily": "./_shared/daily.ts",
+    "@shared/sky": "./_shared/sky.ts",
+    "@shared/transits": "./_shared/transits.ts"
+  }
+}

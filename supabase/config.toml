@@ -13,3 +13,7 @@ verify_jwt = false
 verify_jwt = false
 [functions.ask-question]
 verify_jwt = false
+[functions.telegram-bot]
+verify_jwt = false   # Telegram posts here; requests are checked against the webhook secret token instead
+[functions.telegram-daily]
+verify_jwt = false   # called by pg_cron; requests are checked against a secret kept in Vault

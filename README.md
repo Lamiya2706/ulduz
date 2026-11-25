@@ -76,6 +76,23 @@ Import the GitHub repo, set the two `VITE_…` variables from `.env.example`, bu
 output `dist`. SPA routing is already configured (`vercel.json`, `public/_redirects`).
 Then set `SITE_URL` / `ALLOWED_ORIGINS` in Supabase secrets to your final domain.
 
+### 5. Telegram bot
+The bot (`supabase/functions/telegram-bot`) sends each person their **daily horoscope with moon notes every morning**,
+**transit alerts** on the days a slow planet's transit begins or becomes exact, and a **natal chart summary**. People either
+connect their Ulduz account (account page → **Connect Telegram**, a one-time `t.me/<bot>?start=<code>` link) or type their
+birth details in the chat. The texts come straight from the website's content library (`src/content/…`), so the bot and the
+site always say the same thing. Commands: `/today`, `/chart`, `/transits`, `/settings` (hour, time zone, on/off), `/new`, `/lang`, `/stop`.
+
+The morning messages are sent by `telegram-daily`, which a pg_cron job calls every hour; each chat gets its message at its
+own local hour (default 08:00, Asia/Baku). The job authenticates with a random secret that the migration creates in Vault.
+
+1. In Telegram, open **@BotFather** → `/newbot`, choose a name and a username ending in `bot`. Copy the token.
+2. Save it as the Edge Function secret `TELEGRAM_BOT_TOKEN` (Supabase dashboard → Edge Functions → Secrets). It's the only secret:
+   the webhook's secret token is derived from it.
+3. `npx supabase db push` (adds `tg_chats`, `tg_link_codes`, the hourly job) and `npx supabase functions deploy telegram-bot telegram-daily`.
+4. Run `select public.tg_run_daily();` once in the SQL editor: it registers the webhook and the command menu (the hourly job also checks this).
+5. If the username isn't `UlduzSpaceBot`, set the Actions variable `VITE_TELEGRAM_BOT` to it, so the account page links to the right bot.
+
 ## Before launch — checklist
 - [ ] Fill the `[placeholders]` in `src/pages/staticContent.ts` (legal name, VÖEN, email…) and have Terms / Privacy / Refunds reviewed.
 - [ ] `PAYMENT_MODE=epoint` (never leave `test` on in production — it gives readings away free).

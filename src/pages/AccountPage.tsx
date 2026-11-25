@@ -12,6 +12,7 @@ import { birthToProfile, profileBirth } from "@/lib/profileBirth";
 import { computeChart } from "@shared/astro";
 import { useTransitAlerts } from "@/components/TransitAlerts";
 import { getTransitContent } from "@/content/transits";
+import TelegramConnect from "@/components/TelegramConnect";
 
 export default function AccountPage() {
   const { t } = useTranslation();
@@ -82,6 +83,7 @@ export default function AccountPage() {
           <span className="flex-none text-sm text-gold">{tc.ui.accountOpen} →</span>
         </Link>
       )}
+      <TelegramConnect lang={lang} highlight={params.get("telegram") === "1"} />
       <div className="hairline" />
       <button type="button" className="justify-self-start text-sm text-muted hover:text-rose" data-track="logout" onClick={() => { void signOut(); }}>{t("auth.account.signOut")}</button>
     </AuthShell>
