@@ -13,3 +13,7 @@ verify_jwt = false
 verify_jwt = false
 [functions.ask-question]
 verify_jwt = false
+[functions.send-reminders]
+verify_jwt = false   # called by pg_cron; checked against a secret kept in the database
+[functions.unsubscribe]
+verify_jwt = false   # one-click unsubscribe from mail apps; needs the private token

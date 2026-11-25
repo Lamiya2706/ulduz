@@ -20,6 +20,7 @@ const NumResultPage = lazy(() => import("@/pages/NumerologyPage").then((m) => ({
 const LoginPage = lazy(() => import("@/pages/LoginPage"));
 const ResetPasswordPage = lazy(() => import("@/pages/ResetPasswordPage"));
 const AccountPage = lazy(() => import("@/pages/AccountPage"));
+const UnsubscribePage = lazy(() => import("@/pages/UnsubscribePage"));
 const PaymentSuccess = lazy(() => import("@/pages/PaymentPage").then((m) => ({ default: m.PaymentSuccess })));
 const PaymentFailed = lazy(() => import("@/pages/PaymentPage").then((m) => ({ default: m.PaymentFailed })));
 
@@ -48,6 +49,7 @@ export default function App() {
             <Route path="login" element={<LoginPage />} />
             <Route path="reset-password" element={<ResetPasswordPage />} />
             <Route path="account" element={<AccountPage />} />
+            <Route path="unsubscribe" element={<UnsubscribePage />} />
             <Route path="page/:slug" element={<StaticPage />} />
             <Route path="*" element={<NotFound />} />
           </Route>
