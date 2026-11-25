@@ -38,9 +38,3 @@ revoke execute on function public.delete_push_subscription(text) from public, an
 grant execute on function public.save_push_subscription(text, text, text, text, text) to authenticated;
 grant execute on function public.delete_push_subscription(text) to authenticated;
 
--- The hourly schedule is set up once by hand, because it needs the project URL and a secret (see README → Push notifications):
---   select cron.schedule('daily-push', '5 * * * *', $$ select net.http_post(
---     url := 'https://<ref>.supabase.co/functions/v1/daily-push',
---     headers := jsonb_build_object('Content-Type', 'application/json',
---       'x-cron-secret', (select decrypted_secret from vault.decrypted_secrets where name = 'push_cron_secret')),
---     body := '{}'::jsonb) $$);

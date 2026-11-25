@@ -1,5 +1,12 @@
 // Strings for the installable app card on the signed-in home: add to home screen and daily notifications (namespace "app").
 const en = {
+  headerBtn: "Get the app",
+  dialogTitle: "Install Ulduz",
+  dialogText: "Ulduz opens like an app from your home screen, full screen, and pages you've seen work offline.",
+  stepsIos: "In <b>Safari</b>, tap the Share button <b>⬆︎</b> at the bottom, then <b>Add to Home Screen</b>. (In Instagram or Telegram, first open the page in Safari.)",
+  stepsAndroid: "In <b>Chrome</b>, tap the menu <b>⋮</b> at the top right, then <b>Install app</b> or <b>Add to Home screen</b>.",
+  stepsDesktop: "In <b>Chrome</b> or <b>Edge</b>, click the install icon <b>⊕</b> at the right of the address bar, or open the menu and choose <b>Install Ulduz</b>. In Safari on a Mac: <b>File → Add to Dock</b>.",
+  close: "Close",
   eyebrow: "Ulduz on your phone",
   title: "Keep Ulduz one tap away",
   text: "Add Ulduz to your home screen: it opens like an app, full screen, and the pages you've seen work even offline.",
@@ -19,6 +26,13 @@ const en = {
 };
 type AppUI = typeof en;
 const az: AppUI = {
+  headerBtn: "Tətbiq",
+  dialogTitle: "Ulduz-u quraşdır",
+  dialogText: "Ulduz ana ekrandan tətbiq kimi, tam ekranda açılır, gördüyün səhifələr isə internetsiz də işləyir.",
+  stepsIos: "<b>Safari</b>-də aşağıdakı Paylaş düyməsinə <b>⬆︎</b> toxun, sonra <b>Add to Home Screen</b> (Ana ekrana əlavə et) seç. (Instagram və ya Telegram-dasansa, əvvəlcə səhifəni Safari-də aç.)",
+  stepsAndroid: "<b>Chrome</b>-da yuxarı sağdakı menyuya <b>⋮</b> toxun, sonra <b>Tətbiqi quraşdır</b> və ya <b>Ana ekrana əlavə et</b> seç.",
+  stepsDesktop: "<b>Chrome</b> və ya <b>Edge</b>-də ünvan sətrinin sağındakı quraşdırma ikonuna <b>⊕</b> klik et, ya da menyuda <b>Ulduz-u quraşdır</b> seç. Mac-də Safari: <b>File → Add to Dock</b>.",
+  close: "Bağla",
   eyebrow: "Ulduz telefonunda",
   title: "Ulduz bir toxunuş uzaqlığında olsun",
   text: "Ulduz-u ana ekrana əlavə et: tətbiq kimi, tam ekranda açılır, gördüyün səhifələr isə internetsiz də işləyir.",
@@ -37,6 +51,13 @@ const az: AppUI = {
   pushError: "Bildirişləri aktiv etmək alınmadı. Yenidən cəhd et.",
 };
 const ru: AppUI = {
+  headerBtn: "Приложение",
+  dialogTitle: "Установить Ulduz",
+  dialogText: "Ulduz открывается с главного экрана как приложение, на весь экран, а уже открытые страницы работают без интернета.",
+  stepsIos: "В <b>Safari</b> нажми «Поделиться» <b>⬆︎</b> внизу, затем <b>На экран «Домой»</b>. (Если ты в Instagram или Telegram, сначала открой страницу в Safari.)",
+  stepsAndroid: "В <b>Chrome</b> нажми меню <b>⋮</b> справа вверху, затем <b>Установить приложение</b> или <b>Добавить на главный экран</b>.",
+  stepsDesktop: "В <b>Chrome</b> или <b>Edge</b> нажми значок установки <b>⊕</b> справа в адресной строке или выбери в меню <b>Установить Ulduz</b>. В Safari на Mac: <b>Файл → Добавить в Dock</b>.",
+  close: "Закрыть",
   eyebrow: "Ulduz в телефоне",
   title: "Пусть Ulduz будет под рукой",
   text: "Добавь Ulduz на главный экран: он открывается как приложение, на весь экран, а уже открытые страницы работают даже без интернета.",

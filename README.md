@@ -81,13 +81,11 @@ The site is a PWA: `public/manifest.webmanifest`, icons in `public/icons/`, and 
 (offline app shell, cached static files, never caches Supabase calls or sign-in links). Signed-in people can add it to the
 home screen and turn on a daily horoscope notification from the home page.
 
-Push needs a one-time setup in Supabase:
-1. VAPID keys: generate a pair (`npx web-push generate-vapid-keys`), put the **public** key in `src/lib/push.ts`
-   (or `VITE_VAPID_PUBLIC_KEY`), and set the secrets `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT=mailto:…`.
-2. A random `PUSH_CRON_SECRET` secret, and the same value in Vault: `select vault.create_secret('<value>', 'push_cron_secret');`
-3. `npx supabase db push` (table `push_subscriptions`) and `npx supabase functions deploy daily-push`.
-4. Enable the `pg_cron` and `pg_net` extensions and schedule the hourly run (SQL at the end of the push migration).
-   Each subscription gets one message a day at 8:00 in its own time zone.
+Push setup in Supabase (done for the ulduz project on 25 Nov 2026):
+1. Migrations `…_push_subscriptions.sql` and `…_push_setup.sql` (table, a random cron secret in `private.settings`, hourly `daily-push` cron job).
+2. The VAPID private key in `private.settings` under `vapid_private_key`; its public half is in `src/lib/push.ts` and `daily-push/index.ts`.
+   To rotate: generate a new pair (`npx web-push generate-vapid-keys`), update both places; existing subscribers must turn notifications on again.
+3. `daily-push` deploys from GitHub Actions with the other functions (`.github/workflows/functions.yml`). Each subscription gets one message a day at 8:00 in its own time zone.
 
 ### 6. Telegram bot
 The bot (`supabase/functions/telegram-bot`) sends each person their **daily horoscope with moon notes every morning**,

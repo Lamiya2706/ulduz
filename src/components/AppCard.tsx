@@ -1,28 +1,27 @@
 // "Ulduz on your phone" card on the signed-in home: add to home screen, and the daily horoscope notification.
 import { useEffect, useState } from "react";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useLang } from "@/components/Layout";
 import { track } from "@/lib/analytics";
-import { installMode, onInstallChange, promptInstall, type InstallMode } from "@/lib/install";
+import InstallButton, { useInstallMode } from "@/components/InstallButton";
 import { disablePush, enablePush, pushState, syncPush, type PushState } from "@/lib/push";
 
 export default function AppCard({ hasBirth }: { hasBirth: boolean }) {
   const { t } = useTranslation();
   const lang = useLang();
-  const [mode, setMode] = useState<InstallMode>(installMode);
+  const mode = useInstallMode();
   const [push, setPush] = useState<PushState | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(false);
 
-  useEffect(() => onInstallChange(() => setMode(installMode())), []);
   useEffect(() => {
     let alive = true;
     pushState().then((s) => { if (alive) setPush(s); if (s === "on") syncPush(lang); }).catch(() => alive && setPush("unsupported"));
     return () => { alive = false; };
   }, [lang]);
 
-  const showInstall = mode === "prompt" || mode === "ios";
+  const showInstall = mode !== "installed";
   const showPush = push !== null && push !== "unsupported";
   if (!showInstall && !showPush) return null;
 
@@ -46,16 +45,8 @@ export default function AppCard({ hasBirth }: { hasBirth: boolean }) {
           <p className="text-[0.68rem] uppercase tracking-[0.16em] text-gold">{t("app.eyebrow")}</p>
           <h2 className="mt-2 text-2xl">{t("app.title")}</h2>
           {mode === "installed" ? <p className="mt-2 text-sm text-muted">{t("app.installed")}</p> : <p className="mt-2 text-sm leading-relaxed text-muted">{t("app.text")}</p>}
-          {mode === "prompt" && (
-            <button type="button" className="btn mt-5" data-track="app_install" onClick={() => promptInstall().then((ok) => track(ok ? "app_installed" : "app_install_dismissed"))}>
-              {t("app.install")} <span aria-hidden>↓</span>
-            </button>
-          )}
-          {mode === "ios" && (
-            <p className="mt-4 rounded-xl border border-gold/20 bg-white/[0.03] px-4 py-3 text-sm leading-relaxed">
-              <span className="text-gold">{t("app.iosTitle")}: </span>
-              <Trans i18nKey="app.iosSteps" components={{ b: <b className="font-medium text-ivory" /> }} />
-            </p>
+          {showInstall && (
+            <InstallButton place="home_card" className="btn mt-5">{t("app.install")} <span aria-hidden>↓</span></InstallButton>
           )}
         </div>
       )}

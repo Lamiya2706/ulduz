@@ -6,6 +6,7 @@ import { Star, Starfield } from "./Decor";
 import { isPrivatePath, pageMeta } from "@/lib/seo";
 import { installClickTracking } from "@/lib/analytics";
 import { useAuth } from "@/lib/auth";
+import InstallButton from "@/components/InstallButton";
 
 export function useLang(): Lang {
   const { lang } = useParams();
@@ -86,6 +87,7 @@ function Header() {
             {shown.map((l) => <Link key={l.to} to={l.to} data-track="nav_click" data-track-place="header" className="hover:text-ivory">{l.label}</Link>)}
           </nav>
           <div className="hidden sm:block"><LangSwitch /></div>
+          <InstallButton place="header" className="inline-flex h-9 items-center gap-1.5 rounded-full border border-gold/30 px-3 text-sm text-gold transition hover:border-gold hover:text-ivory" />
           <AccountButton place="header" />
           <button type="button" data-track="menu_toggle" data-track-label={open ? "close" : "open"} onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? "Close menu" : "Open menu"}
             className={`-mr-2 grid h-10 w-10 place-items-center rounded-full text-ivory transition hover:bg-gold/10 ${user ? "xl:hidden" : "sm:hidden"}`}>

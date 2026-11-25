@@ -1,9 +1,12 @@
 // Sends the daily horoscope push notification. Called every hour by pg_cron (see the push migration);
 // each subscription gets one message a day, at its chosen local hour.
-// Auth: the caller must send the PUSH_CRON_SECRET in the x-cron-secret header.
+// Auth: the caller must send the push cron secret (kept in private.settings) in the x-cron-secret header.
 import { db, env } from "../_shared/http.ts";
 import { dailyMessage, isDue, type PushProfile } from "../_shared/dailyPush.ts";
 import { sendPush, type VapidKeys } from "../_shared/webpush.ts";
+
+// Same public key as src/lib/push.ts (public by design); the private half is in private.settings.
+const VAPID_PUBLIC_KEY = "BHTrmnHyRGLgtP9Z11sD7YPwrFKeqqwc3_J8R5bQ3oLWMNXnTMFEZayoGcWnhb5dkmwXYiV6wzolyNvazYNj0Oc";
 
 interface Row {
   id: string; endpoint: string; p256dh: string; auth: string; lang: string | null; tz: string | null;
@@ -12,9 +15,12 @@ interface Row {
 
 Deno.serve(async (req) => {
   if (req.method !== "POST") return new Response("method_not_allowed", { status: 405 });
-  if (req.headers.get("x-cron-secret") !== env("PUSH_CRON_SECRET")) return new Response("forbidden", { status: 403 });
-  const vapid: VapidKeys = { publicKey: env("VAPID_PUBLIC_KEY"), privateKey: env("VAPID_PRIVATE_KEY"), subject: env("VAPID_SUBJECT", "mailto:no-reply@ulduz.space") };
   const sb = db();
+  const secret = req.headers.get("x-cron-secret") ?? "";
+  // The private key comes back only when the secret matches.
+  const { data: privateKey } = secret ? await sb.rpc("push_config", { s: secret }) : { data: null };
+  if (typeof privateKey !== "string" || !privateKey) return new Response("forbidden", { status: 403 });
+  const vapid: VapidKeys = { publicKey: env("VAPID_PUBLIC_KEY", VAPID_PUBLIC_KEY), privateKey, subject: env("VAPID_SUBJECT", "mailto:no-reply@ulduz.space") };
   const now = new Date();
   const { data, error } = await sb.from("push_subscriptions")
     .select("id, endpoint, p256dh, auth, lang, tz, hour, last_sent_on, failures, profiles(full_name, birth_date, birth_time, lat, lon, tz)")

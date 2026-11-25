@@ -4,6 +4,7 @@
 interface BeforeInstallPromptEvent extends Event { prompt: () => Promise<void>; userChoice: Promise<{ outcome: "accepted" | "dismissed" }> }
 
 let deferred: BeforeInstallPromptEvent | null = null;
+let justInstalled = false;
 const listeners = new Set<() => void>();
 const notify = () => listeners.forEach((f) => f());
 
@@ -11,7 +12,7 @@ const notify = () => listeners.forEach((f) => f());
 export function captureInstallPrompt() {
   if (typeof window === "undefined") return;
   window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); deferred = e as BeforeInstallPromptEvent; notify(); });
-  window.addEventListener("appinstalled", () => { deferred = null; notify(); });
+  window.addEventListener("appinstalled", () => { deferred = null; justInstalled = true; notify(); });
 }
 
 export const onInstallChange = (f: () => void) => { listeners.add(f); return () => { listeners.delete(f); }; };
@@ -26,7 +27,7 @@ export const isIOS = () =>
 
 export type InstallMode = "installed" | "prompt" | "ios" | "none";
 export function installMode(): InstallMode {
-  if (isStandalone()) return "installed";
+  if (isStandalone() || justInstalled) return "installed";
   if (deferred) return "prompt";
   if (isIOS()) return "ios";
   return "none";
@@ -39,6 +40,7 @@ export async function promptInstall() {
   deferred = null;
   await e.prompt();
   const { outcome } = await e.userChoice;
+  if (outcome === "accepted") justInstalled = true;
   notify();
   return outcome === "accepted";
 }
