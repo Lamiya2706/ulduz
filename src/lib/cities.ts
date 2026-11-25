@@ -27,6 +27,7 @@ export function searchCities(all: City[], q: string, limit = 8): City[] {
 
 const regionNames: Record<string, Intl.DisplayNames | null> = {};
 export function countryName(code: string, lang: string): string {
+  if (!code) return "";
   if (!(lang in regionNames)) {
     try { regionNames[lang] = new Intl.DisplayNames([lang], { type: "region" }); } catch { regionNames[lang] = null; }
   }

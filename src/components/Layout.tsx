@@ -5,6 +5,7 @@ import i18n, { isLang, LANG_LABEL, LANGS, type Lang } from "@/i18n";
 import { Star, Starfield } from "./Decor";
 import { isPrivatePath, pageMeta } from "@/lib/seo";
 import { installClickTracking } from "@/lib/analytics";
+import { useAuth } from "@/lib/auth";
 
 export function useLang(): Lang {
   const { lang } = useParams();
@@ -26,6 +27,28 @@ function LangSwitch() {
         </span>
       ))}
     </nav>
+  );
+}
+
+/** "Log in" when signed out, a link to the account when signed in. Hidden until the session is known, to avoid a flash. */
+function AccountButton({ place, onClick }: { place: "header" | "mobile_menu"; onClick?: () => void }) {
+  const { t } = useTranslation();
+  const lang = useLang();
+  const { ready, user, profile } = useAuth();
+  if (!ready) return <span className="inline-block h-9 w-9 sm:w-20" aria-hidden />;
+  if (!user) {
+    return (
+      <Link to={`/${lang}/login`} onClick={onClick} data-track="nav_click" data-track-place={place} data-track-label="login"
+        className="inline-flex h-9 items-center rounded-full border border-gold/30 px-4 text-sm text-ivory transition hover:border-gold hover:text-gold">{t("auth.header.login")}</Link>
+    );
+  }
+  const initial = (profile?.full_name || user.email || "?").trim().charAt(0).toLocaleUpperCase(lang);
+  return (
+    <Link to={`/${lang}/account`} onClick={onClick} data-track="nav_click" data-track-place={place} data-track-label="account" aria-label={t("auth.header.account")}
+      className="inline-flex h-9 items-center gap-2 rounded-full border border-gold/30 pl-1 pr-1 text-sm text-ivory transition hover:border-gold hover:text-gold sm:pr-4">
+      <span aria-hidden className="grid h-7 w-7 place-items-center rounded-full bg-gold/15 font-display text-base text-gold">{initial}</span>
+      <span className="hidden sm:inline">{t("auth.header.account")}</span>
+    </Link>
   );
 }
 
@@ -54,11 +77,12 @@ function Header() {
           <Star className="h-5 w-5 text-gold transition group-hover:rotate-45" />
           <span className="font-display text-2xl tracking-[0.08em] text-ivory">Ulduz</span>
         </Link>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3 sm:gap-6">
           <nav className="hidden items-center gap-6 text-sm text-muted xl:flex">
             {links.map((l) => <Link key={l.to} to={l.to} data-track="nav_click" data-track-place="header" className="hover:text-ivory">{l.label}</Link>)}
           </nav>
           <div className="hidden sm:block"><LangSwitch /></div>
+          <AccountButton place="header" />
           <button type="button" data-track="menu_toggle" data-track-label={open ? "close" : "open"} onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? "Close menu" : "Open menu"}
             className="-mr-2 grid h-10 w-10 place-items-center rounded-full text-ivory transition hover:bg-gold/10 xl:hidden">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" aria-hidden>

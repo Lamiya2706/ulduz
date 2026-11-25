@@ -4,6 +4,7 @@ import Layout from "@/components/Layout";
 import { detectLang } from "@/i18n";
 import Home from "@/pages/Home";
 import StaticPage, { NotFound } from "@/pages/StaticPage";
+import { AuthProvider } from "@/lib/auth";
 
 const ChartPage = lazy(() => import("@/pages/ChartPage"));
 const ReadingPage = lazy(() => import("@/pages/ReadingPage"));
@@ -15,12 +16,16 @@ const YearFormPage = lazy(() => import("@/pages/YearPage").then((m) => ({ defaul
 const YearResultPage = lazy(() => import("@/pages/YearPage").then((m) => ({ default: m.YearResultPage })));
 const NumFormPage = lazy(() => import("@/pages/NumerologyPage").then((m) => ({ default: m.NumFormPage })));
 const NumResultPage = lazy(() => import("@/pages/NumerologyPage").then((m) => ({ default: m.NumResultPage })));
+const LoginPage = lazy(() => import("@/pages/LoginPage"));
+const ResetPasswordPage = lazy(() => import("@/pages/ResetPasswordPage"));
+const AccountPage = lazy(() => import("@/pages/AccountPage"));
 const PaymentSuccess = lazy(() => import("@/pages/PaymentPage").then((m) => ({ default: m.PaymentSuccess })));
 const PaymentFailed = lazy(() => import("@/pages/PaymentPage").then((m) => ({ default: m.PaymentFailed })));
 
 export default function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+      <AuthProvider>
       <Suspense fallback={<div className="min-h-screen" />}>
         <Routes>
           <Route path="/" element={<Navigate to={`/${detectLang()}`} replace />} />
@@ -38,11 +43,15 @@ export default function App() {
             <Route path="reading/:orderId" element={<ReadingPage />} />
             <Route path="payment/success" element={<PaymentSuccess />} />
             <Route path="payment/failed" element={<PaymentFailed />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="reset-password" element={<ResetPasswordPage />} />
+            <Route path="account" element={<AccountPage />} />
             <Route path="page/:slug" element={<StaticPage />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
       </Suspense>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

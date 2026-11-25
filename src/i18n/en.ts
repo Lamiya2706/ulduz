@@ -29,7 +29,7 @@ const en = {
     { q: "What if I don't know my birth time?", a: "You still get your Sun, Moon (usually), planets, aspects and numerology. Only the rising sign, houses and Midheaven need the exact time. If the Moon changed sign that day, we show both possibilities." },
     { q: "What is the personal reading?", a: "A long, warm reading written by AI from your full calculated chart: the tensions inside your chart, how you love and attach, your gifts and shadows, your calling, your numbers and the chapter of life you're in. It's written fresh for you — no two are alike." },
     { q: "Which language will my reading be in?", a: "Azerbaijani, English or Russian — you choose when you unlock it." },
-    { q: "Is my data safe?", a: "Your free chart is calculated in your browser. Your birth data is only stored if you unlock a personal reading, to keep your reading available at its private link. You can ask us to delete it at any time." },
+    { q: "Is my data safe?", a: "Your free chart is calculated in your browser. Your birth data is only stored if you create an account and save it there (only you can see it), or if you unlock a personal reading, to keep it available at its private link. You can ask us to delete it at any time." },
     { q: "Is astrology scientific?", a: "No. Astrology and numerology are symbolic languages, not science. We offer them as a mirror for reflection — never as a diagnosis or prediction." },
   ] },
   final: { title: "Your sky is waiting.", cta: "Read my chart" },
