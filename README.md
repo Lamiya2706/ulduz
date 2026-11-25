@@ -85,7 +85,30 @@ Push setup in Supabase (done for the ulduz project on 25 Nov 2026):
 1. Migrations `…_push_subscriptions.sql` and `…_push_setup.sql` (table, a random cron secret in `private.settings`, hourly `daily-push` cron job).
 2. The VAPID private key in `private.settings` under `vapid_private_key`; its public half is in `src/lib/push.ts` and `daily-push/index.ts`.
    To rotate: generate a new pair (`npx web-push generate-vapid-keys`), update both places; existing subscribers must turn notifications on again.
-3. `npx supabase functions deploy daily-push`. Each subscription gets one message a day at 8:00 in its own time zone.
+3. `daily-push` deploys from GitHub Actions with the other functions (`.github/workflows/functions.yml`). Each subscription gets one message a day at 8:00 in its own time zone.
+
+### 6. Telegram bot
+The bot (`supabase/functions/telegram-bot`) sends each person their **daily horoscope with moon notes every morning**,
+**transit alerts** on the days a slow planet's transit begins or becomes exact, and a **natal chart summary**. People either
+connect their Ulduz account (account page → **Connect Telegram**, a one-time `t.me/<bot>?start=<code>` link) or type their
+birth details in the chat. The texts come straight from the website's content library (`src/content/…`), so the bot and the
+site always say the same thing. Commands: `/today`, `/chart`, `/transits`, `/match` (compatibility with someone, from the
+site's synastry), `/settings` (hour, time zone, morning and weekly messages on/off), `/new`, `/lang`, `/stop`.
+On New and Full Moon days the morning message adds a section about them (the Full Moon one uses the site's Full Moon texts),
+and on Sunday at 19:00 local time the bot sends the week ahead (best days, Moon phases, Mercury stations, transits starting).
+Typing `@UlduzSpaceBot` in any chat offers today's horoscope to share there (turn on **Inline mode** in @BotFather → `/setinline`).
+
+The morning messages are sent by `telegram-daily`, which a pg_cron job calls every hour; each chat gets its message at its
+own local hour (default 08:00, Asia/Baku). The job authenticates with a random secret that the migration creates in Vault.
+
+1. In Telegram, open **@BotFather** → `/newbot`, choose a name and a username ending in `bot`. Copy the token.
+2. Save it as the Edge Function secret `TELEGRAM_BOT_TOKEN` (Supabase dashboard → Edge Functions → Secrets). It's the only secret:
+   the webhook's secret token is derived from it.
+3. Run `supabase/migrations/20261125160000_telegram.sql` (SQL editor or `npx supabase db push`). The functions deploy from GitHub Actions
+   (`.github/workflows/functions.yml`) on every push to `main` that touches them; it needs the repository secret `SUPABASE_ACCESS_TOKEN`
+   (supabase.com → Account → Access Tokens). By hand: `npx supabase functions deploy telegram-bot telegram-daily --use-api`.
+4. Run `select public.tg_run_daily();` once in the SQL editor: it registers the webhook and the command menu (the hourly job also checks this).
+5. If the username isn't `UlduzSpaceBot`, set the Actions variable `VITE_TELEGRAM_BOT` to it, so the account page links to the right bot.
 
 ## Before launch — checklist
 - [ ] Fill the `[placeholders]` in `src/pages/staticContent.ts` (legal name, VÖEN, email…) and have Terms / Privacy / Refunds reviewed.
