@@ -115,7 +115,7 @@ describe("auth", () => {
   });
   it("keeps Russian copy gender-neutral", () => {
     const text = JSON.stringify(AUTH_UI.ru);
-    for (const w of ["рад", "готова", "забыл", "вошёл", "вошла", "благодарна"]) expect(text).not.toMatch(new RegExp(`\\b${w}\\b`, "i"));
+    for (const w of ["рад", "готова", "забыл", "вошёл", "вошла", "благодарна", "родился", "родилась"]) expect(text).not.toMatch(new RegExp(`(?<!\\p{L})${w}(?!\\p{L})`, "iu"));
   });
   it("maps Supabase errors to messages", () => {
     expect(authErrorKey({ code: "invalid_credentials" })).toBe("invalid_credentials");
@@ -134,5 +134,24 @@ describe("auth", () => {
   it("keeps the account pages out of search indexes", () => {
     for (const p of ["/login", "/reset-password", "/account"]) expect(isPrivatePath(p)).toBe(true);
     expect(isPrivatePath("/moon")).toBe(false);
+  });
+});
+
+import { birthToProfile, metadataBirth, profileBirth } from "@/lib/profileBirth";
+describe("profile birth data", () => {
+  const r = { fullName: "Aysel Hasanova", date: "1995-06-15", time: "14:30", lat: 40.41, lon: 49.87, tz: "Asia/Baku", place: "Bakı, Azerbaijan" };
+  it("round-trips sign-up birth data through metadata into a chart link", () => {
+    const patch = metadataBirth({ birth: birthToProfile(r) })!;
+    expect(patch).toMatchObject({ birth_date: "1995-06-15", birth_time: "14:30", lat: 40.41, tz: "Asia/Baku" });
+    const p = { id: "x", lang: "az", full_name: r.fullName, ...patch } as Parameters<typeof profileBirth>[0];
+    expect(profileBirth(p)).toEqual(r);
+  });
+  it("drops a birth time without a place, and ignores bad metadata", () => {
+    const noPlace = birthToProfile({ ...r, lat: null, lon: null, place: null, tz: "UTC" });
+    expect(noPlace).toMatchObject({ birth_place: null, tz: null });
+    expect(profileBirth({ id: "x", lang: null, full_name: "A", ...noPlace } as never)?.time).toBeNull();
+    expect(metadataBirth(null)).toBeNull();
+    expect(metadataBirth({ birth: { birth_date: "15/06/1995" } })).toBeNull();
+    expect(metadataBirth({ birth: { birth_date: "1995-06-15", birth_time: "25:00", lat: 999, lon: 1 } })).toMatchObject({ birth_time: null, lat: null, tz: null });
   });
 });

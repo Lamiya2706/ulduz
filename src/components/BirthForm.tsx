@@ -1,10 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { encodeBirth, type BirthParams } from "@/lib/birth";
 import { countryName, loadCities, searchCities, type City } from "@/lib/cities";
 import { useLang } from "./Layout";
 import { track } from "@/lib/analytics";
+import { useAuth } from "@/lib/auth";
+import { profileBirth } from "@/lib/profileBirth";
+import type { Profile } from "@/lib/supabase";
 
 const ALL_ZONES: string[] = (() => { try { return Intl.supportedValuesOf("timeZone"); } catch { return ["Asia/Baku", "Europe/Istanbul", "Europe/Moscow", "Europe/London", "UTC"]; } })();
 const DEFAULT_TZ = (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Baku"; } catch { return "Asia/Baku"; } })();
@@ -14,6 +17,32 @@ export interface PersonState {
   q: string; city: City | null; manual: boolean; lat: string; lon: string; tz: string;
 }
 export const emptyPerson = (): PersonState => ({ name: "", date: "", time: "", noTime: false, q: "", city: null, manual: false, lat: "", lon: "", tz: DEFAULT_TZ });
+
+/** Profile row → form state. A saved place comes back as a ready "city" (country "") so it needs no new search. */
+export function profileToPerson(p: Profile): PersonState {
+  return {
+    ...emptyPerson(),
+    name: p.full_name ?? "",
+    date: p.birth_date ?? "",
+    time: p.birth_time ?? "",
+    noTime: !!p.birth_date && !p.birth_time,
+    q: p.birth_place ?? "",
+    city: p.lat != null && p.lon != null ? { name: p.birth_place ?? "", country: "", lat: p.lat, lon: p.lon, tz: p.tz ?? "UTC", aliases: [] } : null,
+  };
+}
+
+/** Calls `fill` once with the signed-in person's profile, as soon as it has a birth date. */
+export function useProfilePrefill(fill: (p: Profile) => void) {
+  const { profile } = useAuth();
+  const done = useRef(false);
+  useEffect(() => {
+    if (done.current || !profile?.birth_date) return;
+    done.current = true;
+    fill(profile);
+  }, [profile]); // eslint-disable-line react-hooks/exhaustive-deps
+}
+
+const untouched = (p: PersonState) => !p.name && !p.date && !p.q && !p.time;
 
 /** Validates a person's fields. Returns birth params, or an i18n error key. */
 export function personToBirth(p: PersonState, cityLabel: (c: City) => string): BirthParams | { error: string } {
@@ -119,6 +148,9 @@ export default function BirthForm() {
   const label = useCityLabel();
   const [p, setP] = useState(emptyPerson);
   const [err, setErr] = useState("");
+  const { profile } = useAuth();
+  const saved = profileBirth(profile);
+  useProfilePrefill((pr) => setP((cur) => (untouched(cur) ? profileToPerson(pr) : cur)));
   function submit(e: React.FormEvent) {
     e.preventDefault();
     const r = personToBirth(p, label);
@@ -132,6 +164,12 @@ export default function BirthForm() {
         <h2 className="text-2xl text-ivory">{t("form.title")}</h2>
         <span className="eyebrow hidden sm:inline">✦</span>
       </div>
+      {saved && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-gold/25 bg-gold/5 px-4 py-3 text-sm">
+          <span className="text-ivory/90">✦ {t("auth.prefill.text")}</span>
+          <Link to={`/${lang}/chart/${encodeBirth(saved)}`} className="text-gold hover:underline" data-track="prefill_open_chart">{t("auth.prefill.open")} →</Link>
+        </div>
+      )}
       <PersonFields value={p} onChange={(v) => { setP(v); setErr(""); }} idPrefix="me" />
       <p role="alert" className="min-h-[1.25rem] text-sm text-rose">{err}</p>
       <button type="submit" className="btn w-full sm:w-auto sm:justify-self-start">{t("form.submit")} <span aria-hidden>→</span></button>
@@ -148,6 +186,7 @@ export function CoupleForm() {
   const [a, setA] = useState(emptyPerson);
   const [b, setB] = useState(emptyPerson);
   const [err, setErr] = useState("");
+  useProfilePrefill((pr) => setA((cur) => (untouched(cur) ? profileToPerson(pr) : cur)));
   function submit(e: React.FormEvent) {
     e.preventDefault();
     const ra = personToBirth(a, label);

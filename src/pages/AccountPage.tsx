@@ -1,40 +1,23 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import AuthShell from "@/components/AuthShell";
-import { emptyPerson, PersonFields, personToBirth, useCityLabel, type PersonState } from "@/components/BirthForm";
+import { emptyPerson, PersonFields, personToBirth, profileToPerson, useCityLabel, type PersonState } from "@/components/BirthForm";
 import { useLang } from "@/components/Layout";
 import { track } from "@/lib/analytics";
 import { useAuth } from "@/lib/auth";
 import { authErrorKey } from "@/lib/authErrors";
-import { encodeBirth, type BirthParams } from "@/lib/birth";
-import type { Profile } from "@/lib/supabase";
-
-/** Profile row → birth form state. A saved place comes back as a ready "city" so it needs no new search. */
-function toPerson(p: Profile): PersonState {
-  return {
-    ...emptyPerson(),
-    name: p.full_name ?? "",
-    date: p.birth_date ?? "",
-    time: p.birth_time ?? "",
-    noTime: !!p.birth_date && !p.birth_time,
-    q: p.birth_place ?? "",
-    city: p.lat != null && p.lon != null ? { name: p.birth_place ?? "", country: "", lat: p.lat, lon: p.lon, tz: p.tz ?? "UTC", aliases: [] } : null,
-  };
-}
-
-/** Profile row → chart link code, when the profile has enough to draw a chart. */
-function profileBirth(p: Profile | null): BirthParams | null {
-  if (!p?.full_name || !p.birth_date) return null;
-  const hasPlace = p.lat != null && p.lon != null;
-  return { fullName: p.full_name, date: p.birth_date, time: hasPlace ? p.birth_time : null, lat: hasPlace ? p.lat : null, lon: hasPlace ? p.lon : null, tz: hasPlace ? p.tz ?? "UTC" : "UTC", place: hasPlace ? p.birth_place : null };
-}
+import { encodeBirth } from "@/lib/birth";
+import { birthToProfile, profileBirth } from "@/lib/profileBirth";
 
 export default function AccountPage() {
   const { t } = useTranslation();
   const lang = useLang();
   const label = useCityLabel();
-  const { ready, user, profile, saveProfile, signOut } = useAuth();
+  const { ready, user, profile, profileLoaded, saveProfile, signOut } = useAuth();
+  const [params] = useSearchParams();
+  const fromLogin = params.get("from") === "login";
+  const nav = useNavigate();
   const [p, setP] = useState<PersonState>(emptyPerson);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
@@ -43,11 +26,14 @@ export default function AccountPage() {
 
   // Fill the form once, when the profile first arrives.
   useEffect(() => {
-    if (profile && loadedFor.current !== profile.id) { loadedFor.current = profile.id; setP(toPerson(profile)); }
+    if (profile && loadedFor.current !== profile.id) { loadedFor.current = profile.id; setP(profileToPerson(profile)); }
   }, [profile]);
 
   if (ready && !user) return <Navigate to={`/${lang}/login`} replace />;
-  if (!ready || !user) return <AuthShell eyebrow={t("auth.account.eyebrow")} title={t("auth.account.titleNoName")}><p className="text-muted">{t("auth.account.loading")}</p></AuthShell>;
+  const birth = profileBirth(profile);
+  // Right after logging in: with a saved birth moment, go straight to the chart.
+  if (fromLogin && profileLoaded && birth) return <Navigate to={`/${lang}/chart/${encodeBirth(birth)}`} replace />;
+  if (!ready || !user || (fromLogin && !profileLoaded)) return <AuthShell eyebrow={t("auth.account.eyebrow")} title={t("auth.account.titleNoName")}><p className="text-muted">{t("auth.account.loading")}</p></AuthShell>;
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -55,23 +41,23 @@ export default function AccountPage() {
     if ("error" in r) return setErr(t(r.error));
     setBusy(true); setErr(""); setSaved(false);
     try {
-      const hasPlace = r.lat != null && r.lon != null;
-      await saveProfile({
-        full_name: r.fullName, birth_date: r.date, birth_time: r.time,
-        birth_place: hasPlace ? r.place : null, lat: hasPlace ? r.lat : null, lon: hasPlace ? r.lon : null, tz: hasPlace ? r.tz : null, lang,
-      });
-      track("profile_save", { has_time: !!r.time, has_place: hasPlace });
+      const first = !profile?.birth_date;
+      await saveProfile({ ...birthToProfile(r), lang });
+      track("profile_save", { has_time: !!r.time, has_place: r.lat != null, first });
       setSaved(true);
+      // First time: the chart is the reason they gave us the data, so open it.
+      if (first) nav(`/${lang}/chart/${encodeBirth(r)}`);
     } catch (e) { setErr(t(`auth.err.${authErrorKey(e)}`)); } finally { setBusy(false); }
   }
 
   const name = profile?.full_name?.split(/\s+/)[0];
-  const birth = profileBirth(profile);
+  const needsBirth = profileLoaded && !profile?.birth_date;
   return (
     <AuthShell wide eyebrow={t("auth.account.eyebrow")} title={name ? t("auth.account.title", { name }) : t("auth.account.titleNoName")} sub={t("auth.account.signedInAs", { email: user.email ?? "" })}>
       <div>
-        <h2 className="text-2xl text-ivory">{t("auth.account.birthTitle")}</h2>
-        <p className="mt-2 text-sm text-muted">{t("auth.account.birthText")}</p>
+        {needsBirth && <p className="eyebrow mb-2">{t("auth.account.welcomeEyebrow")}</p>}
+        <h2 className="text-2xl text-ivory">{needsBirth ? t("auth.account.welcomeTitle") : t("auth.account.birthTitle")}</h2>
+        <p className="mt-2 text-sm text-muted">{needsBirth ? t("auth.account.welcomeText") : t("auth.account.birthText")}</p>
       </div>
       <form onSubmit={submit} noValidate className="grid gap-5">
         <PersonFields value={p} onChange={(v) => { setP(v); setErr(""); setSaved(false); }} idPrefix="acc" />
