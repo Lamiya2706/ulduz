@@ -18,12 +18,10 @@ const en: DailyContent = {
     noTransits: "Today's planets make no tight contacts with your chart. A quiet, free day to spend as you like.", touches: "Touches",
     spheresTitle: "Your forecast by area",
     sunHouses: "Without a birth time, the houses are counted from your Sun sign. Add your time and place of birth for a more precise day.",
-    formTitle: "See your personal day", formText: "Enter your birth details once. Time and place make the forecast more precise.", formBtn: "Show my day",
-    signInTitle: "Get your day every morning", signInText: "Create a free account and your personal horoscope opens right away, with no forms.", signInBtn: "Create an account",
+    signInTitle: "Get your day every morning", signInText: "Your daily horoscope is part of your free account. Sign up once with your birth details and it opens here every day.", logIn: "I have an account", signInBtn: "Create an account",
     saveTitle: "Add your birth details", saveText: "Save your birth moment in your account and your daily horoscope will be waiting here every day.", saveBtn: "Add my details",
     change: "Change details", openChart: "Open my natal chart", asc: "Ascendant",
     disclaimer: "Calculated for your time zone from real planet positions. Astrology is a symbolic language: use the day as a gentle guide, not a rule.",
-    teaser: "Your personal horoscope for today, based on your birth chart",
   },
   houses: [
     { focus: "You are in focus. Your body, your look and how you come across ask for attention.", tip: "Do one thing just for yourself: a walk, a new outfit, an early night." },
