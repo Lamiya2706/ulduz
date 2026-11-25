@@ -89,7 +89,9 @@ own local hour (default 08:00, Asia/Baku). The job authenticates with a random s
 1. In Telegram, open **@BotFather** → `/newbot`, choose a name and a username ending in `bot`. Copy the token.
 2. Save it as the Edge Function secret `TELEGRAM_BOT_TOKEN` (Supabase dashboard → Edge Functions → Secrets). It's the only secret:
    the webhook's secret token is derived from it.
-3. `npx supabase db push` (adds `tg_chats`, `tg_link_codes`, the hourly job) and `npx supabase functions deploy telegram-bot telegram-daily`.
+3. Run `supabase/migrations/20261125140000_telegram.sql` (SQL editor or `npx supabase db push`). The functions deploy from GitHub Actions
+   (`.github/workflows/functions.yml`) on every push to `main` that touches them; it needs the repository secret `SUPABASE_ACCESS_TOKEN`
+   (supabase.com → Account → Access Tokens). By hand: `npx supabase functions deploy telegram-bot telegram-daily --use-api`.
 4. Run `select public.tg_run_daily();` once in the SQL editor: it registers the webhook and the command menu (the hourly job also checks this).
 5. If the username isn't `UlduzSpaceBot`, set the Actions variable `VITE_TELEGRAM_BOT` to it, so the account page links to the right bot.
 
