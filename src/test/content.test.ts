@@ -101,3 +101,38 @@ describe("full moon content", () => {
     expect(nearestFullMoon(new Date("2026-11-27T10:00:00Z")).date.toISOString().slice(0, 10)).toBe("2026-12-24");
   });
 });
+
+import { AUTH_UI } from "@/i18n/auth";
+import { authErrorKey, urlAuthError } from "@/lib/authErrors";
+import { isPrivatePath } from "@/lib/seo";
+describe("auth", () => {
+  const keys = (o: object): string[] => Object.entries(o).flatMap(([k, v]) => (v && typeof v === "object" && !Array.isArray(v) ? keys(v).map((x) => `${k}.${x}`) : [k])).sort();
+  it("has the same strings in every language, with a message for every error", () => {
+    for (const l of ["az", "ru"] as const) expect(keys(AUTH_UI[l])).toEqual(keys(AUTH_UI.en));
+    for (const ui of Object.values(AUTH_UI)) {
+      for (const k of ["invalid_credentials", "email_not_confirmed", "user_exists", "weak_password", "rate_limit", "email_invalid", "same_password", "link_expired", "network", "generic"] as const) expect(ui.err[k]).toBeTruthy();
+    }
+  });
+  it("keeps Russian copy gender-neutral", () => {
+    const text = JSON.stringify(AUTH_UI.ru);
+    for (const w of ["рад", "готова", "забыл", "вошёл", "вошла", "благодарна"]) expect(text).not.toMatch(new RegExp(`\\b${w}\\b`, "i"));
+  });
+  it("maps Supabase errors to messages", () => {
+    expect(authErrorKey({ code: "invalid_credentials" })).toBe("invalid_credentials");
+    expect(authErrorKey({ message: "Invalid login credentials" })).toBe("invalid_credentials");
+    expect(authErrorKey({ code: "email_not_confirmed" })).toBe("email_not_confirmed");
+    expect(authErrorKey({ code: "user_already_exists" })).toBe("user_exists");
+    expect(authErrorKey({ code: "weak_password" })).toBe("weak_password");
+    expect(authErrorKey({ code: "over_email_send_rate_limit" })).toBe("rate_limit");
+    expect(authErrorKey({ status: 429 })).toBe("rate_limit");
+    expect(authErrorKey({ name: "AuthRetryableFetchError", message: "Failed to fetch" })).toBe("network");
+    expect(authErrorKey(new Error("boom"))).toBe("generic");
+    expect(urlAuthError("?error=access_denied&error_code=otp_expired", "")).toBe("link_expired");
+    expect(urlAuthError("", "#error_code=otp_expired")).toBe("link_expired");
+    expect(urlAuthError("?mode=signup", "")).toBeNull();
+  });
+  it("keeps the account pages out of search indexes", () => {
+    for (const p of ["/login", "/reset-password", "/account"]) expect(isPrivatePath(p)).toBe(true);
+    expect(isPrivatePath("/moon")).toBe(false);
+  });
+});

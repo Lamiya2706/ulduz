@@ -8,6 +8,7 @@ import { NUM_UI } from "../i18n/numerology";
 import { SKY_UI } from "../i18n/sky";
 import { YEAR_UI } from "../i18n/year";
 import { FULLMOON_UI } from "../i18n/fullmoon";
+import { AUTH_UI } from "../i18n/auth";
 import { getPage } from "../pages/staticContent";
 
 export type SeoLang = "az" | "en" | "ru";
@@ -18,7 +19,7 @@ const UI = { en, az, ru };
 export const PUBLIC_ROUTES = ["", "moon", "full-moon", "year", "numerology", "couple", "page/about", "page/terms", "page/privacy", "page/refund", "page/contact"];
 
 /** Personal pages (someone's chart, reading or payment) must not be indexed. */
-export const isPrivatePath = (rest: string) => /^\/(chart|reading|payment)\b|^\/couple\/.+|^\/numerology\/.+|^\/year\/.+/.test(rest);
+export const isPrivatePath = (rest: string) => /^\/(chart|reading|payment|login|reset-password|account)\b|^\/couple\/.+|^\/numerology\/.+|^\/year\/.+/.test(rest);
 
 export function pageMeta(lang: SeoLang, rest: string): { title: string; description: string } {
   const r = rest.replace(/^\/+|\/+$/g, "");
@@ -28,6 +29,9 @@ export function pageMeta(lang: SeoLang, rest: string): { title: string; descript
   if (r.startsWith("year")) return YEAR_UI[lang].meta;
   if (r.startsWith("numerology")) return NUM_UI[lang].meta;
   if (r.startsWith("couple")) return COUPLE_UI[lang].meta;
+  if (r.startsWith("login")) return AUTH_UI[lang].meta.login;
+  if (r.startsWith("reset-password")) return AUTH_UI[lang].meta.reset;
+  if (r.startsWith("account")) return AUTH_UI[lang].meta.account;
   const m = r.match(/^page\/(\w+)/);
   if (m) {
     const p = getPage(lang, m[1]);

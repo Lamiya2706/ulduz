@@ -34,7 +34,7 @@ export function personToBirth(p: PersonState, cityLabel: (c: City) => string): B
 
 export function useCityLabel() {
   const lang = useLang();
-  return (c: City) => `${c.name}, ${countryName(c.country, lang)}`;
+  return (c: City) => (c.country ? `${c.name}, ${countryName(c.country, lang)}` : c.name);
 }
 
 /** The fields for one person (name, date, time, birthplace). Controlled. */
