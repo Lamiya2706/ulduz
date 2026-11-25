@@ -120,7 +120,7 @@ function Landing() {
   return (
     <>
       {/* HERO */}
-      <section className="relative mx-auto max-w-6xl px-5 pb-10 pt-8 sm:px-8 lg:pt-16">
+      <section className="relative mx-auto max-w-6xl overflow-x-clip px-5 pb-10 pt-8 sm:px-8 lg:pt-16">
         <div className="pointer-events-none absolute -right-40 top-0 w-[620px] opacity-60 max-lg:left-1/2 max-lg:-translate-x-1/2 max-lg:opacity-25 lg:-right-24 lg:top-6 lg:w-[560px]">
           <HeroWheel />
         </div>
