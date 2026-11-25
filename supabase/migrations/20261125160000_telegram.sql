@@ -68,7 +68,7 @@ where not exists (select 1 from vault.secrets where name = 'telegram_cron_secret
 
 create or replace function public.tg_cron_ok(secret text) returns boolean
 language sql stable security definer set search_path = '' as $$
-  select exists (select 1 from vault.decrypted_secrets where name = 'telegram_cron_secret' and decrypted_secret = secret);
+  select exists (select 1 from vault.decrypted_secrets where name = 'telegram_cron_secret' and decrypted_secret = $1); -- $1, not the name: decrypted_secrets has its own "secret" column
 $$;
 revoke execute on function public.tg_cron_ok(text) from public, anon, authenticated;
 grant execute on function public.tg_cron_ok(text) to service_role;

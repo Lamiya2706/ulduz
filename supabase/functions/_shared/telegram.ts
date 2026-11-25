@@ -24,6 +24,7 @@ export const send = (chatId: number, text: string, keyboard?: Keyboard) =>
     ...(keyboard ? { reply_markup: { inline_keyboard: keyboard } } : {}),
   });
 
+export const botUsername = () => Deno.env.get("TELEGRAM_BOT_USERNAME") ?? "UlduzSpaceBot";
 export const site = () => env("SITE_URL", "https://ulduz.space").replace(/\/$/, "");
 
 /**
@@ -35,17 +36,17 @@ export const webhookSecret = async () => (await sha256(`ulduz-telegram-webhook:$
 const COMMANDS: Record<Lang, { command: string; description: string }[]> = {
   az: [
     { command: "today", description: "Bu günün horoskopu" }, { command: "chart", description: "Natal xəritənin xülasəsi" },
-    { command: "transits", description: "Böyük tranzitlər" }, { command: "settings", description: "Səhər mesajı" },
+    { command: "transits", description: "Böyük tranzitlər" }, { command: "match", description: "Uyğunluq" }, { command: "settings", description: "Səhər mesajı" },
     { command: "new", description: "Doğum məlumatlarını dəyiş" }, { command: "lang", description: "Dil" },
   ],
   en: [
     { command: "today", description: "Today's horoscope" }, { command: "chart", description: "Your natal chart summary" },
-    { command: "transits", description: "Your big transits" }, { command: "settings", description: "The morning message" },
+    { command: "transits", description: "Your big transits" }, { command: "match", description: "Compatibility" }, { command: "settings", description: "The morning message" },
     { command: "new", description: "Change birth details" }, { command: "lang", description: "Language" },
   ],
   ru: [
     { command: "today", description: "Гороскоп на сегодня" }, { command: "chart", description: "Сводка натальной карты" },
-    { command: "transits", description: "Большие транзиты" }, { command: "settings", description: "Утреннее сообщение" },
+    { command: "transits", description: "Большие транзиты" }, { command: "match", description: "Совместимость" }, { command: "settings", description: "Утреннее сообщение" },
     { command: "new", description: "Изменить данные рождения" }, { command: "lang", description: "Язык" },
   ],
 };
@@ -53,9 +54,11 @@ const COMMANDS: Record<Lang, { command: string; description: string }[]> = {
 /** Points Telegram at the telegram-bot function and registers the command menu, if that isn't done yet. */
 export async function ensureWebhook(): Promise<string> {
   const url = `${env("SUPABASE_URL").replace(/\/$/, "")}/functions/v1/telegram-bot`;
+  const updates = ["message", "callback_query", "inline_query"];
   const info = await tg("getWebhookInfo", {});
-  if (info.ok && info.result?.url === url) return "webhook ok";
-  const set = await tg("setWebhook", { url, secret_token: await webhookSecret(), allowed_updates: ["message", "callback_query"], drop_pending_updates: true });
+  const have: string[] = info.result?.allowed_updates ?? [];
+  if (info.ok && info.result?.url === url && updates.every((u) => have.includes(u))) return "webhook ok";
+  const set = await tg("setWebhook", { url, secret_token: await webhookSecret(), allowed_updates: updates });
   if (!set.ok) return `setWebhook failed: ${set.description ?? set.error_code}`;
   await tg("setMyCommands", { commands: COMMANDS.az });
   await tg("setMyCommands", { commands: COMMANDS.az, language_code: "az" });
@@ -74,25 +77,29 @@ export const loadCities = () =>
   }).catch((e) => { cities = null; throw e; }));
 
 // ---------- Chats ----------
-export type Step = "lang" | "name" | "date" | "time" | "city" | "tzcity" | "done";
-export interface ChatData { fullName?: string; date?: string; time?: string | null; cands?: City[] }
+export type Step = "lang" | "name" | "date" | "time" | "city" | "tzcity" | "m_name" | "m_date" | "m_time" | "m_city" | "done";
+export interface ChatData {
+  fullName?: string; date?: string; time?: string | null; cands?: City[];
+  partner?: { fullName?: string; date?: string; time?: string | null }; // while asking for /match
+}
 export interface Chat {
   chat_id: number; user_id: string | null; lang: Lang; step: Step; data: ChatData; birth: BirthParams | null;
   daily: boolean; send_hour: number; tz: string; last_daily: string | null; blocked: boolean;
+  weekly: boolean; last_weekly: string | null;
 }
-const COLS = "chat_id, user_id, lang, step, data, birth, daily, send_hour, tz, last_daily, blocked";
+export const COLS = "chat_id, user_id, lang, step, data, birth, daily, send_hour, tz, last_daily, blocked, weekly, last_weekly";
 
 export async function loadChat(chatId: number): Promise<Chat | null> {
   const { data } = await db().from("tg_chats").select(COLS).eq("chat_id", chatId).maybeSingle();
   return (data as Chat | null) ?? null;
 }
 export const newChat = (chatId: number, lang: Lang = "az"): Chat => ({
-  chat_id: chatId, user_id: null, lang, step: "lang", data: {}, birth: null, daily: true, send_hour: 8, tz: "Asia/Baku", last_daily: null, blocked: false,
+  chat_id: chatId, user_id: null, lang, step: "lang", data: {}, birth: null, daily: true, send_hour: 8, tz: "Asia/Baku", last_daily: null, blocked: false, weekly: true, last_weekly: null,
 });
 export async function saveChat(c: Chat) {
   const { error } = await db().from("tg_chats").upsert({
     chat_id: c.chat_id, user_id: c.user_id, lang: c.lang, step: c.step, data: c.data, birth: c.birth,
-    daily: c.daily, send_hour: c.send_hour, tz: c.tz, last_daily: c.last_daily, blocked: c.blocked,
+    daily: c.daily, send_hour: c.send_hour, tz: c.tz, last_daily: c.last_daily, blocked: c.blocked, weekly: c.weekly,
   });
   if (error) throw error;
 }

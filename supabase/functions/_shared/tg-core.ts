@@ -2,12 +2,14 @@
 // Input parsing, city search, the bot's own texts (az / en / ru) and the messages it sends.
 // The horoscope, moon and transit texts come from the website's content library (src/content), so the bot
 // and the site always say the same thing. No Deno or network APIs here, so it is unit-tested with vitest.
-import { ASPECTS, type Chart } from "./astro.ts";
+import * as Astronomy from "npm:astronomy-engine@2.1.19";
+import { ASPECTS, computeChart, planetLon, signOf, type Chart, type PlanetKey } from "./astro.ts";
 import type { BirthParams } from "./birthcode.ts";
 import { personalDay, type NatalPoint } from "./daily.ts";
 import { numerology } from "./numerology.ts";
 import type { Lang } from "./prompt.ts";
-import { SPHERES } from "./sky.ts";
+import { skyDetails, SPHERES } from "./sky.ts";
+import { synastry, SYN_CATEGORIES, type SynPoint } from "./synastry.ts";
 import { transitAlerts, type AlertPoint, type TransitAlert } from "./transits.ts";
 import { PLANETS, SIGN_GLYPHS } from "./zodiac.ts";
 import contentAz from "../../../src/content/az.ts";
@@ -25,6 +27,12 @@ import moreRu from "../../../src/content/sky/more-ru.ts";
 import transAz from "../../../src/content/transits/az.ts";
 import transEn from "../../../src/content/transits/en.ts";
 import transRu from "../../../src/content/transits/ru.ts";
+import compatAz from "../../../src/content/compat/az.ts";
+import compatEn from "../../../src/content/compat/en.ts";
+import compatRu from "../../../src/content/compat/ru.ts";
+import fullAz from "../../../src/content/fullmoon/az.ts";
+import fullEn from "../../../src/content/fullmoon/en.ts";
+import fullRu from "../../../src/content/fullmoon/ru.ts";
 import { formatDate, formatDayMonth } from "../../../src/lib/date.ts";
 
 export const LANGS: Lang[] = ["az", "en", "ru"];
@@ -33,6 +41,8 @@ const D = { az: dailyAz, en: dailyEn, ru: dailyRu };
 const S = { az: skyAz, en: skyEn, ru: skyRu };
 const M = { az: moreAz, en: moreEn, ru: moreRu };
 const TR = { az: transAz, en: transEn, ru: transRu };
+const CC = { az: compatAz, en: compatEn, ru: compatRu };
+const FM = { az: fullAz, en: fullEn, ru: fullRu };
 
 export const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const strip = (g: string) => g.replace(/︎/g, "");
@@ -195,9 +205,9 @@ export const T = {
     ru: "Сначала мне нужны твои данные рождения.",
   },
   menu: {
-    az: "Nə göstərim?\n\n/today — bu günün horoskopu\n/chart — natal xəritənin xülasəsi\n/transits — böyük tranzitlər\n/settings — səhər mesajı\n/new — doğum məlumatlarını dəyiş\n/lang — dil",
-    en: "What shall I show you?\n\n/today — today's horoscope\n/chart — your natal chart summary\n/transits — your big transits\n/settings — the morning message\n/new — change birth details\n/lang — language",
-    ru: "Что показать?\n\n/today — гороскоп на сегодня\n/chart — сводка натальной карты\n/transits — большие транзиты\n/settings — утреннее сообщение\n/new — изменить данные рождения\n/lang — язык",
+    az: "Nə göstərim?\n\n/today — bu günün horoskopu\n/chart — natal xəritənin xülasəsi\n/transits — böyük tranzitlər\n/match — uyğunluq\n/settings — səhər mesajı\n/new — doğum məlumatlarını dəyiş\n/lang — dil",
+    en: "What shall I show you?\n\n/today — today's horoscope\n/chart — your natal chart summary\n/transits — your big transits\n/match — compatibility with someone\n/settings — the morning message\n/new — change birth details\n/lang — language",
+    ru: "Что показать?\n\n/today — гороскоп на сегодня\n/chart — сводка натальной карты\n/transits — большие транзиты\n/match — совместимость\n/settings — утреннее сообщение\n/new — изменить данные рождения\n/lang — язык",
   },
   btnToday: { az: "☀️ Bu gün", en: "☀️ Today", ru: "☀️ Сегодня" },
   btnChart: { az: "🌌 Xəritəm", en: "🌌 My chart", ru: "🌌 Моя карта" },
@@ -231,6 +241,56 @@ export const T = {
     ru: "Утренние сообщения выключены. Включить снова: /settings.",
   },
   error: { az: "Nəsə alınmadı. Bir az sonra yenidən yoxla.", en: "Something went wrong. Please try again a little later.", ru: "Что-то пошло не так. Попробуй чуть позже." },
+  // compatibility
+  btnMatch: { az: "💞 Uyğunluq", en: "💞 Compatibility", ru: "💞 Совместимость" },
+  matchAskName: {
+    az: "Gəl uyğunluğunuza baxaq 💞\n\nQarşı tərəfin adı nədir?",
+    en: "Let's look at your compatibility 💞\n\nWhat is the other person's name?",
+    ru: "Давай посмотрим вашу совместимость 💞\n\nКак зовут второго человека?",
+  },
+  matchAskDate: {
+    az: "{name} nə vaxt doğulub? Məsələn 15.06.1995",
+    en: "When was {name} born? E.g. 15.06.1995",
+    ru: "Когда родился(ась) {name}? Например 15.06.1995",
+  },
+  matchAskTime: {
+    az: "{name} saat neçədə doğulub? Bilmirsənsə, düyməni bas.",
+    en: "What time was {name} born? If you don't know, tap the button.",
+    ru: "Во сколько родился(ась) {name}? Если не знаешь, нажми кнопку.",
+  },
+  matchAskCity: { az: "{name} hansı şəhərdə doğulub?", en: "Which city was {name} born in?", ru: "В каком городе родился(ась) {name}?" },
+  matchTitle: { az: "{a} və {b}: uyğunluq", en: "{a} & {b}: compatibility", ru: "{a} и {b}: совместимость" },
+  matchContacts: { az: "Ən güclü əlaqələr", en: "The strongest contacts", ru: "Самые сильные связи" },
+  matchOpen: { az: "💞 Tam analiz saytda", en: "💞 Full analysis on Ulduz", ru: "💞 Полный разбор на Ulduz" },
+  matchAgain: { az: "💞 Başqa biri", en: "💞 Someone else", ru: "💞 Другой человек" },
+  // weekly
+  weekTitle: { az: "Sənin həftən · {range}", en: "Your week ahead · {range}", ru: "Твоя неделя · {range}" },
+  weekBest: { az: "Ən yaxşı günlər", en: "Best days", ru: "Лучшие дни" },
+  weekCare: { az: "Ehtiyatlı olmaq lazım olan gün", en: "Take it easy on", ru: "Береги силы в" },
+  weekEvents: { az: "Həftənin hadisələri", en: "This week in the sky", ru: "События недели" },
+  weekTransits: { az: "Başlayan tranzitlər", en: "Transits starting", ru: "Начинаются транзиты" },
+  weekMoonIn: { az: "Ay {house}-ci evdə", en: "Moon in your {house} house", ru: "Луна в {house} доме" },
+  weekly: { az: "Bazar axşamı həftəlik baxış: <b>{state}</b>", en: "Sunday evening week ahead: <b>{state}</b>", ru: "Обзор недели в воскресенье вечером: <b>{state}</b>" },
+  weeklyOn: { az: "🗓 Həftəlik: aç", en: "🗓 Weekly: on", ru: "🗓 Неделя: вкл" },
+  weeklyOff: { az: "🗓 Həftəlik: bağla", en: "🗓 Weekly: off", ru: "🗓 Неделя: выкл" },
+  // new / full moon
+  moonPeak: { az: "Zirvə: saat {time}", en: "Peaks at {time}", ru: "Пик в {time}" },
+  newMoonText: {
+    az: "Xəritəndə bu sahəyə düşür: {area}. Burada niyyət qoymaq və yeni bir şeyə başlamaq üçün yaxşı andır.",
+    en: "It falls in the part of your chart about {area}. A good moment to set an intention and start something new here.",
+    ru: "Оно приходится на ту часть твоей карты, где {area}. Хороший момент загадать намерение и начать что-то новое.",
+  },
+  fullMoonText: {
+    az: "Xəritəndə bu sahəyə düşür: {area}. Burada nəsə yetişir: nəyin bitməyə hazır olduğuna bax, qalanını burax.",
+    en: "It falls in the part of your chart about {area}. Something here comes to a head: notice what is ready to finish, and let go of the rest.",
+    ru: "Оно приходится на ту часть твоей карты, где {area}. Здесь что-то созревает: заметь, что готово завершиться, и отпусти лишнее.",
+  },
+  newMoon: { az: "Təzə Ay", en: "New Moon", ru: "Новолуние" },
+  fullMoon: { az: "Bədirlənmiş Ay", en: "Full Moon", ru: "Полнолуние" },
+  // inline
+  inlineTitle: { az: "Bu günün horoskopunu paylaş", en: "Share today's horoscope", ru: "Поделиться гороскопом на сегодня" },
+  inlineNoBirth: { az: "Əvvəlcə botda doğum məlumatlarını əlavə et", en: "Add your birth details in the bot first", ru: "Сначала добавь данные рождения в боте" },
+  inlineFrom: { az: "✦ Öz horoskopunu al", en: "✦ Get your own horoscope", ru: "✦ Получить свой гороскоп" },
   // chart summary
   sun: { az: "Günəş", en: "Sun", ru: "Солнце" },
   moon: { az: "Ay", en: "Moon", ru: "Луна" },
@@ -316,9 +376,9 @@ export function transitsMessage(lang: Lang, chart: Chart, now = new Date()): str
 /**
  * The morning message: the tone of the day, the Moon's house with a tip, today's contacts with the birth chart,
  * the forecast by area, moon notes (phase, lunar day, what the Moon's sign is good for, haircut, retrogrades)
- * and any big transit that begins or is exact today.
+ * a New or Full Moon section on those days (when `tz` is given), and any big transit that begins or is exact today.
  */
-export function dailyMessage(lang: Lang, birth: BirthParams, chart: Chart, day: { y: number; m: number; d: number }): string {
+export function dailyMessage(lang: Lang, birth: BirthParams, chart: Chart, day: { y: number; m: number; d: number }, tz?: string): string {
   const dc = D[lang], c = C[lang], sc = S[lang], sm = M[lang];
   const pd = personalDay(chart, day.y, day.m, day.d);
   const house = dc.houses[pd.moonHouse - 1];
@@ -354,10 +414,142 @@ export function dailyMessage(lang: Lang, birth: BirthParams, chart: Chart, day: 
   const named = (["Mercury", "Venus", "Mars"] as const).filter((k) => sky.retro.includes(k));
   for (const k of named) L.push(`℞ ${esc(sc.retro[k] ?? "")}`);
 
+  const moonEv = tz ? moonEventSection(lang, chart, pd.date, tz) : null;
+  if (moonEv) L.push("", moonEv);
+
   const today = alertsForDay(transitAlerts(chart, new Date(pd.date + "T12:00:00Z"), 1), pd.date);
   if (today.length) {
     L.push("", `🪐 <b>${T.transitToday[lang]}</b>`);
     for (const { a, note } of today) L.push("", alertLine(lang, a, note === "exact" ? T.exactToday[lang] : T.begins[lang]));
   }
+  return L.join("\n");
+}
+
+// ---------- New and Full Moon ----------
+const AREAS: Record<Lang, string[]> = {
+  en: ["you, your body and your look", "money and what you value", "talks, messages and learning", "home and family", "love, joy and creativity", "work, health and routines", "partners and close relationships", "deep feelings and shared money", "travel, study and big ideas", "career and reputation", "friends and hopes for the future", "rest, dreams and inner healing"],
+  az: ["sən, bədənin və görünüşün", "pul və dəyər verdiyin şeylər", "söhbətlər, mesajlar və öyrənmə", "ev və ailə", "sevgi, sevinc və yaradıcılıq", "iş, sağlamlıq və gündəlik qayda", "tərəfdaşlar və yaxın münasibətlər", "dərin hisslər və ortaq pul", "səyahət, təhsil və böyük ideyalar", "karyera və nüfuz", "dostlar və gələcək arzuları", "istirahət, yuxular və daxili şəfa"],
+  ru: ["ты сам(а), твоё тело и внешность", "деньги и то, что ты ценишь", "разговоры, сообщения и учёба", "дом и семья", "любовь, радость и творчество", "работа, здоровье и распорядок", "партнёры и близкие отношения", "глубокие чувства и общие деньги", "путешествия, учёба и большие идеи", "карьера и репутация", "друзья и надежды на будущее", "отдых, сны и внутреннее исцеление"],
+};
+
+export interface MoonEvent { phase: "new" | "full"; at: Date; sign: number }
+
+/** New and Full Moons that peak between two instants. */
+export function moonEvents(from: Date, to: Date): MoonEvent[] {
+  const out: MoonEvent[] = [];
+  for (const [phase, angle] of [["new", 0], ["full", 180]] as const) {
+    let t = from;
+    for (let i = 0; i < 3; i++) {
+      const hit = Astronomy.SearchMoonPhase(angle, t, 40);
+      if (!hit || hit.date >= to) break;
+      out.push({ phase, at: hit.date, sign: signOf(planetLon("Moon", hit.date)) });
+      t = new Date(hit.date.getTime() + 86400000);
+    }
+  }
+  return out.sort((a, b) => a.at.getTime() - b.at.getTime());
+}
+
+/** Start and end (as instants) of a local calendar day in a time zone. */
+export function localDayBounds(date: string, tz: string): [Date, Date] {
+  // Find the UTC instant whose local date/hour is date 00:00, by correcting a UTC guess with the zone's offset.
+  const guess = new Date(date + "T00:00:00Z");
+  const l = localNow(tz, guess);
+  const shown = Date.UTC(l.y, l.m - 1, l.d, l.hour);
+  const start = new Date(guess.getTime() - (shown - guess.getTime()));
+  return [start, new Date(start.getTime() + 86400000)];
+}
+
+const clock = (lang: Lang, t: Date, tz: string) => {
+  try { return new Intl.DateTimeFormat(lang === "az" ? "en-GB" : lang, { hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: tz }).format(t); }
+  catch { return t.toISOString().slice(11, 16); }
+};
+
+/** The New or Full Moon section of the morning message, when one peaks on this local day. */
+export function moonEventSection(lang: Lang, chart: Chart, date: string, tz: string): string | null {
+  const [from, to] = localDayBounds(date, tz);
+  const ev = moonEvents(from, to)[0];
+  if (!ev) return null;
+  const c = C[lang];
+  const base = chart.angles ? signOf(chart.angles.asc) : chart.pos.Sun.sign;
+  const house = ((ev.sign - base + 12) % 12) + 1;
+  const L = [`${ev.phase === "new" ? "🌑" : "🌕"} <b>${ev.phase === "new" ? T.newMoon[lang] : T.fullMoon[lang]} ${c.signIn[ev.sign]}</b> · ${fill(T.moonPeak[lang], { time: clock(lang, ev.at, tz) })}`];
+  L.push(esc(fill(ev.phase === "new" ? T.newMoonText[lang] : T.fullMoonText[lang], { area: AREAS[lang][house - 1] })));
+  if (ev.phase === "full") {
+    const fm = FM[lang], sg = fm.signs[ev.sign];
+    L.push(`${esc(sg.theme)}`, `🍃 ${fm.ui.releaseL}: ${esc(sg.release)}`, `✨ ${fm.ui.callL}: ${esc(sg.call)}`, `<i>${esc(sg.affirmation)}</i>`);
+  }
+  return L.join("\n");
+}
+
+// ---------- Compatibility ----------
+const tier = (v: number) => (v >= 72 ? "high" : v >= 55 ? "mid" : "low") as "high" | "mid" | "low";
+const bar = (v: number) => { const n = Math.round(v / 10); return "▰".repeat(n) + "▱".repeat(10 - n); };
+
+/** The /match answer: overall harmony, the five areas and the strongest contacts, from the site's synastry. */
+export function matchMessage(lang: Lang, a: BirthParams, b: BirthParams): string {
+  const A = computeChart(a), B = computeChart(b);
+  const syn = synastry(A, B, numerology(a.fullName, a.date).lifePath, numerology(b.fullName, b.date).lifePath);
+  const cc = CC[lang], c = C[lang];
+  const pname = (p: SynPoint) => (p === "Ascendant" ? cc.ascendant : c.planetNames[p as PlanetKey]);
+  const L = [`💞 <b>${esc(fill(T.matchTitle[lang], { a: firstName(a.fullName), b: firstName(b.fullName) }))}</b>`, ""];
+  L.push(`<b>${syn.overall}%</b> ${bar(syn.overall)}`, esc(cc.overall[tier(syn.overall)]), "");
+  for (const k of SYN_CATEGORIES) L.push(`<b>${cc.categories[k].name}</b> · ${syn.scores[k]}%`, esc(cc.categories[k][tier(syn.scores[k])]));
+  const top = syn.aspects.filter((x) => cc.pairs[x.pair]).slice(0, 3);
+  if (top.length) {
+    L.push("", `<b>${T.matchContacts[lang]}</b>`);
+    for (const x of top) L.push(`${x.flow ? "✦" : "⚡"} ${pname(x.a)} ${symbol(x.type)} ${pname(x.b)}: ${esc(cc.pairs[x.pair][x.flow ? 0 : 1])}`);
+  }
+  return L.join("\n");
+}
+
+// ---------- Weekly overview ----------
+/** Sunday evening: the seven days from `start` (the next Monday), with the best days, sky events and new transits. */
+export function weeklyMessage(lang: Lang, birth: BirthParams, chart: Chart, start: { y: number; m: number; d: number }, tz: string): string {
+  const c = C[lang], sc = S[lang], sm = M[lang], dc = D[lang];
+  const days = Array.from({ length: 7 }, (_, i) => {
+    const dt = new Date(Date.UTC(start.y, start.m - 1, start.d + i, 12));
+    return { dt, pd: personalDay(chart, dt.getUTCFullYear(), dt.getUTCMonth() + 1, dt.getUTCDate()) };
+  });
+  const wd = (dt: Date) => sc.ui.weekdays[(dt.getUTCDay() + 6) % 7];
+  const range = `${formatDayMonth(days[0].dt, lang)} – ${formatDayMonth(days[6].dt, lang)}`;
+  const L = [`🗓 <b>${esc(fill(T.weekTitle[lang], { range }))}</b>`, `${esc(firstName(birth.fullName))} ✦`, ""];
+  for (const { dt, pd } of days) {
+    L.push(`<b>${wd(dt)} ${dt.getUTCDate()}</b>  ${dots(pd.overall)}  ${strip(SIGN_GLYPHS[pd.moonSign])} ${esc(dc.houses[pd.moonHouse - 1].focus.split(/[.!]/)[0])}`);
+  }
+  const max = Math.max(...days.map((x) => x.pd.overall)), min = Math.min(...days.map((x) => x.pd.overall));
+  L.push("", `⭐ ${T.weekBest[lang]}: ${days.filter((x) => x.pd.overall === max).map((x) => `${wd(x.dt)} ${x.dt.getUTCDate()}`).join(", ")}`);
+  if (min < max && min <= 2) L.push(`🌧 ${T.weekCare[lang]}: ${days.filter((x) => x.pd.overall === min).map((x) => `${wd(x.dt)} ${x.dt.getUTCDate()}`).join(", ")}`);
+
+  const ev: string[] = [];
+  const [from] = localDayBounds(days[0].pd.date, tz);
+  const to = new Date(from.getTime() + 7 * 86400000);
+  for (const e of moonEvents(from, to)) {
+    ev.push(`${e.phase === "new" ? "🌑" : "🌕"} ${e.phase === "new" ? sm.ui.nextNew : sm.ui.nextFull} ${c.signIn[e.sign]}: ${formatDayMonth(new Date(e.at.getTime() + 0), lang)}, ${clock(lang, e.at, tz)}`);
+  }
+  const det = skyDetails(start.y, start.m, start.d);
+  if (det.mercury.changes && det.mercury.changes < to) {
+    ev.push(`☿ ${det.mercury.retro ? sm.ui.mercEnds : sm.ui.mercStarts}: ${formatDayMonth(det.mercury.changes, lang)}`);
+  }
+  if (ev.length) L.push("", `<b>${T.weekEvents[lang]}</b>`, ...ev);
+
+  const first = days[0].pd.date, last = days[6].pd.date;
+  const starting = transitAlerts(chart, new Date(first + "T12:00:00Z"), 7).filter((a) => a.start >= first && a.start <= last);
+  if (starting.length) {
+    L.push("", `🪐 <b>${T.weekTransits[lang]}</b>`);
+    for (const a of starting.slice(0, 3)) L.push("", alertLine(lang, a));
+  }
+  return L.join("\n");
+}
+
+// ---------- Inline sharing ----------
+/** A short horoscope for sharing in any chat: tone of the day, the Moon's house and the areas. */
+export function shareDay(lang: Lang, birth: BirthParams, chart: Chart, day: { y: number; m: number; d: number }): string {
+  const dc = D[lang], c = C[lang], sm = M[lang];
+  const pd = personalDay(chart, day.y, day.m, day.d);
+  const house = dc.houses[pd.moonHouse - 1];
+  const L = [`✦ <b>${esc(fill(T.dayFor[lang], { name: firstName(birth.fullName), date: formatDate(pd.date, lang) }))}</b>`, ""];
+  L.push(`${dots(pd.overall)}  ${esc(dc.ui.overall[pd.overall - 1])}`, "");
+  L.push(`${strip(SIGN_GLYPHS[pd.moonSign])} ${esc(dc.ui.moonTitle(c.ordinal(pd.moonHouse), c.signIn[pd.moonSign]))}`, esc(house.focus), `💡 ${esc(house.tip)}`, "");
+  L.push(SPHERES.map((k) => `${sm.ui.sphereNames[k]} ${dots(pd.spheres[k])}`).join("\n"));
   return L.join("\n");
 }

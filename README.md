@@ -94,7 +94,11 @@ The bot (`supabase/functions/telegram-bot`) sends each person their **daily horo
 **transit alerts** on the days a slow planet's transit begins or becomes exact, and a **natal chart summary**. People either
 connect their Ulduz account (account page → **Connect Telegram**, a one-time `t.me/<bot>?start=<code>` link) or type their
 birth details in the chat. The texts come straight from the website's content library (`src/content/…`), so the bot and the
-site always say the same thing. Commands: `/today`, `/chart`, `/transits`, `/settings` (hour, time zone, on/off), `/new`, `/lang`, `/stop`.
+site always say the same thing. Commands: `/today`, `/chart`, `/transits`, `/match` (compatibility with someone, from the
+site's synastry), `/settings` (hour, time zone, morning and weekly messages on/off), `/new`, `/lang`, `/stop`.
+On New and Full Moon days the morning message adds a section about them (the Full Moon one uses the site's Full Moon texts),
+and on Sunday at 19:00 local time the bot sends the week ahead (best days, Moon phases, Mercury stations, transits starting).
+Typing `@UlduzSpaceBot` in any chat offers today's horoscope to share there (turn on **Inline mode** in @BotFather → `/setinline`).
 
 The morning messages are sent by `telegram-daily`, which a pg_cron job calls every hour; each chat gets its message at its
 own local hour (default 08:00, Asia/Baku). The job authenticates with a random secret that the migration creates in Vault.

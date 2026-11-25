@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { computeChart } from "@shared/astro";
 import type { TransitAlert } from "@shared/transits";
 import {
-  alertsForDay, chartSummary, dailyMessage, localNow, parseDate, parseName, parseTime, profileBirth, searchCities, startCode, transitsMessage,
+  alertsForDay, chartSummary, dailyMessage, localDayBounds, localNow, matchMessage, moonEvents, shareDay, weeklyMessage, parseDate, parseName, parseTime, profileBirth, searchCities, startCode, transitsMessage,
   type City,
 } from "@shared/tg-core";
 
@@ -67,5 +67,40 @@ describe("telegram bot messages", () => {
     expect(alertsForDay([a], "2026-11-25")).toEqual([{ a, note: "begins" }]);
     expect(alertsForDay([a], "2026-12-10")).toEqual([{ a, note: "exact" }]);
     expect(alertsForDay([a], "2026-12-11")).toEqual([]);
+  });
+});
+
+describe("telegram bot extras", () => {
+  it("finds the local day and the New and Full Moons in it", () => {
+    const [from, to] = localDayBounds("2026-11-24", "Asia/Baku");
+    expect(from.toISOString()).toBe("2026-11-23T20:00:00.000Z");
+    const ev = moonEvents(from, to);
+    expect(ev).toHaveLength(1);
+    expect(ev[0].phase).toBe("full");
+    expect(ev[0].sign).toBe(2); // Gemini
+  });
+  it("adds the Full Moon section on its day only", () => {
+    expect(dailyMessage("en", birth, chart, { y: 2026, m: 11, d: 24 }, "Asia/Baku")).toContain("Full Moon in Gemini");
+    expect(dailyMessage("en", birth, chart, { y: 2026, m: 11, d: 26 }, "Asia/Baku")).not.toContain("Full Moon in");
+  });
+  it("compares two charts", () => {
+    const other = { fullName: "Elvin", date: "1993-02-03", time: null, lat: null, lon: null, tz: "UTC", place: null };
+    for (const lang of ["az", "en", "ru"] as const) {
+      const m = matchMessage(lang, birth, other);
+      expect(m).toMatch(/\d+%/);
+      expect(m).not.toContain("undefined");
+      expect(m.length).toBeLessThan(4096);
+    }
+  });
+  it("builds the week ahead and the shareable day", () => {
+    for (const lang of ["az", "en", "ru"] as const) {
+      const w = weeklyMessage(lang, birth, chart, { y: 2026, m: 11, d: 30 }, "Asia/Baku");
+      expect(w.split("\n").filter((l) => l.includes("●")).length).toBe(7);
+      expect(w).not.toContain("undefined");
+      expect(w.length).toBeLessThan(4096);
+      expect(shareDay(lang, birth, chart, { y: 2026, m: 11, d: 25 })).toContain("Aysel");
+    }
+    // the week of 7 December has a New Moon (9 Dec)
+    expect(weeklyMessage("en", birth, chart, { y: 2026, m: 12, d: 7 }, "Asia/Baku")).toContain("🌑");
   });
 });
