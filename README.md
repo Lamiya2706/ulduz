@@ -89,6 +89,25 @@ Push needs a one-time setup in Supabase:
 4. Enable the `pg_cron` and `pg_net` extensions and schedule the hourly run (SQL at the end of the push migration).
    Each subscription gets one message a day at 8:00 in its own time zone.
 
+### 6. Telegram bot
+The bot (`supabase/functions/telegram-bot`) sends each person their **daily horoscope with moon notes every morning**,
+**transit alerts** on the days a slow planet's transit begins or becomes exact, and a **natal chart summary**. People either
+connect their Ulduz account (account page → **Connect Telegram**, a one-time `t.me/<bot>?start=<code>` link) or type their
+birth details in the chat. The texts come straight from the website's content library (`src/content/…`), so the bot and the
+site always say the same thing. Commands: `/today`, `/chart`, `/transits`, `/settings` (hour, time zone, on/off), `/new`, `/lang`, `/stop`.
+
+The morning messages are sent by `telegram-daily`, which a pg_cron job calls every hour; each chat gets its message at its
+own local hour (default 08:00, Asia/Baku). The job authenticates with a random secret that the migration creates in Vault.
+
+1. In Telegram, open **@BotFather** → `/newbot`, choose a name and a username ending in `bot`. Copy the token.
+2. Save it as the Edge Function secret `TELEGRAM_BOT_TOKEN` (Supabase dashboard → Edge Functions → Secrets). It's the only secret:
+   the webhook's secret token is derived from it.
+3. Run `supabase/migrations/20261125160000_telegram.sql` (SQL editor or `npx supabase db push`). The functions deploy from GitHub Actions
+   (`.github/workflows/functions.yml`) on every push to `main` that touches them; it needs the repository secret `SUPABASE_ACCESS_TOKEN`
+   (supabase.com → Account → Access Tokens). By hand: `npx supabase functions deploy telegram-bot telegram-daily --use-api`.
+4. Run `select public.tg_run_daily();` once in the SQL editor: it registers the webhook and the command menu (the hourly job also checks this).
+5. If the username isn't `UlduzSpaceBot`, set the Actions variable `VITE_TELEGRAM_BOT` to it, so the account page links to the right bot.
+
 ## Before launch — checklist
 - [ ] Fill the `[placeholders]` in `src/pages/staticContent.ts` (legal name, VÖEN, email…) and have Terms / Privacy / Refunds reviewed.
 - [ ] `PAYMENT_MODE=epoint` (never leave `test` on in production — it gives readings away free).

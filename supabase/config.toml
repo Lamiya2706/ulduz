@@ -19,3 +19,7 @@ verify_jwt = false   # called by pg_cron; authenticated with the PUSH_CRON_SECRE
 verify_jwt = false   # called by pg_cron; checked against a secret kept in the database
 [functions.unsubscribe]
 verify_jwt = false   # one-click unsubscribe from mail apps; needs the private token
+[functions.telegram-bot]
+verify_jwt = false   # Telegram posts here; requests are checked against the webhook secret token instead
+[functions.telegram-daily]
+verify_jwt = false   # called by pg_cron; requests are checked against a secret kept in Vault

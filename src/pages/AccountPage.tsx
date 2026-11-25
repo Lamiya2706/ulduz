@@ -12,6 +12,7 @@ import { birthToProfile, profileBirth } from "@/lib/profileBirth";
 import { computeChart } from "@shared/astro";
 import { useTransitAlerts } from "@/components/TransitAlerts";
 import { getTransitContent } from "@/content/transits";
+import TelegramConnect from "@/components/TelegramConnect";
 
 /** Opt-in switch for reminder emails (New and Full Moon, birthday, transits). */
 function Reminders() {
@@ -110,6 +111,7 @@ export default function AccountPage() {
         </Link>
       )}
       {birth && <Reminders />}
+      <TelegramConnect lang={lang} highlight={params.get("telegram") === "1"} />
       <div className="hairline" />
       <button type="button" className="justify-self-start text-sm text-muted hover:text-rose" data-track="logout" onClick={() => { void signOut(); }}>{t("auth.account.signOut")}</button>
     </AuthShell>
