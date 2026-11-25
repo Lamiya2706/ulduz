@@ -7,6 +7,7 @@ import { SPHERES } from "@shared/sky";
 import { SIGN_GLYPHS } from "@shared/zodiac";
 import { useLang } from "@/components/Layout";
 import { MoonIcon } from "@/components/Sky";
+import TransitAlerts from "@/components/TransitAlerts";
 import { getContent } from "@/content";
 import { getDailyContent, type Tone } from "@/content/daily";
 import { getSkyMore } from "@/content/sky";
@@ -105,7 +106,9 @@ function Horoscope({ birth }: { birth: BirthParams }) {
         </section>
       </div>
 
-      <div className="mt-8 flex flex-wrap justify-center gap-3">
+      <TransitAlerts chart={chart} lang={lang} />
+
+      <div className="mt-10 flex flex-wrap justify-center gap-3">
         <Link to={`/${lang}/chart/${encodeBirth(birth)}`} className="btn-ghost" data-track="today_open_chart">{dc.ui.openChart} <span aria-hidden>→</span></Link>
         <Link to={`/${lang}/account`} className="btn-ghost" data-track="today_change">{dc.ui.change}</Link>
       </div>

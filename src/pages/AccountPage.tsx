@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import AuthShell from "@/components/AuthShell";
@@ -9,6 +9,9 @@ import { useAuth } from "@/lib/auth";
 import { authErrorKey } from "@/lib/authErrors";
 import { encodeBirth } from "@/lib/birth";
 import { birthToProfile, profileBirth } from "@/lib/profileBirth";
+import { computeChart } from "@shared/astro";
+import { useTransitAlerts } from "@/components/TransitAlerts";
+import { getTransitContent } from "@/content/transits";
 
 export default function AccountPage() {
   const { t } = useTranslation();
@@ -28,6 +31,10 @@ export default function AccountPage() {
   useEffect(() => {
     if (profile && loadedFor.current !== profile.id) { loadedFor.current = profile.id; setP(profileToPerson(profile)); }
   }, [profile]);
+
+  const chart = useMemo(() => { const b = profileBirth(profile); return b ? computeChart(b) : null; }, [profile]);
+  const alerts = useTransitAlerts(chart);
+  const tc = getTransitContent(lang);
 
   if (ready && !user) return <Navigate to={`/${lang}/login`} replace />;
   const birth = profileBirth(profile);
@@ -69,6 +76,12 @@ export default function AccountPage() {
           {birth && <Link to={`/${lang}/today`} className="btn-ghost" data-track="account_open_today">✦ {t("daily.nav")}</Link>}
         </div>
       </form>
+      {chart && (
+        <Link to={`/${lang}/today#transits`} data-track="account_transits" className="flex items-center justify-between gap-4 rounded-2xl border border-gold/25 bg-gold/[0.06] px-5 py-4 transition hover:border-gold">
+          <span><span className="block text-ivory">✦ {tc.ui.accountTitle}</span><span className="text-sm text-muted">{alerts.some((a) => a.active) ? tc.ui.accountActive(alerts.filter((a) => a.active).length) : tc.ui.accountNone}</span></span>
+          <span className="flex-none text-sm text-gold">{tc.ui.accountOpen} →</span>
+        </Link>
+      )}
       <div className="hairline" />
       <button type="button" className="justify-self-start text-sm text-muted hover:text-rose" data-track="logout" onClick={() => { void signOut(); }}>{t("auth.account.signOut")}</button>
     </AuthShell>
