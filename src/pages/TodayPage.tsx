@@ -1,12 +1,13 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { computeChart, PLANETS, ASPECTS, type PlanetKey } from "@shared/astro";
 import { personalDay, type DailyTransit, type NatalPoint } from "@shared/daily";
 import { SPHERES } from "@shared/sky";
 import { SIGN_GLYPHS } from "@shared/zodiac";
 import { useLang } from "@/components/Layout";
 import { MoonIcon } from "@/components/Sky";
+import TransitAlerts from "@/components/TransitAlerts";
 import { getContent } from "@/content";
 import { getDailyContent, type Tone } from "@/content/daily";
 import { getSkyMore } from "@/content/sky";
@@ -38,6 +39,13 @@ function Horoscope({ birth }: { birth: BirthParams }) {
   const house = dc.houses[day.moonHouse - 1];
   const first = birth.fullName.trim().split(/\s+/)[0];
   const pointName = (k: NatalPoint) => (k === "Asc" ? dc.ui.asc : c.planetNames[k]);
+  const { hash } = useLocation();
+  // The page renders after the profile loads, so scroll to a linked section (e.g. #transits) once it exists.
+  useEffect(() => {
+    if (!hash) return;
+    const id = setTimeout(() => document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
+    return () => clearTimeout(id);
+  }, [hash]);
 
   return (
     <>
@@ -105,7 +113,9 @@ function Horoscope({ birth }: { birth: BirthParams }) {
         </section>
       </div>
 
-      <div className="mt-8 flex flex-wrap justify-center gap-3">
+      <TransitAlerts chart={chart} lang={lang} />
+
+      <div className="mt-10 flex flex-wrap justify-center gap-3">
         <Link to={`/${lang}/chart/${encodeBirth(birth)}`} className="btn-ghost" data-track="today_open_chart">{dc.ui.openChart} <span aria-hidden>→</span></Link>
         <Link to={`/${lang}/account`} className="btn-ghost" data-track="today_change">{dc.ui.change}</Link>
       </div>

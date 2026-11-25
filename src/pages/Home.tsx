@@ -30,6 +30,7 @@ function TodayBlock({ lang }: { lang: Lang }) {
 /** The tools that open up after sign-in. Their pages stay public by URL (and in the footer) for search engines. */
 const TOOLS = [
   { to: "today", icon: "☉", key: "daily" },
+  { to: "today#transits", icon: "♃", key: "daily.transits" },
   { to: "moon", icon: "☾", key: "sky" },
   { to: "full-moon", icon: "○", key: "fullmoon" },
   { to: "year", icon: "✦", key: "year" },
