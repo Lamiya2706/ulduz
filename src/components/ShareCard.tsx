@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { dominantElement, type Chart } from "@shared/astro";
 import type { Content } from "@/content";
@@ -9,7 +10,8 @@ import { canvasToBlob, drawChartCard } from "@/lib/chartCard";
 /** "Share my chart" button: draws a story-sized image of the chart and offers to share or save it. */
 export default function ShareCard({ chart, content: c, name, lifePath }: { chart: Chart; content: Content; name: string; lifePath: number }) {
   const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
+  const [params] = useSearchParams();
+  const [open, setOpen] = useState(() => params.get("share") === "1");
   const [img, setImg] = useState<{ url: string; blob: Blob } | null>(null);
   const [failed, setFailed] = useState(false);
   const first = name.trim().split(/\s+/)[0];

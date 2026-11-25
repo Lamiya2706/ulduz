@@ -29,6 +29,7 @@ function TodayBlock({ lang }: { lang: Lang }) {
 
 /** The tools that open up after sign-in. Their pages stay public by URL (and in the footer) for search engines. */
 const TOOLS = [
+  { to: "today", icon: "☉", key: "daily" },
   { to: "moon", icon: "☾", key: "sky" },
   { to: "full-moon", icon: "○", key: "fullmoon" },
   { to: "year", icon: "✦", key: "year" },
@@ -39,11 +40,15 @@ const TOOLS = [
 function ToolTiles() {
   const { t } = useTranslation();
   const lang = useLang();
+  const { profile } = useAuth();
+  const saved = profileBirth(profile);
+  // With a saved birth moment, the chart card opens straight from here.
+  const tools = saved ? [...TOOLS.slice(0, 1), { to: `chart/${encodeBirth(saved)}?share=1`, icon: "✧", key: "chart.share" }, ...TOOLS.slice(1)] : TOOLS;
   return (
-    <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-      {TOOLS.map((x, i) => (
+    <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+      {tools.map((x, i) => (
         <Reveal key={x.to} delay={i * 0.08} className="h-full">
-          <Link to={`/${lang}/${x.to}`} data-track="explore_tile" data-track-label={x.to} className="card group flex h-full flex-col transition hover:border-gold/40">
+          <Link to={`/${lang}/${x.to}`} data-track="explore_tile" data-track-label={x.key} className="card group flex h-full flex-col transition hover:border-gold/40">
             <span aria-hidden className="grid h-12 w-12 place-items-center rounded-full border border-gold/25 font-display text-2xl text-gold">{x.icon}</span>
             <p className="mt-5 text-[0.68rem] uppercase tracking-[0.16em] text-muted">{t(`${x.key}.teaser.eyebrow`)}</p>
             <h3 className="mt-2 font-display text-2xl font-normal">{t(`${x.key}.teaser.title`)}</h3>
