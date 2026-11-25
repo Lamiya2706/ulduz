@@ -5,6 +5,7 @@ const en = {
     login: { title: "Log in or sign up — Ulduz", description: "Log in to Ulduz with your email or Google and keep your birth data in one place." },
     reset: { title: "New password — Ulduz", description: "Choose a new password for your Ulduz account." },
     account: { title: "My account — Ulduz", description: "Your Ulduz profile and birth data." },
+    unsubscribe: { title: "Unsubscribe — Ulduz", description: "Turn off Ulduz reminder emails." },
   },
   login: {
     eyebrow: "Your Ulduz account",
@@ -41,8 +42,13 @@ const en = {
     save: "Save", saved: "Saved ✦", openChart: "Open my chart",
     welcomeEyebrow: "One more step", welcomeTitle: "When were you born?", welcomeText: "Add your birth moment once, and your natal chart will be waiting for you every time you log in. Only you can see it.",
     signOut: "Log out", loading: "Loading…",
+    reminders: {
+      title: "Email reminders", text: "A short email on New and Full Moons, on your birthday, and a week before a big transit starts. About two or three emails a month. You can turn them off any time.",
+      on: "Reminders are on", off: "Reminders are off", error: "Couldn't save. Please try again.",
+    },
   },
   prefill: { text: "Your saved birth moment is filled in.", open: "Open my chart" },
+  unsubscribe: { title: "Unsubscribe", working: "Turning reminders off…", done: "Done. You won't get reminder emails any more.", again: "Changed your mind? You can turn them back on in your account.", bad: "This link doesn't work. You can turn reminders off in your account.", account: "My account" },
   home: {
     eyebrow: "Your Ulduz", sub: "Your chart, today's sky and all your tools, in one place.",
     chartTitle: "Your natal chart", chartText: "Calculated from your saved birth moment and ready to open.", addBirth: "Add my birth moment",
@@ -70,6 +76,7 @@ const az: AuthUI = {
     login: { title: "Giriş və qeydiyyat — Ulduz", description: "E-poçt və ya Google ilə Ulduz-a daxil ol, doğum məlumatlarını bir yerdə saxla." },
     reset: { title: "Yeni şifrə — Ulduz", description: "Ulduz hesabın üçün yeni şifrə seç." },
     account: { title: "Hesabım — Ulduz", description: "Ulduz profilin və doğum məlumatların." },
+    unsubscribe: { title: "Abunəlikdən çıx — Ulduz", description: "Ulduz xatırlatma məktublarını söndür." },
   },
   login: {
     eyebrow: "Ulduz hesabın",
@@ -106,8 +113,13 @@ const az: AuthUI = {
     save: "Saxla", saved: "Saxlanıldı ✦", openChart: "Xəritəmi aç",
     welcomeEyebrow: "Son addım", welcomeTitle: "Nə vaxt doğulmusan?", welcomeText: "Doğulduğun anı bir dəfə əlavə et — hər dəfə daxil olanda natal xəritən səni gözləyəcək. Bunu yalnız sən görürsən.",
     signOut: "Çıxış", loading: "Yüklənir…",
+    reminders: {
+      title: "E-poçt xatırlatmaları", text: "Yeni Ay və Tam Ayda, ad günündə və böyük tranzit başlamazdan bir həftə əvvəl qısa məktub. Ayda təxminən iki-üç məktub. İstənilən vaxt söndürə bilərsən.",
+      on: "Xatırlatmalar açıqdır", off: "Xatırlatmalar bağlıdır", error: "Yadda saxlamaq olmadı. Yenidən cəhd et.",
+    },
   },
   prefill: { text: "Saxladığın doğum anı artıq doldurulub.", open: "Xəritəmi aç" },
+  unsubscribe: { title: "Abunəlikdən çıx", working: "Xatırlatmalar söndürülür…", done: "Hazırdır. Artıq xatırlatma məktubları gəlməyəcək.", again: "Fikrini dəyişdin? Onları hesabında yenidən aça bilərsən.", bad: "Bu link işləmir. Xatırlatmaları hesabında söndürə bilərsən.", account: "Hesabım" },
   home: {
     eyebrow: "Sənin Ulduzun", sub: "Xəritən, bugünkü səma və bütün alətlər bir yerdə.",
     chartTitle: "Natal xəritən", chartText: "Saxladığın doğum anına görə hesablanıb, açmağa hazırdır.", addBirth: "Doğum anımı əlavə et",
@@ -135,6 +147,7 @@ const ru: AuthUI = {
     login: { title: "Вход и регистрация — Ulduz", description: "Войди в Ulduz через почту или Google и храни свои данные рождения в одном месте." },
     reset: { title: "Новый пароль — Ulduz", description: "Выбери новый пароль для аккаунта Ulduz." },
     account: { title: "Мой аккаунт — Ulduz", description: "Твой профиль и данные рождения в Ulduz." },
+    unsubscribe: { title: "Отписка — Ulduz", description: "Отключить письма-напоминания Ulduz." },
   },
   login: {
     eyebrow: "Аккаунт Ulduz",
@@ -171,8 +184,13 @@ const ru: AuthUI = {
     save: "Сохранить", saved: "Сохранено ✦", openChart: "Открыть мою карту",
     welcomeEyebrow: "Последний шаг", welcomeTitle: "Расскажи о своём рождении", welcomeText: "Добавь момент рождения один раз — и натальная карта будет ждать тебя при каждом входе. Эти данные видны только тебе.",
     signOut: "Выйти", loading: "Загрузка…",
+    reminders: {
+      title: "Напоминания на почту", text: "Короткое письмо в новолуние и полнолуние, в день рождения и за неделю до начала большого транзита. Примерно два-три письма в месяц. Отключить можно в любой момент.",
+      on: "Напоминания включены", off: "Напоминания выключены", error: "Не удалось сохранить. Попробуй ещё раз.",
+    },
   },
   prefill: { text: "Твой сохранённый момент рождения уже подставлен.", open: "Открыть мою карту" },
+  unsubscribe: { title: "Отписка", working: "Отключаем напоминания…", done: "Готово. Письма-напоминания больше не придут.", again: "Передумал(а)? Включить их снова можно в аккаунте.", bad: "Эта ссылка не работает. Отключить напоминания можно в аккаунте.", account: "Мой аккаунт" },
   home: {
     eyebrow: "Твой Ulduz", sub: "Твоя карта, небо сегодня и все инструменты в одном месте.",
     chartTitle: "Твоя натальная карта", chartText: "Рассчитана по сохранённому моменту рождения: открой её в одно касание.", addBirth: "Добавить момент рождения",

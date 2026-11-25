@@ -14,6 +14,33 @@ import { useTransitAlerts } from "@/components/TransitAlerts";
 import { getTransitContent } from "@/content/transits";
 import TelegramConnect from "@/components/TelegramConnect";
 
+/** Opt-in switch for reminder emails (New and Full Moon, birthday, transits). */
+function Reminders() {
+  const { t } = useTranslation();
+  const { profile, saveProfile } = useAuth();
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState(false);
+  const on = !!profile?.email_reminders;
+  async function toggle() {
+    setBusy(true); setErr(false);
+    try { await saveProfile({ email_reminders: !on }); track("reminders_toggle", { on: !on }); } catch { setErr(true); } finally { setBusy(false); }
+  }
+  return (
+    <div className="flex items-start justify-between gap-5 rounded-2xl border border-gold/15 px-5 py-4">
+      <div>
+        <p id="reminders-title" className="text-ivory">✉ {t("auth.account.reminders.title")}</p>
+        <p className="mt-1 text-sm text-muted">{t("auth.account.reminders.text")}</p>
+        {err && <p role="alert" className="mt-2 text-sm text-rose">{t("auth.account.reminders.error")}</p>}
+      </div>
+      <button type="button" role="switch" aria-checked={on} aria-labelledby="reminders-title" disabled={busy} onClick={toggle}
+        title={on ? t("auth.account.reminders.on") : t("auth.account.reminders.off")}
+        className={`relative mt-1 h-7 w-12 flex-none rounded-full border transition disabled:opacity-60 ${on ? "border-gold bg-gold" : "border-gold/30 bg-white/5"}`}>
+        <span className={`absolute top-0.5 h-5 w-5 rounded-full transition-all ${on ? "left-6 bg-night" : "left-0.5 bg-ivory/70"}`} />
+      </button>
+    </div>
+  );
+}
+
 export default function AccountPage() {
   const { t } = useTranslation();
   const lang = useLang();
@@ -83,6 +110,7 @@ export default function AccountPage() {
           <span className="flex-none text-sm text-gold">{tc.ui.accountOpen} →</span>
         </Link>
       )}
+      {birth && <Reminders />}
       <TelegramConnect lang={lang} highlight={params.get("telegram") === "1"} />
       <div className="hairline" />
       <button type="button" className="justify-self-start text-sm text-muted hover:text-rose" data-track="logout" onClick={() => { void signOut(); }}>{t("auth.account.signOut")}</button>

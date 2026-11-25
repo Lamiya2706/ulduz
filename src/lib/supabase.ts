@@ -3,8 +3,8 @@
 // VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY override them, e.g. for a local Supabase stack.
 import { createClient } from "@supabase/supabase-js";
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://sjxvmmcsrqdzuapfktnh.supabase.co";
-const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_7cQFfVdHoEsPgYqe6G3RqA_Uoo-rjYW";
+export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://sjxvmmcsrqdzuapfktnh.supabase.co";
+export const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_7cQFfVdHoEsPgYqe6G3RqA_Uoo-rjYW";
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: { flowType: "pkce", persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storageKey: "ulduz.auth" },
@@ -23,5 +23,7 @@ export interface Profile {
   lon: number | null;
   tz: string | null;
   lang: string | null;
+  email_reminders: boolean;
+  unsubscribe_token?: string;
 }
-export type ProfilePatch = Partial<Omit<Profile, "id">>;
+export type ProfilePatch = Partial<Omit<Profile, "id" | "unsubscribe_token">>;

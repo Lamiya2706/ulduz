@@ -20,7 +20,7 @@ const UI = { en, az, ru };
 export const PUBLIC_ROUTES = ["", "today", "moon", "full-moon", "year", "numerology", "couple", "page/about", "page/terms", "page/privacy", "page/refund", "page/contact"];
 
 /** Personal pages (someone's chart, reading or payment) must not be indexed. */
-export const isPrivatePath = (rest: string) => /^\/(chart|reading|payment|login|reset-password|account)\b|^\/couple\/.+|^\/numerology\/.+|^\/year\/.+/.test(rest);
+export const isPrivatePath = (rest: string) => /^\/(chart|reading|payment|login|reset-password|account|unsubscribe)\b|^\/couple\/.+|^\/numerology\/.+|^\/year\/.+/.test(rest);
 
 export function pageMeta(lang: SeoLang, rest: string): { title: string; description: string } {
   const r = rest.replace(/^\/+|\/+$/g, "");
@@ -34,6 +34,7 @@ export function pageMeta(lang: SeoLang, rest: string): { title: string; descript
   if (r.startsWith("login")) return AUTH_UI[lang].meta.login;
   if (r.startsWith("reset-password")) return AUTH_UI[lang].meta.reset;
   if (r.startsWith("account")) return AUTH_UI[lang].meta.account;
+  if (r.startsWith("unsubscribe")) return AUTH_UI[lang].meta.unsubscribe;
   const m = r.match(/^page\/(\w+)/);
   if (m) {
     const p = getPage(lang, m[1]);
