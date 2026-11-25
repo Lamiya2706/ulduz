@@ -56,6 +56,7 @@ function Header() {
   const { t } = useTranslation();
   const lang = useLang();
   const { pathname } = useLocation();
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   useEffect(() => setOpen(false), [pathname]);
   useEffect(() => {
@@ -70,6 +71,8 @@ function Header() {
     { to: `/${lang}/couple`, label: t("couple.nav") },
     { to: `/${lang}#faq`, label: t("nav.faq") },
   ];
+  // Visitors see a calm header; the tools show up after sign-in (their pages stay reachable by link and from the footer).
+  const shown = user ? links : links.filter((l) => l.to.endsWith("#faq"));
   return (
     <header className="no-print relative z-40">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-5 sm:px-8">
@@ -78,13 +81,13 @@ function Header() {
           <span className="font-display text-2xl tracking-[0.08em] text-ivory">Ulduz</span>
         </Link>
         <div className="flex items-center gap-3 sm:gap-6">
-          <nav className="hidden items-center gap-6 text-sm text-muted xl:flex">
-            {links.map((l) => <Link key={l.to} to={l.to} data-track="nav_click" data-track-place="header" className="hover:text-ivory">{l.label}</Link>)}
+          <nav className={`hidden items-center gap-6 text-sm text-muted ${user ? "xl:flex" : "sm:flex"}`}>
+            {shown.map((l) => <Link key={l.to} to={l.to} data-track="nav_click" data-track-place="header" className="hover:text-ivory">{l.label}</Link>)}
           </nav>
           <div className="hidden sm:block"><LangSwitch /></div>
           <AccountButton place="header" />
           <button type="button" data-track="menu_toggle" data-track-label={open ? "close" : "open"} onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? "Close menu" : "Open menu"}
-            className="-mr-2 grid h-10 w-10 place-items-center rounded-full text-ivory transition hover:bg-gold/10 xl:hidden">
+            className={`-mr-2 grid h-10 w-10 place-items-center rounded-full text-ivory transition hover:bg-gold/10 ${user ? "xl:hidden" : "sm:hidden"}`}>
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" aria-hidden>
               {open ? <path d="M5 5l10 10M15 5L5 15" /> : <path d="M3 6h14M3 10h14M3 14h9" />}
             </svg>
@@ -92,16 +95,20 @@ function Header() {
         </div>
       </div>
       {open && (
-        <div id="mobile-menu" className="fixed inset-x-0 bottom-0 top-[76px] z-40 overflow-y-auto border-t border-gold/10 bg-night/95 px-5 pb-10 pt-6 backdrop-blur-md xl:hidden">
+        <div id="mobile-menu" className={`fixed inset-x-0 bottom-0 top-[76px] z-40 overflow-y-auto border-t border-gold/10 bg-night/95 px-5 pb-10 pt-6 backdrop-blur-md ${user ? "xl:hidden" : "sm:hidden"}`}>
           <nav className="grid">
-            {links.map((l) => (
+            {shown.map((l) => (
               <Link key={l.to} to={l.to} data-track="nav_click" data-track-place="mobile_menu" onClick={() => setOpen(false)} className="flex items-center justify-between border-b border-gold/10 py-4 font-display text-2xl text-ivory">
                 {l.label}<span aria-hidden className="text-base text-gold">→</span>
               </Link>
             ))}
           </nav>
           <div className="mt-8 flex justify-center"><LangSwitch /></div>
-          <div className="mt-8 flex justify-center"><Link to={`/${lang}#start`} onClick={() => setOpen(false)} className="btn">{t("nav.start")} <span aria-hidden>→</span></Link></div>
+          <div className="mt-8 flex justify-center">
+            {user
+              ? <Link to={`/${lang}`} onClick={() => setOpen(false)} className="btn">{t("auth.home.eyebrow")} <span aria-hidden>→</span></Link>
+              : <Link to={`/${lang}/login?mode=signup`} onClick={() => setOpen(false)} className="btn">{t("auth.home.join")} <span aria-hidden>→</span></Link>}
+          </div>
         </div>
       )}
     </header>

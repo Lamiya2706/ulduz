@@ -8,6 +8,9 @@ import { useLang } from "@/components/Layout";
 import BirthForm from "@/components/BirthForm";
 import { CarpetDivider, HeroWheel, Reveal } from "@/components/Decor";
 import { Markdown } from "@/lib/md";
+import { useAuth } from "@/lib/auth";
+import { encodeBirth } from "@/lib/birth";
+import { profileBirth } from "@/lib/profileBirth";
 
 type Step = { t: string; d: string };
 type QA = { q: string; a: string };
@@ -24,13 +27,85 @@ function TodayBlock({ lang }: { lang: Lang }) {
   return <Suspense fallback={<div className="mx-auto h-72 max-w-4xl" />}><TodaySection lang={lang} day={day} /></Suspense>;
 }
 
+/** The tools that open up after sign-in. Their pages stay public by URL (and in the footer) for search engines. */
+const TOOLS = [
+  { to: "moon", icon: "☾", key: "sky" },
+  { to: "full-moon", icon: "○", key: "fullmoon" },
+  { to: "year", icon: "✦", key: "year" },
+  { to: "numerology", icon: "9", key: "numerology" },
+  { to: "couple", icon: "♡", key: "couple" },
+];
+
+function ToolTiles() {
+  const { t } = useTranslation();
+  const lang = useLang();
+  return (
+    <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      {TOOLS.map((x, i) => (
+        <Reveal key={x.to} delay={i * 0.08} className="h-full">
+          <Link to={`/${lang}/${x.to}`} data-track="explore_tile" data-track-label={x.to} className="card group flex h-full flex-col transition hover:border-gold/40">
+            <span aria-hidden className="grid h-12 w-12 place-items-center rounded-full border border-gold/25 font-display text-2xl text-gold">{x.icon}</span>
+            <p className="mt-5 text-[0.68rem] uppercase tracking-[0.16em] text-muted">{t(`${x.key}.teaser.eyebrow`)}</p>
+            <h3 className="mt-2 font-display text-2xl font-normal">{t(`${x.key}.teaser.title`)}</h3>
+            <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">{t(`${x.key}.teaser.text`)}</p>
+            <span className="mt-5 text-sm text-gold transition group-hover:text-ivory">{t(`${x.key}.teaser.cta`)} →</span>
+          </Link>
+        </Reveal>
+      ))}
+    </div>
+  );
+}
+
+/** Home for signed-in people: their chart, today's sky and every tool. */
+function SignedInHome() {
+  const { t } = useTranslation();
+  const lang = useLang();
+  const { profile, profileLoaded } = useAuth();
+  const saved = profileBirth(profile);
+  const name = (profile?.full_name || "").trim().split(/\s+/)[0];
+  return (
+    <>
+      <section className="mx-auto max-w-6xl px-5 pt-8 sm:px-8 lg:pt-14">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1] }}>
+          <p className="eyebrow">{t("auth.home.eyebrow")}</p>
+          <h1 className="mt-4 text-5xl sm:text-6xl">{name ? t("auth.account.title", { name }) : t("auth.account.titleNoName")}</h1>
+          <p className="mt-4 max-w-xl text-lg text-muted">{t("auth.home.sub")}</p>
+        </motion.div>
+        {profileLoaded && (
+          <div className="card mt-10 flex flex-wrap items-center justify-between gap-5 border-gold/30 bg-gradient-to-br from-gold/[0.08] to-transparent">
+            <div>
+              <h2 className="text-3xl">{saved ? t("auth.home.chartTitle") : t("auth.account.welcomeTitle")}</h2>
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted">{saved ? t("auth.home.chartText") : t("auth.account.welcomeText")}</p>
+            </div>
+            {saved
+              ? <Link to={`/${lang}/chart/${encodeBirth(saved)}`} className="btn" data-track="home_open_chart">{t("auth.account.openChart")} <span aria-hidden>→</span></Link>
+              : <Link to={`/${lang}/account`} className="btn" data-track="home_add_birth">{t("auth.home.addBirth")} <span aria-hidden>→</span></Link>}
+          </div>
+        )}
+      </section>
+
+      <div className="mt-14"><TodayBlock lang={lang} /></div>
+
+      <section className="mx-auto mt-20 max-w-6xl px-5 sm:px-8">
+        <Reveal><p className="eyebrow">Ulduz</p><h2 className="mt-3 text-4xl sm:text-5xl">{t("sky.exploreTitle")}</h2></Reveal>
+        <ToolTiles />
+      </section>
+    </>
+  );
+}
+
 export default function Home() {
+  const { ready, user } = useAuth();
+  if (!ready) return <div className="min-h-screen" />;
+  return user ? <SignedInHome /> : <Landing />;
+}
+
+/** Landing page for visitors: hero + free chart, how it works, a sample, FAQ and sign-up. */
+function Landing() {
   const { t } = useTranslation();
   const lang = useLang();
   const steps = t("how.steps", { returnObjects: true }) as Step[];
   const faq = t("faq.items", { returnObjects: true }) as QA[];
-  const freeItems = t("compare.free.items", { returnObjects: true }) as string[];
-  const paidItems = t("compare.paid.items", { returnObjects: true }) as string[];
   const sample = (t("sample.text", { returnObjects: true }) as string[]).join("\n\n");
   const [openQ, setOpenQ] = useState<number | null>(0);
 
@@ -55,11 +130,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TODAY — loads the astronomy engine lazily */}
-      <div className="mt-14"><TodayBlock lang={lang} /></div>
-
-      <div className="mx-auto max-w-6xl px-5 sm:px-8"><CarpetDivider className="my-16" /></div>
-
       {/* HOW */}
       <section id="how" className="mx-auto max-w-6xl scroll-mt-20 px-5 sm:px-8">
         <Reveal><p className="eyebrow">{t("how.eyebrow")}</p><h2 className="mt-3 text-4xl sm:text-5xl">{t("how.title")}</h2></Reveal>
@@ -69,45 +139,6 @@ export default function Home() {
               <span className="font-display text-5xl italic text-gold/80">{["I", "II", "III"][i]}</span>
               <h3 className="mt-4 text-2xl">{s.t}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted">{s.d}</p>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* COMPARE */}
-      <section className="mx-auto mt-28 max-w-6xl px-5 sm:px-8">
-        <Reveal><p className="eyebrow">{t("compare.eyebrow")}</p><h2 className="mt-3 max-w-3xl text-4xl sm:text-5xl">{t("compare.title")}</h2></Reveal>
-        <div className="mt-10 grid gap-5 md:grid-cols-2">
-          <Reveal className="card">
-            <div className="flex items-baseline justify-between"><h3 className="text-3xl">{t("compare.free.title")}</h3><span className="text-sm text-muted">{t("compare.free.price")}</span></div>
-            <ul className="mt-6 grid gap-3">{freeItems.map((x) => <li key={x} className="flex gap-3 text-sm text-ivory/90"><span className="text-gold">✦</span>{x}</li>)}</ul>
-          </Reveal>
-          <Reveal delay={0.12} className="card relative overflow-hidden border-gold/40 bg-gradient-to-br from-gold/[0.10] to-transparent">
-            <div className="flex items-baseline justify-between"><h3 className="text-3xl">{t("compare.paid.title")}</h3><span className="font-display text-3xl text-gold">{t("compare.paid.price")}</span></div>
-            <ul className="mt-6 grid gap-3">{paidItems.map((x) => <li key={x} className="flex gap-3 text-sm text-ivory/90"><span className="text-gold">✦</span>{x}</li>)}</ul>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* MORE IN ULDUZ — one row instead of separate big teasers */}
-      <section className="mx-auto mt-28 max-w-6xl px-5 sm:px-8">
-        <Reveal className="text-center"><p className="eyebrow">Ulduz</p><h2 className="mt-3 text-4xl sm:text-5xl">{t("sky.exploreTitle")}</h2></Reveal>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          {[
-            { to: "moon", icon: "☾", key: "sky" },
-            { to: "full-moon", icon: "○", key: "fullmoon" },
-            { to: "year", icon: "✦", key: "year" },
-            { to: "numerology", icon: "9", key: "numerology" },
-            { to: "couple", icon: "♡", key: "couple" },
-          ].map((x, i) => (
-            <Reveal key={x.to} delay={i * 0.08} className="h-full">
-              <Link to={`/${lang}/${x.to}`} data-track="explore_tile" data-track-label={x.to} className="card group flex h-full flex-col transition hover:border-gold/40">
-                <span aria-hidden className="grid h-12 w-12 place-items-center rounded-full border border-gold/25 font-display text-2xl text-gold">{x.icon}</span>
-                <p className="mt-5 text-[0.68rem] uppercase tracking-[0.16em] text-muted">{t(`${x.key}.teaser.eyebrow`)}</p>
-                <h3 className="mt-2 font-display text-2xl font-normal">{t(`${x.key}.teaser.title`)}</h3>
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">{t(`${x.key}.teaser.text`)}</p>
-                <span className="mt-5 text-sm text-gold transition group-hover:text-ivory">{t(`${x.key}.teaser.cta`)} →</span>
-              </Link>
             </Reveal>
           ))}
         </div>
@@ -147,7 +178,11 @@ export default function Home() {
       <section className="mx-auto mt-28 max-w-3xl px-5 text-center sm:px-8">
         <Reveal>
           <h2 className="text-4xl italic sm:text-5xl">{t("final.title")}</h2>
-          <a href="#start" className="btn mt-8">{t("final.cta")} <span aria-hidden>→</span></a>
+          <p className="mx-auto mt-5 max-w-xl leading-relaxed text-muted">{t("auth.home.joinText")}</p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+            <Link to={`/${lang}/login?mode=signup`} className="btn" data-track="landing_signup">{t("auth.home.join")} <span aria-hidden>→</span></Link>
+            <a href="#start" className="btn-ghost">{t("final.cta")}</a>
+          </div>
         </Reveal>
       </section>
     </>
