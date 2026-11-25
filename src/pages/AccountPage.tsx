@@ -66,6 +66,7 @@ export default function AccountPage() {
         <div className="flex flex-wrap items-center gap-3">
           <button type="submit" className="btn" disabled={busy}>{t("auth.account.save")}</button>
           {birth && <Link to={`/${lang}/chart/${encodeBirth(birth)}`} className="btn-ghost" data-track="account_open_chart">{t("auth.account.openChart")} <span aria-hidden>→</span></Link>}
+          {birth && <Link to={`/${lang}/today`} className="btn-ghost" data-track="account_open_today">✦ {t("daily.nav")}</Link>}
         </div>
       </form>
       <div className="hairline" />

@@ -10,6 +10,7 @@ const ChartPage = lazy(() => import("@/pages/ChartPage"));
 const ReadingPage = lazy(() => import("@/pages/ReadingPage"));
 const CoupleFormPage = lazy(() => import("@/pages/CouplePage").then((m) => ({ default: m.CoupleFormPage })));
 const CoupleResultPage = lazy(() => import("@/pages/CouplePage").then((m) => ({ default: m.CoupleResultPage })));
+const TodayPage = lazy(() => import("@/pages/TodayPage"));
 const MoonPage = lazy(() => import("@/pages/MoonPage"));
 const FullMoonPage = lazy(() => import("@/pages/FullMoonPage"));
 const YearFormPage = lazy(() => import("@/pages/YearPage").then((m) => ({ default: m.YearFormPage })));
@@ -32,6 +33,8 @@ export default function App() {
           <Route path="/:lang" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="chart/:code" element={<ChartPage />} />
+            <Route path="today" element={<TodayPage />} />
+            <Route path="today/:code" element={<TodayPage />} />
             <Route path="moon" element={<MoonPage />} />
             <Route path="full-moon" element={<FullMoonPage />} />
             <Route path="year" element={<YearFormPage />} />

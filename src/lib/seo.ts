@@ -9,6 +9,7 @@ import { SKY_UI } from "../i18n/sky";
 import { YEAR_UI } from "../i18n/year";
 import { FULLMOON_UI } from "../i18n/fullmoon";
 import { AUTH_UI } from "../i18n/auth";
+import { DAILY_UI } from "../i18n/daily";
 import { getPage } from "../pages/staticContent";
 
 export type SeoLang = "az" | "en" | "ru";
@@ -16,14 +17,15 @@ export const SEO_LANGS: SeoLang[] = ["az", "en", "ru"];
 const UI = { en, az, ru };
 
 /** Public, indexable routes (relative to /:lang). */
-export const PUBLIC_ROUTES = ["", "moon", "full-moon", "year", "numerology", "couple", "page/about", "page/terms", "page/privacy", "page/refund", "page/contact"];
+export const PUBLIC_ROUTES = ["", "today", "moon", "full-moon", "year", "numerology", "couple", "page/about", "page/terms", "page/privacy", "page/refund", "page/contact"];
 
 /** Personal pages (someone's chart, reading or payment) must not be indexed. */
-export const isPrivatePath = (rest: string) => /^\/(chart|reading|payment|login|reset-password|account)\b|^\/couple\/.+|^\/numerology\/.+|^\/year\/.+/.test(rest);
+export const isPrivatePath = (rest: string) => /^\/(chart|reading|payment|login|reset-password|account)\b|^\/couple\/.+|^\/numerology\/.+|^\/year\/.+|^\/today\/.+/.test(rest);
 
 export function pageMeta(lang: SeoLang, rest: string): { title: string; description: string } {
   const r = rest.replace(/^\/+|\/+$/g, "");
   const home = UI[lang].meta;
+  if (r.startsWith("today")) return DAILY_UI[lang].meta;
   if (r.startsWith("moon")) return SKY_UI[lang].meta;
   if (r.startsWith("full-moon")) return FULLMOON_UI[lang].meta;
   if (r.startsWith("year")) return YEAR_UI[lang].meta;
