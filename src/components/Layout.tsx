@@ -76,7 +76,7 @@ function Header() {
   // Visitors see a calm header; the tools show up after sign-in (their pages stay reachable by link and from the footer).
   const shown = user ? links : links.filter((l) => l.to.endsWith("#faq"));
   return (
-    <header className="no-print relative z-40">
+    <header className="no-print relative z-40 pt-[env(safe-area-inset-top)]">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-5 sm:px-8">
         <Link to={`/${lang}`} className="group flex flex-none items-center gap-2.5" aria-label="Ulduz">
           <Star className="h-5 w-5 text-gold transition group-hover:rotate-45" />
@@ -98,7 +98,7 @@ function Header() {
         </div>
       </div>
       {open && (
-        <div id="mobile-menu" className={`fixed inset-x-0 bottom-0 top-[76px] z-40 overflow-y-auto border-t border-gold/10 bg-night/95 px-5 pb-10 pt-6 backdrop-blur-md ${user ? "xl:hidden" : "sm:hidden"}`}>
+        <div id="mobile-menu" className={`fixed inset-x-0 bottom-0 top-[calc(76px+env(safe-area-inset-top))] z-40 overflow-y-auto border-t border-gold/10 bg-night/95 px-5 pb-10 pt-6 backdrop-blur-md ${user ? "xl:hidden" : "sm:hidden"}`}>
           <nav className="grid">
             {shown.map((l) => (
               <Link key={l.to} to={l.to} data-track="nav_click" data-track-place="mobile_menu" onClick={() => setOpen(false)} className="flex items-center justify-between border-b border-gold/10 py-4 font-display text-2xl text-ivory">
