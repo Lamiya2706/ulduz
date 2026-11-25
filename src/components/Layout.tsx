@@ -89,15 +89,15 @@ function Header() {
           <div className="hidden sm:block"><LangSwitch /></div>
           <InstallButton place="header" className="inline-flex h-9 items-center gap-1.5 rounded-full border border-gold/30 px-3 text-sm text-gold transition hover:border-gold hover:text-ivory" />
           <AccountButton place="header" />
-          <button type="button" data-track="menu_toggle" data-track-label={open ? "close" : "open"} onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? "Close menu" : "Open menu"}
+          {user && <button type="button" data-track="menu_toggle" data-track-label={open ? "close" : "open"} onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? "Close menu" : "Open menu"}
             className={`-mr-2 grid h-10 w-10 place-items-center rounded-full text-ivory transition hover:bg-gold/10 ${user ? "xl:hidden" : "sm:hidden"}`}>
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" aria-hidden>
               {open ? <path d="M5 5l10 10M15 5L5 15" /> : <path d="M3 6h14M3 10h14M3 14h9" />}
             </svg>
-          </button>
+          </button>}
         </div>
       </div>
-      {open && (
+      {open && user && (
         <div id="mobile-menu" className={`fixed inset-x-0 bottom-0 top-[calc(76px+env(safe-area-inset-top))] z-40 overflow-y-auto border-t border-gold/10 bg-night/95 px-5 pb-10 pt-6 backdrop-blur-md ${user ? "xl:hidden" : "sm:hidden"}`}>
           <nav className="grid">
             {shown.map((l) => (
@@ -129,6 +129,7 @@ function Footer() {
           <div className="flex items-center gap-2.5"><Star className="h-4 w-4 text-gold" /><span className="font-display text-xl">Ulduz</span></div>
           <p className="mt-3 max-w-sm text-sm text-muted">{t("footer.tagline")}</p>
           <p className="mt-6 max-w-md text-xs leading-relaxed text-muted/70">{t("footer.disclaimer")}</p>
+          <div className="mt-6"><LangSwitch /></div>
         </div>
         <div className="flex flex-wrap content-start gap-x-6 gap-y-3 text-sm text-muted md:justify-end">
           <Link to={`/${lang}/today`} className="hover:text-gold">{t("daily.nav")}</Link>
