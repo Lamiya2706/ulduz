@@ -4,6 +4,7 @@ import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { decodeNum, encodeNum, fullNumerology, type CoreKey, type FullNumerology } from "@shared/numerology-full";
 import { CarpetDivider, Reveal } from "@/components/Decor";
+import { useProfilePrefill } from "@/components/BirthForm";
 import { useLang } from "@/components/Layout";
 import { getContent } from "@/content";
 import { getNumContent, type NumContent } from "@/content/numerology";
@@ -23,6 +24,7 @@ export function NumFormPage() {
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [err, setErr] = useState<string | null>(null);
+  useProfilePrefill((pr) => { setName((cur) => cur || pr.full_name || ""); setDate((cur) => cur || pr.birth_date || ""); });
   const submit = (e: FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return setErr(t("form.err.name"));

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { yearForecast, type SlowPlanet } from "@shared/year";
 import { SIGN_GLYPHS } from "@shared/zodiac";
 import { Reveal } from "@/components/Decor";
+import { useProfilePrefill } from "@/components/BirthForm";
 import { useLang } from "@/components/Layout";
 import { getContent } from "@/content";
 import { getNumContent } from "@/content/numerology";
@@ -19,6 +20,7 @@ export function YearFormPage() {
   const yc = getYearContent(lang);
   const nav = useNavigate();
   const [date, setDate] = useState("");
+  useProfilePrefill((pr) => setDate((cur) => cur || pr.birth_date || ""));
   const [err, setErr] = useState(false);
   const submit = (e: FormEvent) => {
     e.preventDefault();

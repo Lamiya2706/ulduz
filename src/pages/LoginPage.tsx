@@ -2,10 +2,12 @@ import { useState, type FormEvent } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { Link, Navigate, useLocation, useSearchParams } from "react-router-dom";
 import AuthShell, { GoogleIcon } from "@/components/AuthShell";
+import { emptyPerson, PersonFields, personToBirth, useCityLabel } from "@/components/BirthForm";
 import { useLang } from "@/components/Layout";
 import { track } from "@/lib/analytics";
 import { useAuth } from "@/lib/auth";
 import { authErrorKey, urlAuthError } from "@/lib/authErrors";
+import { birthToProfile } from "@/lib/profileBirth";
 import { siteUrl, supabase } from "@/lib/supabase";
 
 type Mode = "in" | "up" | "forgot";
@@ -18,7 +20,8 @@ export default function LoginPage() {
   const [params] = useSearchParams();
   const { ready, user, linkFailed } = useAuth();
   const [mode, setMode] = useState<Mode>(params.get("mode") === "signup" ? "up" : params.get("mode") === "forgot" ? "forgot" : "in");
-  const [name, setName] = useState("");
+  const label = useCityLabel();
+  const [person, setPerson] = useState(emptyPerson);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -28,9 +31,9 @@ export default function LoginPage() {
   const [sent, setSent] = useState<null | "signup" | "forgot">(null);
   const [resent, setResent] = useState(false);
 
-  if (ready && user) return <Navigate to={`/${lang}/account`} replace />;
+  if (ready && user) return <Navigate to={`/${lang}/account?from=login`} replace />;
 
-  const accountUrl = siteUrl(`/${lang}/account`);
+  const accountUrl = siteUrl(`/${lang}/account?from=login`);
   const fail = (e: unknown) => {
     const k = authErrorKey(e);
     setUnconfirmed(k === "email_not_confirmed");
@@ -43,6 +46,8 @@ export default function LoginPage() {
     const mail = email.trim();
     if (!EMAIL_RE.test(mail)) return setErr("auth.err.email");
     if ((mode === "up" && password.length < 8) || (mode === "in" && !password)) return setErr("auth.err.password");
+    const birth = mode === "up" ? personToBirth(person, label) : null;
+    if (birth && "error" in birth) return setErr(birth.error);
     setBusy(true); setErr(""); setUnconfirmed(false);
     try {
       if (mode === "in") {
@@ -52,7 +57,8 @@ export default function LoginPage() {
       } else if (mode === "up") {
         const { data, error } = await supabase.auth.signUp({
           email: mail, password,
-          options: { emailRedirectTo: accountUrl, data: { full_name: name.trim() || undefined, lang } },
+          // The birth moment rides along in the user's metadata; the first signed-in visit copies it to the profile.
+          options: { emailRedirectTo: accountUrl, data: { full_name: person.name.trim(), lang, birth: birth ? birthToProfile(birth) : undefined } },
         });
         if (error) throw error;
         // With email confirmation on, Supabase answers an existing address with a user that has no identities.
@@ -98,7 +104,7 @@ export default function LoginPage() {
   }
 
   return (
-    <AuthShell eyebrow={t("auth.login.eyebrow")} title={title} sub={mode === "forgot" ? undefined : t("auth.login.sub")}>
+    <AuthShell wide={mode === "up"} eyebrow={t("auth.login.eyebrow")} title={title} sub={mode === "forgot" ? undefined : t("auth.login.sub")}>
       {mode !== "forgot" ? (
         <>
           <div role="tablist" className="grid grid-cols-2 rounded-full border border-gold/20 p-1 text-sm">
@@ -119,11 +125,6 @@ export default function LoginPage() {
       {linkFailed && mode === "in" && !err && <p role="status" className="rounded-xl border border-gold/20 bg-gold/5 p-3 text-sm text-ivory/90">{t("auth.login.linkFailed")}</p>}
 
       <form onSubmit={submit} noValidate className="grid gap-5">
-        {mode === "up" && (
-          <label className="label">{t("auth.login.name")}
-            <input className="field" value={name} onChange={(e) => setName(e.target.value)} maxLength={120} placeholder={t("auth.login.namePh")} autoComplete="given-name" />
-          </label>
-        )}
         <label className="label">{t("auth.login.email")}
           <input className="field" type="email" inputMode="email" value={email} onChange={(e) => { setEmail(e.target.value); setErr(""); }} placeholder={t("auth.login.emailPh")} autoComplete="email" required />
         </label>
@@ -133,6 +134,16 @@ export default function LoginPage() {
               autoComplete={mode === "up" ? "new-password" : "current-password"} />
             {mode === "up" && <span className="hint">{t("auth.login.passwordHint")}</span>}
           </label>
+        )}
+        {mode === "up" && (
+          <fieldset className="grid gap-4 border-t border-gold/15 pt-5">
+            <legend className="sr-only">{t("auth.login.birthTitle")}</legend>
+            <div>
+              <p className="font-display text-xl text-ivory">✦ {t("auth.login.birthTitle")}</p>
+              <p className="mt-1 text-sm text-muted">{t("auth.login.birthText")}</p>
+            </div>
+            <PersonFields value={person} onChange={(v) => { setPerson(v); setErr(""); }} idPrefix="signup" />
+          </fieldset>
         )}
         {err && <p role="alert" className="text-sm text-rose">{t(err)}</p>}
         {unconfirmed && <button type="button" className="btn-ghost justify-self-start" disabled={busy} onClick={resend} data-track="auth_resend">{t("auth.login.resend")}</button>}

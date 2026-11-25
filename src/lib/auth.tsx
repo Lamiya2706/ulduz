@@ -2,6 +2,7 @@
 // The Supabase client is loaded lazily so it stays out of the first page bundle.
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import type { User } from "@supabase/supabase-js";
+import { metadataBirth } from "./profileBirth";
 import type { Profile, ProfilePatch } from "./supabase";
 
 export const BIRTH_KEY = "ulduz.birthdate";
@@ -12,6 +13,8 @@ interface AuthState {
   ready: boolean;
   user: User | null;
   profile: Profile | null;
+  /** True once the profile has been fetched (or failed) for the current user. */
+  profileLoaded: boolean;
   /** An email or Google link came back with a code that could not be used (expired, or opened in another browser). */
   linkFailed: boolean;
   saveProfile: (patch: ProfilePatch) => Promise<Profile>;
@@ -19,7 +22,7 @@ interface AuthState {
 }
 
 const AuthContext = createContext<AuthState>({
-  ready: false, user: null, profile: null, linkFailed: false,
+  ready: false, user: null, profile: null, profileLoaded: false, linkFailed: false,
   saveProfile: () => Promise.reject(new Error("no auth provider")), signOut: async () => {},
 });
 
@@ -33,6 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [profileLoaded, setProfileLoaded] = useState(false);
   const [linkFailed, setLinkFailed] = useState(false);
 
   useEffect(() => {
@@ -60,16 +64,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const uid = user?.id;
   useEffect(() => {
+    setProfileLoaded(false);
     if (!uid) { setProfile(null); return; }
     let alive = true;
     client().then(async (sb) => {
       let { data } = await sb.from("profiles").select("*").eq("id", uid).maybeSingle<Profile>();
       // The sign-up trigger normally creates the row; this covers accounts made before it existed.
       if (!data) ({ data } = await sb.from("profiles").upsert({ id: uid }).select().single<Profile>());
+      // Birth data typed in the sign-up form waits in the user's metadata until the first signed-in visit.
+      if (data && !data.birth_date) {
+        const { data: s } = await sb.auth.getSession();
+        const birth = metadataBirth(s.session?.user.user_metadata);
+        if (birth) {
+          const { data: saved } = await sb.from("profiles").update(birth).eq("id", uid).select().single<Profile>();
+          if (saved) data = saved;
+        }
+      }
       if (!alive) return;
       setProfile(data ?? null);
       syncBirthDate(data ?? null);
-    }).catch(() => { /* the account page shows the empty form */ });
+    }).catch(() => { /* the account page shows the empty form */ })
+      .finally(() => { if (alive) setProfileLoaded(true); });
     return () => { alive = false; };
   }, [uid]);
 
@@ -89,7 +104,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, []);
 
-  return <AuthContext.Provider value={{ ready, user, profile, linkFailed, saveProfile, signOut }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ ready, user, profile, profileLoaded, linkFailed, saveProfile, signOut }}>{children}</AuthContext.Provider>;
 }
 
 export const useAuth = () => useContext(AuthContext);
