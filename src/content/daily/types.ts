@@ -11,12 +11,10 @@ export interface DailyContent {
     transitsTitle: string; transitsIntro: string; noTransits: string; touches: string;
     spheresTitle: string;
     sunHouses: string;
-    formTitle: string; formText: string; formBtn: string;
-    signInTitle: string; signInText: string; signInBtn: string;
+    signInTitle: string; signInText: string; signInBtn: string; logIn: string;
     saveTitle: string; saveText: string; saveBtn: string;
     change: string; openChart: string; asc: string;
     disclaimer: string;
-    teaser: string;
   };
   houses: { focus: string; tip: string }[]; // index 0..11 = houses 1..12
   points: Record<NatalPoint, string>;        // the part of you that is touched

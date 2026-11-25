@@ -34,7 +34,6 @@ export default function App() {
             <Route index element={<Home />} />
             <Route path="chart/:code" element={<ChartPage />} />
             <Route path="today" element={<TodayPage />} />
-            <Route path="today/:code" element={<TodayPage />} />
             <Route path="moon" element={<MoonPage />} />
             <Route path="full-moon" element={<FullMoonPage />} />
             <Route path="year" element={<YearFormPage />} />

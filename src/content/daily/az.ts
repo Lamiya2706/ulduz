@@ -18,12 +18,10 @@ const az: DailyContent = {
     noTransits: "Bu gün planetlər xəritənə dəqiq toxunmur. Sakit, sərbəst gün: onu istədiyin kimi keçir.", touches: "Toxunur",
     spheresTitle: "Sahələr üzrə sənin proqnozun",
     sunHouses: "Doğum vaxtı olmadan evlər Günəş bürcündən sayılır. Daha dəqiq gün üçün doğum vaxtını və yerini əlavə et.",
-    formTitle: "Şəxsi gününə bax", formText: "Doğum məlumatlarını bir dəfə yaz. Vaxt və yer proqnozu daha dəqiq edir.", formBtn: "Günümü göstər",
-    signInTitle: "Hər səhər öz gününü al", signInText: "Pulsuz hesab yarat, şəxsi falın heç bir forma olmadan dərhal açılacaq.", signInBtn: "Hesab yarat",
+    signInTitle: "Hər səhər öz gününü al", signInText: "Gündəlik falın pulsuz hesabının bir hissəsidir. Doğum məlumatlarınla bir dəfə qeydiyyatdan keç, o hər gün burada açılacaq.", logIn: "Hesabım var", signInBtn: "Hesab yarat",
     saveTitle: "Doğum məlumatlarını əlavə et", saveText: "Doğum anını hesabında saxla, gündəlik falın hər gün burada səni gözləyəcək.", saveBtn: "Məlumatlarımı əlavə et",
     change: "Məlumatları dəyiş", openChart: "Natal xəritəmi aç", asc: "Assendent",
     disclaimer: "Sənin saat qurşağın üçün planetlərin real mövqelərinə görə hesablanıb. Astrologiya simvollar dilidir: günü qayda kimi yox, yumşaq bələdçi kimi qəbul et.",
-    teaser: "Doğum xəritənə əsaslanan bu günkü şəxsi falın",
   },
   houses: [
     { focus: "Diqqət mərkəzindəsən. Bədənin, görünüşün və necə təsir bağışladığın diqqət istəyir.", tip: "Yalnız özün üçün bir şey et: gəzinti, yeni geyim, erkən yuxu." },

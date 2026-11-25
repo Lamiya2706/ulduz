@@ -8,7 +8,6 @@ import { skyDetails, SPHERES, type Phase, type SkyDay, type Verdict } from "@sha
 import { getContent } from "@/content";
 import { getNumContent } from "@/content/numerology";
 import { getSkyContent, getSkyMore } from "@/content/sky";
-import { getDailyContent } from "@/content/daily";
 import { FULLMOON_UI } from "@/i18n/fullmoon";
 import type { Lang } from "@/i18n";
 import { formatDate } from "@/lib/date";
@@ -96,9 +95,6 @@ function PersonalDay({ lang, date }: { lang: Lang; date: string }) {
           <button type="button" onClick={() => { setDraft(birth); setEditing(true); }} className="mt-3 text-xs text-gold hover:text-ivory">{sm.ui.personalChange}</button>
         </>
       )}
-      <Link to={`/${lang}/today`} data-track="personal_day_horoscope" className="mt-4 flex items-center justify-between gap-3 border-t border-gold/10 pt-4 text-sm text-gold hover:text-ivory">
-        <span>✦ {getDailyContent(lang).ui.teaser}</span><span aria-hidden>→</span>
-      </Link>
     </div>
   );
 }
