@@ -1,20 +1,17 @@
-import { useMemo, useState, type FormEvent } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { useTranslation } from "react-i18next";
-import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { computeChart, PLANETS, ASPECTS, type PlanetKey } from "@shared/astro";
 import { personalDay, type DailyTransit, type NatalPoint } from "@shared/daily";
 import { SPHERES } from "@shared/sky";
 import { SIGN_GLYPHS } from "@shared/zodiac";
-import { emptyPerson, PersonFields, personToBirth, useCityLabel, type PersonState } from "@/components/BirthForm";
 import { useLang } from "@/components/Layout";
 import { MoonIcon } from "@/components/Sky";
 import { getContent } from "@/content";
 import { getDailyContent, type Tone } from "@/content/daily";
 import { getSkyMore } from "@/content/sky";
-import { track } from "@/lib/analytics";
 import { useAuth } from "@/lib/auth";
-import { decodeBirth, encodeBirth, type BirthParams } from "@/lib/birth";
+import { encodeBirth, type BirthParams } from "@/lib/birth";
 import { formatDate } from "@/lib/date";
 import { profileBirth } from "@/lib/profileBirth";
 
@@ -28,7 +25,7 @@ function Dots({ n }: { n: number }) {
   return <span className="flex gap-1" aria-hidden>{[1, 2, 3, 4, 5].map((i) => <span key={i} className={`h-2 w-2 rounded-full ${i <= n ? "bg-gold" : "bg-white/10"}`} />)}</span>;
 }
 
-function Horoscope({ birth, own }: { birth: BirthParams; own: boolean }) {
+function Horoscope({ birth }: { birth: BirthParams }) {
   const lang = useLang();
   const dc = getDailyContent(lang), c = getContent(lang), sm = getSkyMore(lang);
   const [offset, setOffset] = useState(0);
@@ -110,27 +107,16 @@ function Horoscope({ birth, own }: { birth: BirthParams; own: boolean }) {
 
       <div className="mt-8 flex flex-wrap justify-center gap-3">
         <Link to={`/${lang}/chart/${encodeBirth(birth)}`} className="btn-ghost" data-track="today_open_chart">{dc.ui.openChart} <span aria-hidden>→</span></Link>
-        <Link to={own ? `/${lang}/account` : `/${lang}/today?edit=1`} className="btn-ghost" data-track="today_change">{dc.ui.change}</Link>
+        <Link to={`/${lang}/account`} className="btn-ghost" data-track="today_change">{dc.ui.change}</Link>
       </div>
     </>
   );
 }
 
-function DailyForm({ signedIn }: { signedIn: boolean }) {
+/** Shown instead of the horoscope: sign in first, or add birth details to the account. */
+function Gate({ signedIn }: { signedIn: boolean }) {
   const lang = useLang();
   const dc = getDailyContent(lang);
-  const label = useCityLabel();
-  const nav = useNavigate();
-  const [p, setP] = useState<PersonState>(emptyPerson);
-  const [err, setErr] = useState("");
-  const { t } = useTranslation();
-  const submit = (e: FormEvent) => {
-    e.preventDefault();
-    const r = personToBirth(p, label);
-    if ("error" in r) return setErr(t(r.error));
-    track("today_create", { has_time: !!r.time });
-    nav(`/${lang}/today/${encodeBirth(r)}`);
-  };
   return (
     <>
       <motion.header initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }} className="text-center">
@@ -138,45 +124,32 @@ function DailyForm({ signedIn }: { signedIn: boolean }) {
         <h1 className="mt-4 text-5xl sm:text-6xl">{dc.ui.title}</h1>
         <p className="mx-auto mt-5 max-w-2xl text-muted">{dc.ui.intro}</p>
       </motion.header>
-      {signedIn ? (
-        <section className="card mx-auto mt-10 max-w-xl text-center">
-          <p className="font-display text-2xl">{dc.ui.saveTitle}</p>
-          <p className="mt-2 text-sm text-muted">{dc.ui.saveText}</p>
-          <Link to={`/${lang}/account`} className="btn mt-5" data-track="today_add_details">{dc.ui.saveBtn} <span aria-hidden>→</span></Link>
-        </section>
-      ) : (
-        <>
-          <form onSubmit={submit} noValidate className="card mx-auto mt-10 grid max-w-xl gap-5">
-            <div><p className="font-display text-2xl">{dc.ui.formTitle}</p><p className="mt-1 text-sm text-muted">{dc.ui.formText}</p></div>
-            <PersonFields value={p} onChange={(v) => { setP(v); setErr(""); }} idPrefix="today" />
-            {err && <p role="alert" className="text-sm text-rose">{err}</p>}
-            <button type="submit" className="btn justify-self-start">{dc.ui.formBtn} <span aria-hidden>→</span></button>
-          </form>
-          <section className="mx-auto mt-4 flex max-w-xl flex-wrap items-center justify-between gap-4 rounded-2xl border border-gold/25 bg-gold/[0.06] px-5 py-4">
-            <div><p className="text-ivory">{dc.ui.signInTitle}</p><p className="text-sm text-muted">{dc.ui.signInText}</p></div>
-            <Link to={`/${lang}/login?mode=signup`} className="btn-ghost" data-track="today_signup">{dc.ui.signInBtn}</Link>
-          </section>
-        </>
-      )}
+      <section className="card mx-auto mt-10 max-w-xl text-center">
+        <p className="font-display text-2xl">{signedIn ? dc.ui.saveTitle : dc.ui.signInTitle}</p>
+        <p className="mt-2 text-sm text-muted">{signedIn ? dc.ui.saveText : dc.ui.signInText}</p>
+        <div className="mt-5 flex flex-wrap justify-center gap-3">
+          {signedIn
+            ? <Link to={`/${lang}/account`} className="btn" data-track="today_add_details">{dc.ui.saveBtn} <span aria-hidden>→</span></Link>
+            : <>
+              <Link to={`/${lang}/login?mode=signup`} className="btn" data-track="today_signup">{dc.ui.signInBtn} <span aria-hidden>→</span></Link>
+              <Link to={`/${lang}/login`} className="btn-ghost" data-track="today_login">{dc.ui.logIn}</Link>
+            </>}
+        </div>
+      </section>
     </>
   );
 }
 
 export default function TodayPage() {
-  const { code } = useParams();
   const lang = useLang();
   const dc = getDailyContent(lang);
   const { ready, user, profile, profileLoaded } = useAuth();
-  const [params] = useSearchParams();
-  const editing = params.get("edit") === "1";
-  const fromCode = useMemo(() => (code ? decodeBirth(code) : null), [code]);
-  const own = profileBirth(profile);
-  const birth = fromCode ?? (editing ? null : own);
-  const waiting = !fromCode && !editing && (!ready || (user && !profileLoaded));
+  const birth = useMemo(() => profileBirth(profile), [profile]);
+  const waiting = !ready || (!!user && !profileLoaded);
 
   return (
     <div className="mx-auto max-w-4xl px-5 pt-8 sm:px-8 lg:pt-14">
-      {waiting ? <div className="h-96" /> : birth ? <Horoscope birth={birth} own={!fromCode && !!own} /> : <DailyForm signedIn={!!user && !editing} />}
+      {waiting ? <div className="h-96" /> : user && birth ? <Horoscope birth={birth} /> : <Gate signedIn={!!user} />}
       <p className="mx-auto mt-10 max-w-xl text-center text-xs text-muted/70">{dc.ui.disclaimer}</p>
     </div>
   );

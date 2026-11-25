@@ -8,6 +8,8 @@ import {
 import { numerology } from "@shared/numerology";
 import { encodeNum } from "@shared/numerology-full";
 import ChartWheel from "@/components/ChartWheel";
+import ShareCard from "@/components/ShareCard";
+import { useAuth } from "@/lib/auth";
 import { CarpetDivider, Reveal } from "@/components/Decor";
 import { useLang } from "@/components/Layout";
 import { getContent, type Content } from "@/content";
@@ -60,6 +62,7 @@ export default function ChartPage() {
   const chart = useMemo<Chart | null>(() => (input ? computeChart(input) : null), [input]);
   const nm = useMemo(() => (input ? numerology(input.fullName, input.date) : null), [input]);
   const [copied, setCopied] = useState(false);
+  const { user } = useAuth();
   if (!input || !chart || !nm) return <Navigate to={`/${lang}`} replace />;
 
   const p = chart.pos, sun = p.Sun.sign, moon = p.Moon.sign;
@@ -307,6 +310,7 @@ export default function ChartPage() {
       </section>
 
       <div className="no-print mt-16 flex flex-wrap items-center justify-center gap-3">
+        {user && <ShareCard chart={chart} content={c} name={input.fullName} lifePath={nm.lifePath} />}
         <button className="btn-ghost" data-track="share_link" data-track-type="chart" onClick={async () => { try { await navigator.clipboard.writeText(location.href); setCopied(true); setTimeout(() => setCopied(false), 2500); } catch { /* ignore */ } }}>
           {copied ? t("chart.actions.copied") : t("chart.actions.copy")}
         </button>
