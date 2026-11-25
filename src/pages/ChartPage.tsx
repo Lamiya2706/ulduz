@@ -8,6 +8,7 @@ import {
 import { numerology } from "@shared/numerology";
 import { encodeNum } from "@shared/numerology-full";
 import ChartWheel from "@/components/ChartWheel";
+import ShareCard from "@/components/ShareCard";
 import { CarpetDivider, Reveal } from "@/components/Decor";
 import { useLang } from "@/components/Layout";
 import { getContent, type Content } from "@/content";
@@ -307,6 +308,7 @@ export default function ChartPage() {
       </section>
 
       <div className="no-print mt-16 flex flex-wrap items-center justify-center gap-3">
+        <ShareCard chart={chart} content={c} name={input.fullName} lifePath={nm.lifePath} />
         <button className="btn-ghost" data-track="share_link" data-track-type="chart" onClick={async () => { try { await navigator.clipboard.writeText(location.href); setCopied(true); setTimeout(() => setCopied(false), 2500); } catch { /* ignore */ } }}>
           {copied ? t("chart.actions.copied") : t("chart.actions.copy")}
         </button>
