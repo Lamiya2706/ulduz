@@ -43,6 +43,11 @@ const en = {
     signOut: "Log out", loading: "Loading…",
   },
   prefill: { text: "Your saved birth moment is filled in.", open: "Open my chart" },
+  home: {
+    eyebrow: "Your Ulduz", sub: "Your chart, today's sky and all your tools, in one place.",
+    chartTitle: "Your natal chart", chartText: "Calculated from your saved birth moment and ready to open.", addBirth: "Add my birth moment",
+    join: "Create a free account", joinText: "A free account also opens the lunar calendar, the Full Moon ritual, your year forecast, numerology and compatibility, and keeps your birth moment ready.",
+  },
   err: {
     invalid_credentials: "The email or password isn't right. Try again, or reset your password.",
     email_not_confirmed: "Please confirm your email first: open the link we sent you.",
@@ -103,6 +108,11 @@ const az: AuthUI = {
     signOut: "Çıxış", loading: "Yüklənir…",
   },
   prefill: { text: "Saxladığın doğum anı artıq doldurulub.", open: "Xəritəmi aç" },
+  home: {
+    eyebrow: "Sənin Ulduzun", sub: "Xəritən, bugünkü səma və bütün alətlər bir yerdə.",
+    chartTitle: "Natal xəritən", chartText: "Saxladığın doğum anına görə hesablanıb, açmağa hazırdır.", addBirth: "Doğum anımı əlavə et",
+    join: "Pulsuz hesab yarat", joinText: "Pulsuz hesabla Ay təqvimi, Bədirlənmiş Ay ritualı, illik proqnoz, numerologiya və uyğunluq da açılır, doğum anın isə həmişə hazır qalır.",
+  },
   err: {
     invalid_credentials: "E-poçt və ya şifrə düz deyil. Yenidən yoxla və ya şifrəni bərpa et.",
     email_not_confirmed: "Əvvəlcə e-poçtunu təsdiqlə: göndərdiyimiz linki aç.",
@@ -163,6 +173,11 @@ const ru: AuthUI = {
     signOut: "Выйти", loading: "Загрузка…",
   },
   prefill: { text: "Твой сохранённый момент рождения уже подставлен.", open: "Открыть мою карту" },
+  home: {
+    eyebrow: "Твой Ulduz", sub: "Твоя карта, небо сегодня и все инструменты в одном месте.",
+    chartTitle: "Твоя натальная карта", chartText: "Рассчитана по сохранённому моменту рождения: открой её в одно касание.", addBirth: "Добавить момент рождения",
+    join: "Создать бесплатный аккаунт", joinText: "С бесплатным аккаунтом открываются лунный календарь, ритуал полнолуния, прогноз на год, нумерология и совместимость, а момент рождения всегда под рукой.",
+  },
   err: {
     invalid_credentials: "Почта или пароль не подходят. Попробуй ещё раз или восстанови пароль.",
     email_not_confirmed: "Сначала подтверди почту: открой ссылку из письма.",
