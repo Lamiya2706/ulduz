@@ -63,6 +63,7 @@ function Header() {
     return () => { document.body.style.overflow = ""; };
   }, [open]);
   const links = [
+    { to: `/${lang}/today`, label: t("daily.nav") },
     { to: `/${lang}/moon`, label: t("sky.nav") },
     { to: `/${lang}/full-moon`, label: t("fullmoon.nav") },
     { to: `/${lang}/year`, label: t("year.nav") },
@@ -121,6 +122,7 @@ function Footer() {
           <p className="mt-6 max-w-md text-xs leading-relaxed text-muted/70">{t("footer.disclaimer")}</p>
         </div>
         <div className="flex flex-wrap content-start gap-x-6 gap-y-3 text-sm text-muted md:justify-end">
+          <Link to={`/${lang}/today`} className="hover:text-gold">{t("daily.nav")}</Link>
           <Link to={`/${lang}/moon`} className="hover:text-gold">{t("sky.nav")}</Link>
           <Link to={`/${lang}/full-moon`} className="hover:text-gold">{t("fullmoon.nav")}</Link>
           <Link to={`/${lang}/year`} className="hover:text-gold">{t("year.nav")}</Link>
