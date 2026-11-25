@@ -56,3 +56,27 @@ export default function InstallButton({ place, className, children }: { place: s
     </>
   );
 }
+
+const BAR_KEY = "ulduz.installBar.hidden";
+
+/** For visitors who aren't signed in: a slim bar at the bottom of the screen, hidden for good with ×. */
+export function InstallBar() {
+  const { t } = useTranslation();
+  const mode = useInstallMode();
+  const [hidden, setHidden] = useState(() => { try { return localStorage.getItem(BAR_KEY) === "1"; } catch { return false; } });
+  const [ready, setReady] = useState(false);
+  useEffect(() => { const id = setTimeout(() => setReady(true), 1500); return () => clearTimeout(id); }, []);
+  if (mode === "installed" || hidden || !ready) return null;
+  const hide = () => { setHidden(true); track("app_install_bar_closed", {}); try { localStorage.setItem(BAR_KEY, "1"); } catch { /* ignore */ } };
+  return (
+    <motion.div initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
+      className="no-print fixed inset-x-0 bottom-0 z-30 flex justify-center sm:hidden px-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+      <div className="flex w-full max-w-md items-center gap-2 rounded-2xl border border-gold/25 bg-night-2/95 py-2 pl-4 pr-2 shadow-xl backdrop-blur-md">
+        <span aria-hidden className="text-gold max-[359px]:hidden">✦</span>
+        <p className="flex-1 text-sm leading-snug text-ivory">{t("app.barText")}</p>
+        <InstallButton place="bar" className="inline-flex h-9 flex-none items-center rounded-full bg-gold px-4 text-sm font-medium text-night transition hover:bg-ivory">{t("app.barBtn")}</InstallButton>
+        <button type="button" onClick={hide} aria-label={t("app.close")} className="grid h-9 w-9 flex-none place-items-center rounded-full text-muted transition hover:bg-gold/10 hover:text-ivory">✕</button>
+      </div>
+    </motion.div>
+  );
+}

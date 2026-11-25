@@ -1,6 +1,8 @@
 // Strings for the installable app card on the signed-in home: add to home screen and daily notifications (namespace "app").
 const en = {
   headerBtn: "Get the app",
+  barText: "Ulduz works like an app on your phone",
+  barBtn: "Install",
   dialogTitle: "Install Ulduz",
   dialogText: "Ulduz opens like an app from your home screen, full screen, and pages you've seen work offline.",
   stepsIos: "In <b>Safari</b>, tap the Share button <b>⬆︎</b> at the bottom, then <b>Add to Home Screen</b>. (In Instagram or Telegram, first open the page in Safari.)",
@@ -27,6 +29,8 @@ const en = {
 type AppUI = typeof en;
 const az: AppUI = {
   headerBtn: "Tətbiq",
+  barText: "Ulduz telefonunda tətbiq kimi işləyir",
+  barBtn: "Quraşdır",
   dialogTitle: "Ulduz-u quraşdır",
   dialogText: "Ulduz ana ekrandan tətbiq kimi, tam ekranda açılır, gördüyün səhifələr isə internetsiz də işləyir.",
   stepsIos: "<b>Safari</b>-də aşağıdakı Paylaş düyməsinə <b>⬆︎</b> toxun, sonra <b>Add to Home Screen</b> (Ana ekrana əlavə et) seç. (Instagram və ya Telegram-dasansa, əvvəlcə səhifəni Safari-də aç.)",
@@ -52,6 +56,8 @@ const az: AppUI = {
 };
 const ru: AppUI = {
   headerBtn: "Приложение",
+  barText: "Ulduz работает на телефоне как приложение",
+  barBtn: "Установить",
   dialogTitle: "Установить Ulduz",
   dialogText: "Ulduz открывается с главного экрана как приложение, на весь экран, а уже открытые страницы работают без интернета.",
   stepsIos: "В <b>Safari</b> нажми «Поделиться» <b>⬆︎</b> внизу, затем <b>На экран «Домой»</b>. (Если ты в Instagram или Telegram, сначала открой страницу в Safari.)",

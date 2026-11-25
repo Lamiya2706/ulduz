@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Navigate, Outlet, useLocation, useParams } from "react-router-dom";
-import i18n, { isLang, LANG_LABEL, LANGS, type Lang } from "@/i18n";
+import i18n, { isLang, LANG_LABEL, LANG_NAME, LANGS, type Lang } from "@/i18n";
 import { Star, Starfield } from "./Decor";
 import { isPrivatePath, pageMeta } from "@/lib/seo";
 import { installClickTracking } from "@/lib/analytics";
 import { useAuth } from "@/lib/auth";
-import InstallButton from "@/components/InstallButton";
+import { InstallBar } from "@/components/InstallButton";
 
 export function useLang(): Lang {
   const { lang } = useParams();
@@ -28,6 +28,44 @@ function LangSwitch() {
         </span>
       ))}
     </nav>
+  );
+}
+
+/** Phones: one small button with the current language; tapping it opens the three choices. */
+function LangMenu() {
+  const lang = useLang();
+  const { pathname, search, hash } = useLocation();
+  const rest = pathname.replace(/^\/(az|en|ru)/, "");
+  const [open, setOpen] = useState(false);
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: Event) => { if (!(e.target as Element).closest?.("[data-lang-menu]")) setOpen(false); };
+    const esc = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("pointerdown", close);
+    document.addEventListener("keydown", esc);
+    return () => { document.removeEventListener("pointerdown", close); document.removeEventListener("keydown", esc); };
+  }, [open]);
+  return (
+    <div data-lang-menu className="relative">
+      <button type="button" onClick={() => setOpen(!open)} aria-expanded={open} aria-haspopup="menu" aria-label={`Language: ${LANG_NAME[lang]}`}
+        className="inline-flex h-9 items-center gap-1 rounded-full px-2 text-xs tracking-[0.18em] text-gold transition hover:bg-gold/10">
+        {LANG_LABEL[lang]}
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" aria-hidden className={`transition ${open ? "rotate-180" : ""}`}><path d="M2 3.5l3 3 3-3" /></svg>
+      </button>
+      {open && (
+        <div role="menu" className="absolute right-0 top-full z-50 mt-2 min-w-[11rem] overflow-hidden rounded-2xl border border-gold/20 bg-night/95 py-1 shadow-xl backdrop-blur-md">
+          {LANGS.map((l) => (
+            <Link key={l} role="menuitem" to={`/${l}${rest}${search}${hash}`} data-track="language_change" data-track-label={l}
+              onClick={() => { try { localStorage.setItem("ulduz.lang", l); } catch { /* ignore */ } setOpen(false); }}
+              aria-current={l === lang ? "true" : undefined}
+              className={`flex items-center justify-between gap-4 px-4 py-3 text-sm transition hover:bg-gold/10 ${l === lang ? "text-gold" : "text-ivory"}`}>
+              {LANG_NAME[l]}<span className="text-xs tracking-[0.18em] text-muted">{LANG_LABEL[l]}</span>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -76,29 +114,29 @@ function Header() {
   // Visitors see a calm header; the tools show up after sign-in (their pages stay reachable by link and from the footer).
   const shown = user ? links : links.filter((l) => l.to.endsWith("#faq"));
   return (
-    <header className="no-print relative z-40">
+    <header className="no-print relative z-40 pt-[env(safe-area-inset-top)]">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-5 sm:px-8">
         <Link to={`/${lang}`} className="group flex flex-none items-center gap-2.5" aria-label="Ulduz">
           <Star className="h-5 w-5 text-gold transition group-hover:rotate-45" />
           <span className="font-display text-2xl tracking-[0.08em] text-ivory">Ulduz</span>
         </Link>
-        <div className="flex items-center gap-3 sm:gap-6">
+        <div className="flex items-center gap-2 sm:gap-6">
           <nav className={`hidden items-center gap-6 text-sm text-muted ${user ? "xl:flex" : "sm:flex"}`}>
             {shown.map((l) => <Link key={l.to} to={l.to} data-track="nav_click" data-track-place="header" className="hover:text-ivory">{l.label}</Link>)}
           </nav>
           <div className="hidden sm:block"><LangSwitch /></div>
-          <InstallButton place="header" className="inline-flex h-9 items-center gap-1.5 rounded-full border border-gold/30 px-3 text-sm text-gold transition hover:border-gold hover:text-ivory" />
+          <div className="sm:hidden"><LangMenu /></div>
           <AccountButton place="header" />
-          <button type="button" data-track="menu_toggle" data-track-label={open ? "close" : "open"} onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? "Close menu" : "Open menu"}
+          {user && <button type="button" data-track="menu_toggle" data-track-label={open ? "close" : "open"} onClick={() => setOpen(!open)} aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? "Close menu" : "Open menu"}
             className={`-mr-2 grid h-10 w-10 place-items-center rounded-full text-ivory transition hover:bg-gold/10 ${user ? "xl:hidden" : "sm:hidden"}`}>
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" aria-hidden>
               {open ? <path d="M5 5l10 10M15 5L5 15" /> : <path d="M3 6h14M3 10h14M3 14h9" />}
             </svg>
-          </button>
+          </button>}
         </div>
       </div>
-      {open && (
-        <div id="mobile-menu" className={`fixed inset-x-0 bottom-0 top-[76px] z-40 overflow-y-auto border-t border-gold/10 bg-night/95 px-5 pb-10 pt-6 backdrop-blur-md ${user ? "xl:hidden" : "sm:hidden"}`}>
+      {open && user && (
+        <div id="mobile-menu" className={`fixed inset-x-0 bottom-0 top-[calc(76px+env(safe-area-inset-top))] z-40 overflow-y-auto border-t border-gold/10 bg-night/95 px-5 pb-10 pt-6 backdrop-blur-md ${user ? "xl:hidden" : "sm:hidden"}`}>
           <nav className="grid">
             {shown.map((l) => (
               <Link key={l.to} to={l.to} data-track="nav_click" data-track-place="mobile_menu" onClick={() => setOpen(false)} className="flex items-center justify-between border-b border-gold/10 py-4 font-display text-2xl text-ivory">
@@ -106,7 +144,6 @@ function Header() {
               </Link>
             ))}
           </nav>
-          <div className="mt-8 flex justify-center"><LangSwitch /></div>
           <div className="mt-8 flex justify-center">
             {user
               ? <Link to={`/${lang}`} onClick={() => setOpen(false)} className="btn">{t("auth.home.eyebrow")} <span aria-hidden>→</span></Link>
@@ -144,6 +181,11 @@ function Footer() {
       <div className="border-t border-gold/10 py-5 text-center text-xs text-muted/60">© {new Date().getFullYear()} Ulduz. {t("footer.rights")}</div>
     </footer>
   );
+}
+
+function VisitorInstallBar() {
+  const { ready, user } = useAuth();
+  return ready && !user ? <InstallBar /> : null;
 }
 
 export default function Layout() {
@@ -189,6 +231,7 @@ export default function Layout() {
         <Header />
         <main className="flex-1"><Outlet /></main>
         <Footer />
+        <VisitorInstallBar />
       </div>
     </>
   );
