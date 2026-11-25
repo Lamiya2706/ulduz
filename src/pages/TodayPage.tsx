@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { computeChart, PLANETS, ASPECTS, type PlanetKey } from "@shared/astro";
 import { personalDay, type DailyTransit, type NatalPoint } from "@shared/daily";
 import { SPHERES } from "@shared/sky";
@@ -39,6 +39,13 @@ function Horoscope({ birth }: { birth: BirthParams }) {
   const house = dc.houses[day.moonHouse - 1];
   const first = birth.fullName.trim().split(/\s+/)[0];
   const pointName = (k: NatalPoint) => (k === "Asc" ? dc.ui.asc : c.planetNames[k]);
+  const { hash } = useLocation();
+  // The page renders after the profile loads, so scroll to a linked section (e.g. #transits) once it exists.
+  useEffect(() => {
+    if (!hash) return;
+    const id = setTimeout(() => document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
+    return () => clearTimeout(id);
+  }, [hash]);
 
   return (
     <>
