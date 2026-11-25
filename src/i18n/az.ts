@@ -31,7 +31,7 @@ const az: UI = {
     { q: "Doğum saatımı bilmirəmsə nə olacaq?", a: "Günəşini, demək olar ki, həmişə Ayını, bütün planetləri, aspektləri və numerologiyanı yenə də alacaqsan. Dəqiq saat yalnız yüksələn bürc, evlər və Göyün ortası üçün lazımdır. Həmin gün Ay bürcünü dəyişibsə, hər iki variantı göstərəcəyik." },
     { q: "Şəxsi təhlil nədir?", a: "Bu, tam hesablanmış xəritənə əsasən süni intellektin yazdığı uzun, səmimi mətndir: daxili ziddiyyətlərin, necə sevdiyin və bağlandığın, güclü və kölgə tərəfin, çağırışın, rəqəmlərin və hazırda keçdiyin həyat mərhələsi. Hər təhlil yenidən yazılır — iki eynisi olmur." },
     { q: "Təhlil hansı dildə olacaq?", a: "Azərbaycan, ingilis və ya rus dilində — dili ödənişdən əvvəl özün seçirsən." },
-    { q: "Məlumatlarım necə qorunur?", a: "Pulsuz xəritə birbaşa brauzerində hesablanır. Doğum məlumatların yalnız şəxsi təhlili açsan saxlanılır — təhlil sənin linkində əlçatan qalsın deyə. İstədiyin vaxt bizə yazıb onları sildirə bilərsən." },
+    { q: "Məlumatlarım necə qorunur?", a: "Pulsuz xəritə birbaşa brauzerində hesablanır. Doğum məlumatların yalnız hesab yaradıb onları orada saxlasan (onları yalnız sən görürsən) və ya şəxsi təhlili açsan saxlanılır — təhlil sənin linkində əlçatan qalsın deyə. İstədiyin vaxt bizə yazıb onları sildirə bilərsən." },
     { q: "Astrologiya elmdirmi?", a: "Xeyr. Astrologiya və numerologiya elm yox, simvolik dillərdir. Biz onları diaqnoz və ya proqnoz kimi yox, özünü dərk etmək üçün bir güzgü kimi təqdim edirik." },
   ] },
   final: { title: "Sənin səman səni gözləyir.", cta: "Xəritəmi göstər" },
